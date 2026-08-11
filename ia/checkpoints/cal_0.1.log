@@ -1,0 +1,52 @@
+cargando mlx-community/Qwen2-VL-7B-Instruct-4bit...
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 4688.75it/s]
+The image processor of type `Qwen2VLImageProcessor` is now loaded as a fast processor by default, even if the model checkpoint was saved with a slow processor. This is a breaking change and may produce slightly different outputs. To continue using the slow processor, instantiate this class with `use_fast=False`. Note that this behavior will be extended to all models in a future release.
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 4203.86it/s]
+#trainable params: 40.370176 M || all params: 7615.487488 M || trainable%: 0.530%
+333 ejemplos · 1 epoch(s) · 40 pasos · batch 1 · lr 0.0001 · rank 16
+  epoch 0 · paso 1/40 · loss 15.3512 · 34.4s
+  epoch 0 · paso 2/40 · loss 10.3182 · 121.9s
+  epoch 0 · paso 3/40 · loss 9.5311 · 96.1s
+  epoch 0 · paso 4/40 · loss 10.0268 · 93.6s
+  epoch 0 · paso 5/40 · loss 6.9216 · 118.7s
+  epoch 0 · paso 6/40 · loss 6.6748 · 98.8s
+  epoch 0 · paso 7/40 · loss 7.6513 · 107.4s
+  epoch 0 · paso 8/40 · loss 6.4317 · 139.0s
+  epoch 0 · paso 9/40 · loss 5.7745 · 106.2s
+mx.metal.get_peak_memory is deprecated and will be removed in a future version. Use mx.get_peak_memory instead.
+  epoch 0 · paso 10/40 · loss 6.6999 · 109.6s · ✓ · 🐤
+  epoch 0 · paso 11/40 · loss 5.9889 · 21.0s
+  epoch 0 · paso 12/40 · loss 5.1137 · 110.0s
+  epoch 0 · paso 13/40 · loss 6.2830 · 119.0s
+  epoch 0 · paso 14/40 · loss 5.7878 · 152.9s
+  epoch 0 · paso 15/40 · loss 6.1315 · 148.4s
+  epoch 0 · paso 16/40 · loss 5.7897 · 176.1s
+  epoch 0 · paso 17/40 · loss 4.6968 · 171.4s
+  epoch 0 · paso 18/40 · loss 5.6919 · 121.5s
+  epoch 0 · paso 19/40 · loss 5.8017 · 164.8s
+  epoch 0 · paso 20/40 · loss 5.2744 · 181.7s · ✓ · 🐤
+  epoch 0 · paso 21/40 · loss 5.6307 · 32.6s
+  epoch 0 · paso 22/40 · loss 4.9248 · 141.7s
+  epoch 0 · paso 23/40 · loss 5.9205 · 115.6s
+  epoch 0 · paso 24/40 · loss 5.9983 · 170.0s
+  epoch 0 · paso 25/40 · loss 4.8314 · 165.9s
+  epoch 0 · paso 26/40 · loss 4.6789 · 119.8s
+  epoch 0 · paso 27/40 · loss 5.7316 · 104.6s
+  epoch 0 · paso 28/40 · loss 5.1584 · 138.9s
+  epoch 0 · paso 29/40 · loss 5.9901 · 139.3s
+  epoch 0 · paso 30/40 · loss 5.5954 · 164.3s · ✓ · 🐤
+  epoch 0 · paso 31/40 · loss 4.5080 · 17.0s
+  epoch 0 · paso 32/40 · loss 5.7820 · 97.6s
+  epoch 0 · paso 33/40 · loss 6.0546 · 170.0s
+  epoch 0 · paso 34/40 · loss 4.4778 · 162.0s
+  epoch 0 · paso 35/40 · loss 5.8786 · 116.9s
+  epoch 0 · paso 36/40 · loss 5.1871 · 154.5s
+  epoch 0 · paso 37/40 · loss 4.4522 · 128.1s
+  epoch 0 · paso 38/40 · loss 5.8853 · 111.0s
+  epoch 0 · paso 39/40 · loss 5.1675 · 148.9s
+  epoch 0 · paso 40/40 · loss 5.7258 · 129.7s · ✓ · 🐤
+
+adapters → ia/checkpoints/cal_0.1/adapters.safetensors
+estado   → ia/checkpoints/cal_0.1/estado.json
+curva    → ia/checkpoints/cal_0.1/curva_loss.csv
+total 90.9 min · 136.4 s/paso · 40 pasos

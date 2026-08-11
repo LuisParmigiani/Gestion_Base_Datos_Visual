@@ -1,0 +1,206 @@
+cargando mlx-community/Qwen2-VL-7B-Instruct-4bit...
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 5161.93it/s]
+The image processor of type `Qwen2VLImageProcessor` is now loaded as a fast processor by default, even if the model checkpoint was saved with a slow processor. This is a breaking change and may produce slightly different outputs. To continue using the slow processor, instantiate this class with `use_fast=False`. Note that this behavior will be extended to all models in a future release.
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 3547.39it/s]
+#trainable params: 40.370176 M || all params: 7615.487488 M || trainable%: 0.530%
+335 ejemplos · 1 epoch(s) · 335 pasos · batch 1 · lr 0.0001 · rank 16
+  epoch 0 · paso 1/335 · loss 15.3512 · 29.1s · ✓
+  epoch 0 · paso 2/335 · loss 17.9783 · 24.4s · ✓
+  epoch 0 · paso 3/335 · loss 20.3352 · 22.5s · ✓
+  epoch 0 · paso 4/335 · loss 18.5943 · 29.5s · ✓
+  epoch 0 · paso 5/335 · loss 15.6951 · 22.0s · ✓
+  epoch 0 · paso 6/335 · loss 58.2762 · 22.0s · ✓
+  epoch 0 · paso 7/335 · loss 41.7249 · 31.2s · ✓
+  epoch 0 · paso 8/335 · loss 17.1600 · 21.7s · ✓
+  epoch 0 · paso 9/335 · loss 16.2077 · 18.2s · ✓
+  epoch 0 · paso 10/335 · loss 15.5723 · 34.3s · ✓
+  epoch 0 · paso 11/335 · loss 15.3394 · 23.9s · ✓
+  epoch 0 · paso 12/335 · loss 14.5520 · 20.8s · ✓
+  epoch 0 · paso 13/335 · loss 15.3656 · 37.1s · ✓
+  epoch 0 · paso 14/335 · loss 14.7446 · 28.1s · ✓
+  epoch 0 · paso 15/335 · loss 14.4127 · 33.8s · ✓
+  epoch 0 · paso 16/335 · loss 13.9533 · 39.7s · ✓
+  epoch 0 · paso 17/335 · loss 13.9919 · 24.2s · ✓
+  epoch 0 · paso 18/335 · loss 13.5064 · 35.5s · ✓
+  epoch 0 · paso 19/335 · loss 13.2150 · 37.6s · ✓
+  epoch 0 · paso 20/335 · loss 13.1171 · 28.9s · ✓
+  epoch 0 · paso 21/335 · loss 12.6546 · 42.6s · ✓
+  epoch 0 · paso 22/335 · loss 12.6600 · 27.1s · ✓
+  epoch 0 · paso 23/335 · loss 12.0773 · 40.2s · ✓
+  epoch 0 · paso 24/335 · loss 11.8829 · 41.6s · ✓
+  epoch 0 · paso 25/335 · loss 11.7955 · 25.8s · ✓
+  epoch 0 · paso 26/335 · loss 11.4675 · 23.3s · ✓
+  epoch 0 · paso 27/335 · loss 10.9305 · 36.8s · ✓
+  epoch 0 · paso 28/335 · loss 10.6776 · 29.7s · ✓
+  epoch 0 · paso 29/335 · loss 10.2641 · 38.0s · ✓
+  epoch 0 · paso 30/335 · loss 10.0549 · 35.9s · ✓
+  epoch 0 · paso 31/335 · loss 10.3200 · 24.8s · ✓
+  epoch 0 · paso 32/335 · loss 9.8299 · 38.9s · ✓
+  epoch 0 · paso 33/335 · loss 9.4505 · 39.5s · ✓
+  epoch 0 · paso 34/335 · loss 10.0574 · 26.6s · ✓
+  epoch 0 · paso 35/335 · loss 9.3198 · 40.0s · ✓
+  epoch 0 · paso 36/335 · loss 9.4910 · 30.8s · ✓
+  epoch 0 · paso 37/335 · loss 9.9713 · 20.2s · ✓
+  epoch 0 · paso 38/335 · loss 9.1426 · 37.7s · ✓
+  epoch 0 · paso 39/335 · loss 9.3923 · 30.6s · ✓
+  epoch 0 · paso 40/335 · loss 9.0191 · 39.3s · ✓
+  epoch 0 · paso 41/335 · loss 9.0695 · 42.3s · ✓
+  epoch 0 · paso 42/335 · loss 8.9599 · 36.7s · ✓
+  epoch 0 · paso 43/335 · loss 8.8970 · 37.0s · ✓
+  epoch 0 · paso 44/335 · loss 9.4585 · 22.7s · ✓
+  epoch 0 · paso 45/335 · loss 9.0723 · 27.5s · ✓
+  epoch 0 · paso 46/335 · loss 8.6525 · 40.7s · ✓
+  epoch 0 · paso 47/335 · loss 9.2534 · 24.4s · ✓
+  epoch 0 · paso 48/335 · loss 8.7345 · 38.1s · ✓
+  epoch 0 · paso 49/335 · loss 8.7753 · 40.8s · ✓
+  epoch 0 · paso 50/335 · loss 8.7204 · 41.6s · ✓
+  epoch 0 · paso 51/335 · loss 8.6592 · 39.8s · ✓
+  epoch 0 · paso 52/335 · loss 8.6201 · 39.5s · ✓
+  epoch 0 · paso 53/335 · loss 8.6415 · 37.1s · ✓
+  epoch 0 · paso 54/335 · loss 8.5611 · 41.5s · ✓
+  epoch 0 · paso 55/335 · loss 8.6102 · 29.1s · ✓
+  epoch 0 · paso 56/335 · loss 8.6507 · 41.1s · ✓
+  epoch 0 · paso 57/335 · loss 8.6928 · 31.1s · ✓
+  epoch 0 · paso 58/335 · loss 8.8241 · 26.9s · ✓
+  epoch 0 · paso 59/335 · loss 8.7330 · 25.8s · ✓
+  epoch 0 · paso 60/335 · loss 8.6177 · 37.8s · ✓
+  epoch 0 · paso 61/335 · loss 8.6637 · 24.4s · ✓
+  epoch 0 · paso 62/335 · loss 8.6152 · 24.5s · ✓
+  epoch 0 · paso 63/335 · loss 8.6229 · 27.3s · ✓
+  epoch 0 · paso 64/335 · loss 8.5259 · 25.9s · ✓
+  epoch 0 · paso 65/335 · loss 8.5039 · 24.1s · ✓
+  epoch 0 · paso 66/335 · loss 8.4829 · 26.4s · ✓
+  epoch 0 · paso 67/335 · loss 8.6958 · 20.8s · ✓
+  epoch 0 · paso 68/335 · loss 8.4569 · 27.0s · ✓
+  epoch 0 · paso 69/335 · loss 8.4617 · 20.1s · ✓
+  epoch 0 · paso 70/335 · loss 8.6457 · 33.2s · ✓
+  epoch 0 · paso 71/335 · loss 8.3820 · 32.3s · ✓
+  epoch 0 · paso 72/335 · loss 8.3870 · 30.9s · ✓
+  epoch 0 · paso 73/335 · loss 8.4298 · 35.8s · ✓
+  epoch 0 · paso 74/335 · loss 8.4652 · 34.7s · ✓
+  epoch 0 · paso 75/335 · loss 8.5216 · 21.7s · ✓
+  epoch 0 · paso 76/335 · loss 8.5343 · 23.9s · ✓
+  epoch 0 · paso 77/335 · loss 8.4490 · 18.2s · ✓
+  epoch 0 · paso 78/335 · loss 8.2905 · 33.1s · ✓
+  epoch 0 · paso 79/335 · loss 8.6575 · 16.2s · ✓
+  epoch 0 · paso 80/335 · loss 8.3725 · 31.0s · ✓
+  epoch 0 · paso 81/335 · loss 8.1977 · 39.3s · ✓
+  epoch 0 · paso 82/335 · loss 8.2414 · 21.5s · ✓
+  epoch 0 · paso 83/335 · loss 8.6003 · 35.2s · ✓
+  epoch 0 · paso 84/335 · loss 8.2692 · 34.5s · ✓
+  epoch 0 · paso 85/335 · loss 8.4538 · 24.8s · ✓
+  epoch 0 · paso 86/335 · loss 8.3041 · 32.6s · ✓
+  epoch 0 · paso 87/335 · loss 8.2669 · 19.4s · ✓
+  epoch 0 · paso 88/335 · loss 8.4666 · 25.3s · ✓
+  epoch 0 · paso 89/335 · loss 8.2671 · 17.3s · ✓
+  epoch 0 · paso 90/335 · loss 8.1631 · 32.8s · ✓
+  epoch 0 · paso 91/335 · loss 8.1993 · 32.8s · ✓
+  epoch 0 · paso 92/335 · loss 8.2134 · 35.5s · ✓
+  epoch 0 · paso 93/335 · loss 8.3955 · 18.4s · ✓
+  epoch 0 · paso 94/335 · loss 8.2018 · 27.6s · ✓
+  epoch 0 · paso 95/335 · loss 8.1089 · 21.9s · ✓
+  epoch 0 · paso 96/335 · loss 8.2995 · 32.6s · ✓
+  epoch 0 · paso 97/335 · loss 8.0825 · 19.8s · ✓
+  epoch 0 · paso 98/335 · loss 8.1402 · 33.7s · ✓
+  epoch 0 · paso 99/335 · loss 8.1283 · 23.4s · ✓
+  epoch 0 · paso 100/335 · loss 8.1411 · 17.9s · ✓
+  epoch 0 · paso 101/335 · loss 8.3658 · 25.4s · ✓
+  epoch 0 · paso 102/335 · loss 8.1461 · 32.5s · ✓
+  epoch 0 · paso 103/335 · loss 8.1273 · 35.8s · ✓
+  epoch 0 · paso 104/335 · loss 8.5054 · 20.5s · ✓
+  epoch 0 · paso 105/335 · loss 8.2019 · 38.8s · ✓
+  epoch 0 · paso 106/335 · loss 8.0749 · 32.9s · ✓
+  epoch 0 · paso 107/335 · loss 8.1160 · 28.4s · ✓
+  epoch 0 · paso 108/335 · loss 8.1698 · 27.1s · ✓
+  epoch 0 · paso 109/335 · loss 7.9555 · 17.0s · ✓
+  epoch 0 · paso 110/335 · loss 8.0279 · 31.6s · ✓
+  epoch 0 · paso 111/335 · loss 8.0284 · 17.5s · ✓
+  epoch 0 · paso 112/335 · loss 8.0537 · 32.8s · ✓
+  epoch 0 · paso 113/335 · loss 8.0951 · 24.4s · ✓
+  epoch 0 · paso 114/335 · loss 7.9528 · 26.4s · ✓
+  epoch 0 · paso 115/335 · loss 8.0335 · 30.9s · ✓
+  epoch 0 · paso 116/335 · loss 8.0296 · 19.7s · ✓
+  epoch 0 · paso 117/335 · loss 7.9884 · 26.7s · ✓
+  epoch 0 · paso 118/335 · loss 8.0897 · 35.2s · ✓
+  epoch 0 · paso 119/335 · loss 8.0684 · 34.9s · ✓
+  epoch 0 · paso 120/335 · loss 8.0755 · 37.1s · ✓
+  epoch 0 · paso 121/335 · loss 8.0926 · 34.4s · ✓
+  epoch 0 · paso 122/335 · loss 8.1038 · 28.2s · ✓
+  epoch 0 · paso 123/335 · loss 7.9480 · 15.5s · ✓
+  epoch 0 · paso 124/335 · loss 8.4080 · 37.1s · ✓
+  epoch 0 · paso 125/335 · loss 7.9694 · 25.7s · ✓
+  epoch 0 · paso 126/335 · loss 8.0277 · 22.7s · ✓
+  epoch 0 · paso 127/335 · loss 7.9696 · 21.1s · ✓
+  epoch 0 · paso 128/335 · loss 7.9542 · 33.2s · ✓
+  epoch 0 · paso 129/335 · loss 8.0323 · 35.0s · ✓
+  epoch 0 · paso 130/335 · loss 7.9168 · 21.7s · ✓
+  epoch 0 · paso 131/335 · loss 7.9577 · 33.8s · ✓
+  epoch 0 · paso 132/335 · loss 7.9881 · 33.5s · ✓
+  epoch 0 · paso 133/335 · loss 7.9877 · 33.7s · ✓
+  epoch 0 · paso 134/335 · loss 7.8558 · 20.4s · ✓
+  epoch 0 · paso 135/335 · loss 8.0343 · 31.2s · ✓
+  epoch 0 · paso 136/335 · loss 7.7903 · 17.4s · ✓
+  epoch 0 · paso 137/335 · loss 7.9727 · 34.8s · ✓
+  epoch 0 · paso 138/335 · loss 7.8281 · 16.7s · ✓
+  epoch 0 · paso 139/335 · loss 7.8001 · 20.3s · ✓
+  epoch 0 · paso 140/335 · loss 8.0299 · 33.3s · ✓
+  epoch 0 · paso 141/335 · loss 7.7255 · 18.8s · ✓
+  epoch 0 · paso 142/335 · loss 7.7079 · 15.3s · ✓
+  epoch 0 · paso 143/335 · loss 8.0267 · 35.6s · ✓
+  epoch 0 · paso 144/335 · loss 7.7711 · 18.1s · ✓
+  epoch 0 · paso 145/335 · loss 7.7339 · 18.1s · ✓
+  epoch 0 · paso 146/335 · loss 8.0497 · 32.4s · ✓
+  epoch 0 · paso 147/335 · loss 7.9266 · 34.7s · ✓
+  epoch 0 · paso 148/335 · loss 7.9437 · 32.1s · ✓
+  epoch 0 · paso 149/335 · loss 7.9707 · 30.7s · ✓
+  epoch 0 · paso 150/335 · loss 7.9268 · 33.1s · ✓
+  epoch 0 · paso 151/335 · loss 7.9041 · 36.5s · ✓
+  epoch 0 · paso 152/335 · loss 7.9421 · 24.7s · ✓
+  epoch 0 · paso 153/335 · loss 7.9604 · 40.3s · ✓
+  epoch 0 · paso 154/335 · loss 7.8976 · 33.7s · ✓
+  epoch 0 · paso 155/335 · loss 7.8911 · 21.6s · ✓
+  epoch 0 · paso 156/335 · loss 7.8949 · 28.6s · ✓
+  epoch 0 · paso 157/335 · loss 7.9402 · 34.4s · ✓
+  epoch 0 · paso 158/335 · loss 7.8373 · 24.0s · ✓
+  epoch 0 · paso 159/335 · loss 7.8996 · 30.3s · ✓
+  epoch 0 · paso 160/335 · loss 7.7487 · 16.9s · ✓
+  epoch 0 · paso 161/335 · loss 7.9320 · 37.5s · ✓
+  epoch 0 · paso 162/335 · loss 7.9796 · 37.6s · ✓
+/opt/homebrew/Cellar/python@3.12/3.12.13_4/Frameworks/Python.framework/Versions/3.12/lib/python3.12/multiprocessing/resource_tracker.py:279: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+cargando mlx-community/Qwen2-VL-7B-Instruct-4bit...
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 4521.05it/s]
+The image processor of type `Qwen2VLImageProcessor` is now loaded as a fast processor by default, even if the model checkpoint was saved with a slow processor. This is a breaking change and may produce slightly different outputs. To continue using the slow processor, instantiate this class with `use_fast=False`. Note that this behavior will be extended to all models in a future release.
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 6857.51it/s]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 333 examples [00:00, 71828.40 examples/s]
+Map:   0%|          | 0/333 [00:00<?, ? examples/s]Map: 100%|██████████| 333/333 [00:00<00:00, 28949.02 examples/s]
+#trainable params: 40.370176 M || all params: 7615.487488 M || trainable%: 0.530%
+333 ejemplos · 1 epoch(s) · 333 pasos · batch 1 · lr 0.0001 · rank 16
+continuando desde epoch 0, paso 163 (último loss 7.9796, guardado 2026-08-08 14:10:29). Adam arranca de cero: esperar un transitorio de unos pasos.
+  epoch 0 · paso 163/333 · loss 7.9098 · 32.2s · ✓
+  epoch 0 · paso 164/333 · loss 48.7313 · 32.3s · ✓
+  epoch 0 · paso 165/333 · loss 8.7380 · 34.3s · ✓
+  epoch 0 · paso 166/333 · loss 15.5620 · 32.2s · ✓
+  epoch 0 · paso 167/333 · loss 25.4025 · 18.1s · ✓
+  epoch 0 · paso 168/333 · loss 14.5666 · 33.2s · ✓
+  epoch 0 · paso 169/333 · loss 13.0986 · 32.7s · ✓
+  epoch 0 · paso 170/333 · loss 11.3152 · 24.7s · ✓
+  epoch 0 · paso 171/333 · loss 11.2367 · 27.4s · ✓
+  epoch 0 · paso 172/333 · loss 10.3554 · 25.0s · ✓
+  epoch 0 · paso 173/333 · loss 9.5430 · 27.8s · ✓
+  epoch 0 · paso 174/333 · loss 9.8114 · 37.7s · ✓
+  epoch 0 · paso 175/333 · loss 9.9036 · 29.1s · ✓
+  epoch 0 · paso 176/333 · loss 9.9914 · 15.5s · ✓
+  epoch 0 · paso 177/333 · loss 9.9791 · 30.1s · ✓
+  epoch 0 · paso 178/333 · loss 10.0029 · 17.1s · ✓
+  epoch 0 · paso 179/333 · loss 9.5601 · 23.3s · ✓
+  epoch 0 · paso 180/333 · loss 44.4865 · 17.7s · ✓
+  epoch 0 · paso 181/333 · loss 48.7878 · 30.2s · ✓
+  epoch 0 · paso 182/333 · loss 32.5126 · 17.4s · ✓
+  epoch 0 · paso 183/333 · loss 40.4187 · 31.3s · ✓
+  epoch 0 · paso 184/333 · loss 38.7498 · 30.6s · ✓
+  epoch 0 · paso 185/333 · loss 31.6644 · 23.2s · ✓
+  epoch 0 · paso 186/333 · loss 24.4515 · 26.3s · ✓
+  epoch 0 · paso 187/333 · loss 22.0827 · 30.6s · ✓
+/opt/homebrew/Cellar/python@3.12/3.12.13_4/Frameworks/Python.framework/Versions/3.12/lib/python3.12/multiprocessing/resource_tracker.py:279: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '

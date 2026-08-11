@@ -10,6 +10,8 @@ comprobantesReales/
 *.jpeg
 *.jpg
 *.png
+*.webp
+*.heic
 *.pdf
 
 # Dumps de la base.
@@ -28,7 +30,6 @@ viejo/
 
 
 # ─── MODELOS Y ENTRENAMIENTO ───────────────────────────────────────
-checkpoints/
 adapters/
 *.safetensors
 *.gguf
