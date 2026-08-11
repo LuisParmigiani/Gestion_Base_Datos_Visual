@@ -1,0 +1,20 @@
+cargando mlx-community/Qwen2-VL-7B-Instruct-4bit + ia/checkpoints/lora_v2...
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 4045.36it/s]
+The image processor of type `Qwen2VLImageProcessor` is now loaded as a fast processor by default, even if the model checkpoint was saved with a slow processor. This is a breaking change and may produce slightly different outputs. To continue using the slow processor, instantiate this class with `use_fast=False`. Note that this behavior will be extended to all models in a future release.
+[1/16] 002.jpeg
+mx.metal.get_peak_memory is deprecated and will be removed in a future version. Use mx.get_peak_memory instead.
+[2/16] 003.jpeg
+[3/16] 005.jpeg
+[4/16] 010.jpeg
+[5/16] 014.jpeg
+[6/16] 018.jpeg
+[7/16] 019.jpeg
+[8/16] 021.jpeg
+[9/16] 024.jpeg
+[10/16] 025.jpeg
+[11/16] 026.jpeg
+[12/16] 029.jpeg
+[13/16] 031.jpeg
+[14/16] 035.jpeg
+[15/16] 044.jpeg
+[16/16] 049.jpeg

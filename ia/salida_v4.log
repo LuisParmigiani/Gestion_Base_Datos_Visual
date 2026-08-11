@@ -1,0 +1,56 @@
+cargando mlx-community/Qwen2-VL-7B-Instruct-4bit...
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 5494.50it/s]
+The image processor of type `Qwen2VLImageProcessor` is now loaded as a fast processor by default, even if the model checkpoint was saved with a slow processor. This is a breaking change and may produce slightly different outputs. To continue using the slow processor, instantiate this class with `use_fast=False`. Note that this behavior will be extended to all models in a future release.
+[1/52] 001.jpeg
+mx.metal.get_peak_memory is deprecated and will be removed in a future version. Use mx.get_peak_memory instead.
+[2/52] 002.jpeg
+[3/52] 003.jpeg
+[4/52] 004.jpeg
+[5/52] 005.jpeg
+[6/52] 006.jpeg
+[7/52] 007.jpeg
+[8/52] 008.jpeg
+[9/52] 009.jpeg
+[10/52] 010.jpeg
+[11/52] 011.jpeg
+[12/52] 012.jpeg
+[13/52] 013.jpeg
+[14/52] 014.jpeg
+[15/52] 015.jpeg
+[16/52] 016.jpeg
+[17/52] 017.jpeg
+[18/52] 018.jpeg
+[19/52] 019.jpeg
+[20/52] 020.jpeg
+[21/52] 021.jpeg
+[22/52] 022.jpeg
+[23/52] 023.jpeg
+[24/52] 024.jpeg
+[25/52] 025.jpeg
+[26/52] 026.jpeg
+[27/52] 027.jpeg
+[28/52] 028.jpeg
+[29/52] 029.jpeg
+[30/52] 030.jpeg
+[31/52] 031.jpeg
+[32/52] 032.jpeg
+[33/52] 033.jpeg
+[34/52] 034.jpeg
+[35/52] 035.jpeg
+[36/52] 036.jpeg
+[37/52] 037.jpeg
+[38/52] 038.jpeg
+[39/52] 039.jpeg
+[40/52] 040.jpeg
+[41/52] 041.jpeg
+[42/52] 042.jpeg
+[43/52] 043.jpeg
+[44/52] 044.jpeg
+[45/52] 045.jpeg
+[46/52] 046.jpeg
+[47/52] 047.jpeg
+[48/52] 048.jpeg
+[49/52] 049.jpeg
+[50/52] 050.jpeg
+[51/52] 051.jpeg
+[52/52] 052.jpeg

@@ -1,0 +1,65 @@
+# ─── DATOS REALES — NUNCA A GIT ────────────────────────────────────
+# Extractos bancarios: CUITs, nombres y montos de gente real.
+*.xlsx
+*.xls
+*.csv
+
+# Imágenes de comprobantes reales.
+comprobantes/
+comprobantesReales/
+*.jpeg
+*.jpg
+*.png
+*.pdf
+
+# Dumps de la base.
+*.sql.gz
+*.dump
+
+# Salidas de la IA: llevan los 16 campos extraídos de comprobantes reales.
+# La verdad de referencia es el archivo más sensible del proyecto.
+*.jsonl
+*.tsv
+
+
+# ─── INTENTO ANTERIOR ──────────────────────────────────────────────
+# Referencia local de solo lectura. No se versiona.
+viejo/
+
+
+# ─── MODELOS Y ENTRENAMIENTO ───────────────────────────────────────
+checkpoints/
+adapters/
+*.safetensors
+*.gguf
+
+
+# ─── PYTHON ────────────────────────────────────────────────────────
+env/
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+
+# ─── NODE / NEXT.JS ────────────────────────────────────────────────
+node_modules/
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+
+
+# ─── ENTORNO Y SECRETOS ────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+
+# ─── HERRAMIENTAS ──────────────────────────────────────────────────
+.claude/settings.local.json
+.DS_Store
+.idea/
+.vscode/

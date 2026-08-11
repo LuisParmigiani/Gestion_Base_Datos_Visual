@@ -1,0 +1,35 @@
+{
+  "name": "web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "db:migrar": "for f in migraciones/*.sql; do /Applications/Postgres.app/Contents/Versions/18/bin/psql -v ON_ERROR_STOP=1 -d conciliador -f $f || exit 1; done",
+    "db:test:reiniciar": "PG=/Applications/Postgres.app/Contents/Versions/18/bin; $PG/dropdb --if-exists conciliador_test && $PG/createdb conciliador_test && for f in migraciones/*.sql; do $PG/psql -v ON_ERROR_STOP=1 -d conciliador_test -f $f || exit 1; done",
+    "test": "DATABASE_URL=postgresql://luisparmigiani@localhost:5432/conciliador_test node --test --test-concurrency=1 \"src/**/*.test.ts\"",
+    "importar": "node --env-file=.env.local src/lib/importar.ts",
+    "importar:comprobantes": "node --env-file=.env.local src/lib/importar-comprobantes.ts"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0",
+    "next": "16.3.0",
+    "pg": "^8.22.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/pg": "^8.20.4",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  },
+  "packageManager": "pnpm@10.27.0"
+}
