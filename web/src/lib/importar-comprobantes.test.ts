@@ -132,6 +132,47 @@ test('lo que se GUARDA conserva las mayúsculas que tipeó la persona', () => {
   assert.equal(paraColumna('nombre_emisor', 'GOMEZ, ANA').valor, 'GOMEZ, ANA')
 })
 
+// ─── CUIT y CBU: los separadores no distinguen ─────────────────────────
+
+test('los separadores del CUIT NO distinguen: mismos dígitos es el mismo CUIT', () => {
+  // Mismo caso que las mayúsculas, medido el 2026-08-11 sobre los 16 apartados:
+  // de 28 fallos en campos numéricos de `lora_v3_final`, 10 eran SOLO puntuación
+  // (`20-27705919-4` contra `20277059194`) y el base perdía 0 por ese motivo.
+  // O sea ~4 puntos de castigo por cómo se escribe un número, no por leerlo mal.
+  assert.ok(mismoValor('cuit_emisor', '20-27705919-4', '20277059194'))
+  assert.ok(mismoValor('cuit_receptor', '20-10409660-4', '20104096604'))
+  assert.ok(mismoValor('cbu_cvu_emisor', '0170 0992 2000 0012 3456 78', '0170099220000012345678'))
+  assert.ok(mismoValor('cbu_cvu_receptor', '2850795040094731285108', '2850-7950-4009-4731-2851-08'))
+})
+
+test('ignorar separadores no borra la diferencia entre dos números distintos', () => {
+  assert.ok(!mismoValor('cuit_emisor', '20-27705919-4', '20-27705919-5'))
+  // El caso que motivó mirar el comprobante 126: los dígitos NO coinciden.
+  assert.ok(!mismoValor('cuit_receptor', '20-11260819-9', '20-11126081-9'))
+  assert.ok(!mismoValor('cbu_cvu_receptor', '0170099220000012345678', '0170099220000012345679'))
+})
+
+test('coelsa_id y referencia NO se comparan por dígitos: son alfanuméricos', () => {
+  // Sacarles los no-dígitos les borraría las letras y dos IDs distintos pasarían
+  // a ser el mismo. Es la razón por la que el plegado se limita a los 4 campos
+  // que son números y nada más.
+  assert.ok(!mismoValor('coelsa_id', 'A1B2C3', '123'))
+  assert.ok(!mismoValor('referencia', 'TRF-0001', 'TRF-0002'))
+  assert.ok(!mismoValor('coelsa_id', 'X99', 'Y99'))
+})
+
+test('un CUIT sin un solo dígito no se convierte en ausencia', () => {
+  // Si se devolvieran los dígitos a secas, `no figura` daría '' y contaría como
+  // acierto contra una columna en NULL: el modelo inventando texto se premiaría.
+  assert.ok(!mismoValor('cuit_emisor', 'no figura', null))
+  assert.ok(mismoValor('cuit_emisor', 'No Figura', 'no figura'))
+})
+
+test('lo que se GUARDA conserva los separadores que tipeó la persona', () => {
+  assert.equal(paraColumna('cuit_receptor', '20-10409660-4').valor, '20-10409660-4')
+  assert.equal(paraColumna('cbu_cvu_emisor', '0170 0992 2000').valor, '0170 0992 2000')
+})
+
 test('los 16 campos están, y una sola vez', () => {
   assert.equal(CAMPOS.length, 16)
   assert.equal(new Set(CAMPOS).size, 16)

@@ -15,8 +15,11 @@ Por qué la partición importa más que nada:
   el número que sale no dice "aprendió a leer comprobantes", dice "se acordó de
   estos". Los apartados son la única prueba de que sirve en uno que nunca vio.
 
-La partición es DETERMINÍSTICA (semilla fija) y se imprime entera al correr, así
-que se puede repetir y auditar en cualquier momento.
+La partición está FIJA por nombre de archivo (ver `APARTADOS`) y se imprime
+entera al correr. Antes se sorteaba con semilla fija, pero el sorteo era sobre el
+conjunto de revisados: cada comprobante nuevo cambiaba cuáles eran los 16 y la
+medición dejaba de ser comparable con la anterior. Todo lo que no está apartado
+entrena, así que sumar comprobantes solo agranda el entrenamiento.
 
 Las etiquetas salen canónicas —monto `15000.50`, fecha `2026-06-01`, hora
 `21:46`— igual que en `generar.py`, porque es el formato que la conciliación
@@ -30,14 +33,46 @@ import subprocess
 import sys
 from pathlib import Path
 
+from PIL import Image
+
 from extraer import CAMPOS, PROMPT_V3
 
 AQUI = Path(__file__).resolve().parent
 IMAGENES = AQUI / "comprobantes"
+REDUCIDAS = AQUI / "comprobantes_reducidos"
+
+# Qwen2-VL no achica a un tamaño fijo: consume un token cada 28x28 px, así que
+# los tokens escalan con el ÁREA (medido con el procesador instalado). El tope
+# probado del entrenamiento es 1.848; 3.078 y 3.534 mataron el proceso sin dejar
+# traceback y costaron las corridas del 7 y del 8 de agosto de 2026.
+#
+# Antes esto se esquivaba a mano, sacando esos comprobantes del dataset: por eso
+# existía `train_v2_sin_gigantes.jsonl`. Acordarse no es una estrategia — el
+# 2026-08-11 `reales.py` los volvió a meter solo. Ahora se mide y se achica.
+TOPE_TOKENS = 1800          # margen bajo el 1.848 probado
+PX_POR_TOKEN = 28 * 28
 # ponytail: se lee con el psql que ya está instalado en vez de agregar psycopg
 # al venv. Son 51 filas una vez por corrida: no justifica una dependencia.
 PSQL = "/Applications/Postgres.app/Contents/Versions/18/bin/psql"
 BASE = "conciliador"
+
+# Los 16 apartados, FIJOS por nombre. Salieron del sorteo con semilla 2026 sobre
+# los 51 revisados que había el 2026-08-10, y son la vara de F10: todo número
+# publicado del proyecto está medido sobre estos y nada más.
+#
+# Por qué dejaron de sortearse (decisión del 2026-08-11): el sorteo era sobre el
+# CONJUNTO de revisados, así que cada comprobante nuevo que se revisaba cambiaba
+# cuáles eran los 16 y ningún número anterior volvía a ser comparable. Con 58
+# revisados ya habrían sido otros. Fijarlos cuesta una constante y hace que la
+# vara sobreviva a todas las tandas de comprobantes que vengan.
+#
+# ⛔ Esta lista NO se toca. Agregar uno acá lo saca del entrenamiento; sacar uno
+# lo mete, y en los dos casos la medición histórica deja de valer.
+APARTADOS = frozenset({
+    "002.jpeg", "003.jpeg", "005.jpeg", "010.jpeg", "014.jpeg", "018.jpeg",
+    "019.jpeg", "021.jpeg", "024.jpeg", "025.jpeg", "026.jpeg", "029.jpeg",
+    "031.jpeg", "035.jpeg", "044.jpeg", "049.jpeg",
+})
 
 # Las 16 columnas tipadas de `comprobante`, ya canonizadas por Postgres. Es la
 # misma conversión que hace `normalizarCampo` en la web: los tres campos con
@@ -68,7 +103,35 @@ def leer_verdad() -> list[dict]:
     return json.loads(r.stdout.strip())
 
 
-def registro(fila: dict) -> dict:
+def tokens_de(w: int, h: int) -> int:
+    return (w // 28) * (h // 28)
+
+
+def imagen_para_entrenar(ruta: Path) -> Path:
+    """La misma imagen, o una copia achicada si no entra en el tope de tokens.
+
+    El original NUNCA se toca: lo muestra `/revisar` y es el comprobante que la
+    persona miró para escribir la verdad. La copia va aparte y solo la usa el
+    entrenamiento.
+    """
+    with Image.open(ruta) as im:
+        w, h = im.size
+        if tokens_de(w, h) <= TOPE_TOKENS:
+            return ruta
+
+        destino = REDUCIDAS / ruta.name
+        factor = ((TOPE_TOKENS * PX_POR_TOKEN) / (w * h)) ** 0.5
+        nuevo = (int(w * factor), int(h * factor))
+        if not destino.exists():
+            REDUCIDAS.mkdir(exist_ok=True)
+            im.convert("RGB").resize(nuevo, Image.LANCZOS).save(
+                destino, "JPEG", quality=95, optimize=True)
+        print(f"  achicado {ruta.name}: {w}x{h} ({tokens_de(w, h):,} tokens) → "
+              f"{nuevo[0]}x{nuevo[1]} ({tokens_de(*nuevo):,})")
+        return destino
+
+
+def registro(fila: dict, para_entrenar: bool = True) -> dict:
     """Un ejemplo en el formato que lee `mlx_vlm.trainer.Dataset` de 0.1.15.
 
     `content` va como STRING PLANO en los dos mensajes. Está explicado largo en
@@ -79,6 +142,12 @@ def registro(fila: dict) -> dict:
     ruta = IMAGENES / fila["archivo"]
     if not ruta.exists():
         sys.exit(f"falta la imagen {ruta} — ¿se borró el comprobante de la base?")
+
+    # El tope de tokens es un problema del ENTRENAMIENTO, no de la inferencia:
+    # los 51 se extrajeron enteros sin drama. Achicar un apartado cambiaría la
+    # vara en silencio, así que la vara se entrega siempre en tamaño original.
+    if para_entrenar:
+        ruta = imagen_para_entrenar(ruta)
 
     etiqueta = {c: (fila[c] if fila[c] not in ("", None) else None) for c in CAMPOS}
     return {
@@ -92,10 +161,8 @@ def registro(fila: dict) -> dict:
 
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__.splitlines()[1])
-    p.add_argument("--n-test", type=int, default=16,
-                   help="cuántos reales se apartan y NO se entrenan nunca")
     p.add_argument("--semilla", type=int, default=2026,
-                   help="fija la partición: la misma semilla da los mismos apartados")
+                   help="mezcla el orden del dataset de entrenamiento")
     p.add_argument("--sinteticos", type=Path, default=None,
                    help="jsonl sintético con el que mezclar los reales de entrenamiento")
     p.add_argument("--salida", type=Path, required=True)
@@ -104,15 +171,20 @@ def main() -> None:
 
     filas = leer_verdad()
 
-    if len(filas) <= args.n_test:
-        sys.exit(f"solo hay {len(filas)} reales revisados: no alcanza para apartar "
-                 f"{args.n_test}. Revisá más en /revisar antes de entrenar.")
+    # La vara tiene que estar ENTERA o el número no se compara con ninguno de los
+    # publicados. Si falta uno se corta acá: entrenar con 15 apartados en vez de
+    # 16 daría un porcentaje que parece el de siempre y mide otra cosa.
+    presentes = {f["archivo"] for f in filas}
+    faltan = APARTADOS - presentes
+    if faltan:
+        sys.exit(f"faltan {len(faltan)} de los 16 apartados entre los revisados: "
+                 f"{' '.join(sorted(faltan))}. Son la vara de F10 y no se puede "
+                 f"medir sin ellos — revisalos en /revisar antes de entrenar.")
 
-    # Se ordena por archivo antes de mezclar para que la partición no dependa
-    # del orden en que Postgres devuelva las filas.
-    orden = sorted(filas, key=lambda f: f["archivo"])
-    random.Random(args.semilla).shuffle(orden)
-    test, train = orden[:args.n_test], orden[args.n_test:]
+    # Partición FIJA por nombre: los 16 de siempre se apartan y TODO el resto
+    # entrena, incluidos los que se vayan revisando de acá en adelante.
+    test = sorted((f for f in filas if f["archivo"] in APARTADOS), key=lambda f: f["archivo"])
+    train = sorted((f for f in filas if f["archivo"] not in APARTADOS), key=lambda f: f["archivo"])
 
     sinteticos = []
     if args.sinteticos:
@@ -125,14 +197,15 @@ def main() -> None:
     args.salida.write_text(
         "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in mezcla), encoding="utf-8")
     args.test.write_text(
-        "".join(json.dumps(registro(f), ensure_ascii=False) + "\n" for f in test),
+        "".join(json.dumps(registro(f, para_entrenar=False), ensure_ascii=False) + "\n"
+                for f in test),
         encoding="utf-8")
 
     print(f"entrenamiento → {args.salida}")
     print(f"  {len(sinteticos)} sintéticos + {len(train)} reales = {len(mezcla)} ejemplos")
     print(f"apartados     → {args.test}   ({len(test)} reales que NO se entrenan)")
-    print(f"\nLos {len(test)} apartados, con semilla {args.semilla} "
-          f"(anotar: son la vara de F10):")
+    print(f"\nLos {len(test)} apartados (FIJOS, la vara de F10 — no cambian "
+          f"aunque se agreguen comprobantes):")
     print("  " + " ".join(sorted(f["archivo"] for f in test)))
 
 

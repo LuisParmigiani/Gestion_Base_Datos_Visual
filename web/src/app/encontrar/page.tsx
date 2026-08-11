@@ -1,21 +1,22 @@
 import Link from 'next/link'
 import { db } from '@/lib/db'
+import { candidatos, elegidas } from '@/lib/eleccion'
 import { plata } from '../estados'
 
 export const dynamic = 'force-dynamic'
 
 /**
- * Qué fila del extracto le corresponde a cada comprobante, y por qué.
+ * Dónde está parado el cruce comprobante ↔ extracto, de un vistazo.
  *
- * No usa `motor.ts`: aquél cruza por `cuenta.cbu`, que está en NULL en las tres
- * cuentas, así que daría "no verificable" en los 52. Esta pantalla implementa
- * la cascada que describió la empresa, que **no necesita los CBU**:
+ * Esta pantalla NO resuelve: para eso está `/encontrar/[id]`, que muestra la
+ * imagen al lado de las filas candidatas. Acá se ve el estado y se entra.
  *
- *   1. nro de transacción + CUIT coinciden → se chequea monto y fecha → 90%
- *   2. si no, solo monto y fecha                                      → 50%
+ * Los contadores son el punto de todo esto mientras la regla se desarrolla:
+ * dicen cuántos resuelve el algoritmo solo y cuántos hay que corregir a mano.
+ * Si la segunda cifra no baja, la regla todavía no sirve.
  *
- * Es una pantalla de diagnóstico, no el veredicto: sirve para ver dónde acierta
- * y dónde no, y para que una persona busque a mano los que no aparecieron.
+ * La cascada vive en `lib/eleccion.ts` y no acá: la usa también la pantalla de
+ * a uno, y tenerla escrita dos veces garantizaba que un día dijeran distinto.
  */
 
 type Fila = {
@@ -23,97 +24,96 @@ type Fila = {
   archivo: string
   monto: string | null
   fecha: string | null
-  cuitEmisor: string | null
-  referencia: string | null
   revisado: boolean
-  regla: '90' | '50' | null
-  candidatos: number
-  movId: number | null
-  hoja: string | null
-  movFecha: string | null
-  movImporte: string | null
-  movNro: string | null
-  movCuit: string | null
-  movDescripcion: string | null
-  filaExcel: number | null
 }
 
-export default async function Encontrar() {
-  const { rows } = await db.query<Fila>(
-    `WITH c AS (
-       SELECT id, archivo, monto, fecha, cuit_emisor, referencia,
-              revisado_en IS NOT NULL AS revisado
-       FROM comprobante WHERE corrida_base IS NOT NULL
-     ),
-     -- Escalón 1: el número de transacción Y el CUIT coinciden.
-     -- lower() a los dos lados: el nro de transacción puede traer letras y la
-     -- IA las transcribe como las ve. Hoy no cambia ningún resultado —ninguna
-     -- fila del extracto tiene letras— pero es el join del que depende el 90%.
-     r1 AS (
-       SELECT c.id AS comp, m.id AS mov, '90'::text AS regla
-       FROM c JOIN movimiento m
-         ON lower(m.nro_transaccion) = lower(c.referencia)
-        AND m.cuit_emisor = c.cuit_emisor
-       WHERE c.referencia IS NOT NULL AND c.cuit_emisor IS NOT NULL
-     ),
-     -- Escalón 2: monto y fecha, para los que no resolvió el escalón 1.
-     r2 AS (
-       SELECT c.id AS comp, m.id AS mov, '50'::text AS regla
-       FROM c JOIN movimiento m
-         ON m.importe = c.monto AND m.fecha = c.fecha AND m.es_ingreso
-       WHERE c.monto IS NOT NULL AND c.fecha IS NOT NULL
-         AND NOT EXISTS (SELECT 1 FROM r1 WHERE r1.comp = c.id)
-     ),
-     todos AS (SELECT * FROM r1 UNION ALL SELECT * FROM r2),
-     -- Un solo candidato = se puede señalar. Varios = ambiguo, no se elige.
-     resumen AS (
-       SELECT comp, min(regla) AS regla, count(*) AS candidatos,
-              CASE WHEN count(*) = 1 THEN min(mov) END AS mov
-       FROM todos GROUP BY comp
-     )
-     SELECT c.id, c.archivo, c.monto, to_char(c.fecha,'YYYY-MM-DD') AS fecha,
-            c.cuit_emisor AS "cuitEmisor", c.referencia, c.revisado,
-            s.regla, coalesce(s.candidatos,0) AS candidatos,
-            m.id AS "movId", m.hoja,
-            to_char(m.fecha,'YYYY-MM-DD') AS "movFecha", m.importe AS "movImporte",
-            m.nro_transaccion AS "movNro", m.cuit_emisor AS "movCuit",
-            m.descripcion AS "movDescripcion",
-            -- La hoja y la fila las guarda el importador leyendo el .xlsx, así
-            -- que son la fila exacta. Antes se estimaban contando movimientos y
-            -- eso se corría un lugar por cada fila repetida que la base descarta.
-            m.fila AS "filaExcel"
-     FROM c
-     LEFT JOIN resumen s ON s.comp = c.id
-     LEFT JOIN movimiento m ON m.id = s.mov
-     LEFT JOIN cuenta cu ON cu.id = m.cuenta_id
-     ORDER BY (s.regla IS NULL) DESC, s.regla, c.id`)
+export default async function Encontrar({ searchParams }: PageProps<'/encontrar'>) {
+  const { error } = await searchParams
 
-  const con90 = rows.filter((r) => r.regla === '90').length
-  const con50 = rows.filter((r) => r.regla === '50').length
-  const sin = rows.filter((r) => !r.regla).length
+  const { rows: filas } = await db.query<Fila>(
+    `SELECT id, archivo, monto, to_char(fecha,'YYYY-MM-DD') AS fecha,
+            revisado_en IS NOT NULL AS revisado
+     FROM comprobante
+     -- Los sintéticos tienen montos inventados por un script: nunca van a
+     -- cruzar con un extracto real y solo inflarían el "no encontrado".
+     WHERE corrida_base IS NOT NULL AND corrida_base <> 'sintetico'
+     ORDER BY id`)
+
+  const propuestas = await candidatos()
+  const elecciones = await elegidas()
+
+  const porComprobante = new Map<number, typeof propuestas>()
+  for (const p of propuestas) {
+    const l = porComprobante.get(p.comprobanteId) ?? []
+    l.push(p)
+    porComprobante.set(p.comprobanteId, l)
+  }
+
+  /** `elegido` gana sobre todo: una persona ya lo miró y no se vuelve a preguntar. */
+  const situacion = (f: Fila) => {
+    if (elecciones.has(f.id)) return 'elegido'
+    const n = porComprobante.get(f.id)?.length ?? 0
+    return n === 0 ? 'sin_candidatos' : n === 1 ? 'unico' : 'ambiguo'
+  }
+
+  const cuenta = (s: string) => filas.filter((f) => situacion(f) === s).length
+  // De lo elegido a mano: cuántas veces se corrigió al algoritmo (eligió otra
+  // fila de la que él proponía). Es la medida de si la regla sirve.
+  const corregidos = filas.filter((f) => {
+    const e = elecciones.get(f.id)
+    const p = porComprobante.get(f.id) ?? []
+    return e !== undefined && p.length === 1 && p[0].id !== e
+  }).length
+
+  // Primero lo que pide atención. Dentro de cada grupo por id, que no se mueve.
+  const orden = { sin_candidatos: 0, ambiguo: 1, elegido: 2, unico: 3 } as const
+  const ordenadas = [...filas].sort((a, b) =>
+    orden[situacion(a) as keyof typeof orden] - orden[situacion(b) as keyof typeof orden]
+    || a.id - b.id)
+
+  const pendientes = cuenta('sin_candidatos') + cuenta('ambiguo')
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Revisión de encontrados</h1>
+        <h1 className="text-2xl font-semibold">Comprobante ↔ extracto</h1>
         <p className="mt-2 max-w-3xl text-sm text-stone-600">
-          Qué fila del extracto le corresponde a cada comprobante y por qué regla.
-          Los que no aparecieron van primero: buscalos a mano en el Excel y, si los
-          encontrás, avisá con qué dato — eso dice qué le falta a la regla.
+          Qué fila del extracto le corresponde a cada comprobante. Entrá a uno para ver la
+          imagen al lado de las filas candidatas, y elegir o buscar la correcta.
         </p>
       </div>
 
+      {error && (
+        <p className="rounded border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-900">
+          {Array.isArray(error) ? error[0] : error}
+        </p>
+      )}
+
       <div className="flex flex-wrap gap-3 text-sm">
         <span className="rounded border border-emerald-300 bg-emerald-50 px-3 py-1.5">
-          <strong>{con90}</strong> por nro de transacción + CUIT · 90%
+          <strong>{cuenta('unico')}</strong> los resolvió la regla
+        </span>
+        <span className="rounded border border-sky-300 bg-sky-50 px-3 py-1.5">
+          <strong>{cuenta('elegido')}</strong> los elegiste vos
+          {corregidos > 0 && <span className="ml-1 text-xs">({corregidos} corrigiendo)</span>}
         </span>
         <span className="rounded border border-amber-300 bg-amber-50 px-3 py-1.5">
-          <strong>{con50}</strong> por monto + fecha · 50%
+          <strong>{cuenta('ambiguo')}</strong> con varios candidatos
         </span>
         <span className="rounded border border-stone-300 bg-white px-3 py-1.5">
-          <strong>{sin}</strong> sin encontrar
+          <strong>{cuenta('sin_candidatos')}</strong> sin encontrar
+        </span>
+        <span className="rounded border border-stone-200 bg-stone-50 px-3 py-1.5 text-stone-600">
+          {filas.length} comprobantes reales
         </span>
       </div>
+
+      {pendientes > 0 && ordenadas[0] && (
+        <Link href={`/encontrar/${ordenadas[0].id}`}
+              className="inline-block rounded bg-stone-800 px-4 py-2 text-sm text-white hover:bg-stone-700">
+          Resolver los {pendientes} pendientes →
+        </Link>
+      )}
 
       {/* El export es un GET a mano y no una Server Action: lo que devuelve es
           un archivo para descargar, no una navegación. El navegador ya sabe
@@ -124,7 +124,7 @@ export default async function Encontrar() {
           <span className="text-xs text-stone-600">Qué exportar</span>
           <select name="que" defaultValue="comprobantes"
                   className="rounded border border-stone-300 bg-white px-2 py-1.5">
-            <option value="comprobantes">Comprobantes ({rows.length})</option>
+            <option value="comprobantes">Comprobantes ({filas.length})</option>
             <option value="extracto">Extracto — ingresos</option>
             <option value="ambas">Las dos hojas</option>
           </select>
@@ -154,20 +154,7 @@ export default async function Encontrar() {
                 className="rounded bg-stone-800 px-4 py-2 text-white hover:bg-stone-700">
           Descargar Excel
         </button>
-        <span className="text-xs text-stone-500">
-          🟢 90% · 🟡 50%, puede ser casualidad · 🔴 no encontrado
-        </span>
       </form>
-
-      {con90 === 0 && (
-        <p className="rounded border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-900">
-          <strong>Ninguno cruza por número de transacción + CUIT.</strong> Con estos dos
-          archivos es lo esperado: son ejemplos sin relación entre sí. Los que aparecen
-          al 50% coinciden en monto y fecha <em>por casualidad</em> — ninguno sobrevive
-          si además se le exige el CUIT. Es justamente la prueba de por qué la regla del
-          90% mira el CUIT antes que el importe.
-        </p>
-      )}
 
       <div className="overflow-x-auto">
         <table className="w-full border-collapse bg-white text-sm">
@@ -176,73 +163,66 @@ export default async function Encontrar() {
               <th className="px-3 py-2 font-medium">Comprobante</th>
               <th className="px-3 py-2 text-right font-medium">Monto</th>
               <th className="px-3 py-2 font-medium">Fecha</th>
-              <th className="px-3 py-2 font-medium">Regla</th>
-              <th className="px-3 py-2 font-medium">Hoja / fila del Excel</th>
-              <th className="px-3 py-2 font-medium">Qué coincidió</th>
+              <th className="px-3 py-2 font-medium">Situación</th>
+              <th className="px-3 py-2 font-medium">Fila del extracto</th>
+              <th className="px-3 py-2" />
             </tr>
           </thead>
           <tbody>
-            {rows.map((r) => (
-              <tr key={r.id} className="border-b border-stone-200 align-top">
-                <td className="px-3 py-2">
-                  <Link href={`/revisar/${r.id}`} className="text-sky-800 hover:underline">
-                    {r.archivo}
-                  </Link>
-                  {r.revisado && <span className="ml-1 text-xs text-emerald-700">✓</span>}
-                </td>
-                <td className="px-3 py-2 text-right tabular-nums">{plata(r.monto)}</td>
-                <td className="px-3 py-2 tabular-nums">{r.fecha ?? '—'}</td>
-                <td className="px-3 py-2">
-                  {r.regla === '90' && (
-                    <span className="rounded bg-emerald-100 px-2 py-0.5 text-emerald-900">
-                      90%
-                    </span>
-                  )}
-                  {r.regla === '50' && (
-                    <span className="rounded bg-amber-100 px-2 py-0.5 text-amber-900">50%</span>
-                  )}
-                  {!r.regla && <span className="text-stone-500">no encontrado</span>}
-                  {r.candidatos > 1 && (
-                    <span className="block text-xs text-sky-800">
-                      {r.candidatos} candidatos — ambiguo
-                    </span>
-                  )}
-                </td>
-                <td className="px-3 py-2">
-                  {r.hoja
-                    ? <span className="tabular-nums">
-                        <strong>{r.hoja}</strong> · fila {r.filaExcel}
-                        <span className="block text-xs text-stone-500">
-                          movimiento #{r.movId}
-                        </span>
+            {ordenadas.map((f) => {
+              const s = situacion(f)
+              const props = porComprobante.get(f.id) ?? []
+              const elegida = props.find((p) => p.id === elecciones.get(f.id))
+              const mostrar = s === 'elegido' ? elegida : s === 'unico' ? props[0] : undefined
+              return (
+                <tr key={f.id} className="border-b border-stone-200">
+                  <td className="px-3 py-2">
+                    <Link href={`/encontrar/${f.id}`} className="text-sky-800 hover:underline">
+                      {f.archivo}
+                    </Link>
+                    {f.revisado && <span className="ml-1 text-xs text-emerald-700">✓</span>}
+                  </td>
+                  <td className="px-3 py-2 text-right tabular-nums">{plata(f.monto)}</td>
+                  <td className="px-3 py-2 tabular-nums">{f.fecha ?? '—'}</td>
+                  <td className="px-3 py-2">
+                    {s === 'unico' && (
+                      <span className="rounded bg-emerald-100 px-2 py-0.5 text-emerald-900">
+                        {props[0].regla}% · la regla
                       </span>
-                    : <span className="text-stone-400">—</span>}
-                </td>
-                <td className="px-3 py-2 text-xs">
-                  {r.movId ? (
-                    <>
-                      <div className="tabular-nums">
-                        {r.movFecha} · {plata(r.movImporte)}
-                      </div>
-                      <div className="text-stone-600">
-                        nro {r.movNro ?? '—'}
-                        {r.movNro === r.referencia && r.movNro &&
-                          <span className="text-emerald-700"> = referencia ✓</span>}
-                      </div>
-                      <div className="text-stone-600">
-                        CUIT {r.movCuit ?? '—'}
-                        {r.movCuit === r.cuitEmisor && r.movCuit &&
-                          <span className="text-emerald-700"> = del comprobante ✓</span>}
-                      </div>
-                    </>
-                  ) : (
-                    <span className="text-stone-500">
-                      buscalo a mano y decime con qué dato lo encontraste
-                    </span>
-                  )}
-                </td>
-              </tr>
-            ))}
+                    )}
+                    {s === 'elegido' && (
+                      <span className="rounded bg-sky-100 px-2 py-0.5 text-sky-900">
+                        lo elegiste vos
+                      </span>
+                    )}
+                    {s === 'ambiguo' && (
+                      <span className="rounded bg-amber-100 px-2 py-0.5 text-amber-900">
+                        {props.length} candidatos
+                      </span>
+                    )}
+                    {s === 'sin_candidatos' && (
+                      <span className="text-stone-500">sin encontrar</span>
+                    )}
+                  </td>
+                  <td className="px-3 py-2 text-xs tabular-nums">
+                    {mostrar
+                      ? <>
+                          <strong>{mostrar.hoja}</strong> · fila {mostrar.fila}
+                          <span className="block text-stone-500">
+                            {mostrar.fecha} · {plata(mostrar.importe)}
+                          </span>
+                        </>
+                      : <span className="text-stone-400">—</span>}
+                  </td>
+                  <td className="px-3 py-2 text-right">
+                    <Link href={`/encontrar/${f.id}`}
+                          className="text-xs text-sky-800 underline hover:text-sky-950">
+                      {s === 'unico' || s === 'elegido' ? 'ver' : 'resolver'}
+                    </Link>
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </div>

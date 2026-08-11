@@ -120,6 +120,22 @@ export function paraColumna(
 }
 
 /**
+ * Los cuatro campos que son un número y nada más: se comparan por sus dígitos.
+ *
+ * `20-27705919-4` y `20277059194` son el mismo CUIT escrito de dos maneras.
+ * Medido el 2026-08-11 sobre los 16 apartados: de 28 fallos en campos numéricos
+ * de `lora_v3_final`, 10 eran SOLO puntuación, y el modelo base perdía 0 por ese
+ * motivo — o sea que la comparación le cobraba al LoRA ~4 puntos por tipografía.
+ *
+ * ⛔ `coelsa_id` y `referencia` NO entran: son alfanuméricos y quitarles los
+ * no-dígitos les borraría las letras, con lo que dos IDs distintos pasarían a
+ * ser el mismo. Un falso acierto es peor que un falso error.
+ */
+const SOLO_DIGITOS = new Set<Campo>([
+  'cuit_emisor', 'cuit_receptor', 'cbu_cvu_emisor', 'cbu_cvu_receptor',
+])
+
+/**
  * Un campo crudo, en la forma en que se COMPARA. No es lo que se guarda.
  *
  * Comparar el crudo contra la columna SIN pasar por acá da diferencias falsas:
@@ -144,6 +160,12 @@ export function normalizarCampo(campo: Campo, valor: unknown): string {
   // NUMERIC(14,2) siempre devuelve dos decimales: '250000' y '250000.00' son
   // el mismo importe y no pueden contar como una corrección.
   if (campo === 'monto') return Number(v).toFixed(2)
+  if (SOLO_DIGITOS.has(campo)) {
+    const digitos = v.replace(/\D/g, '')
+    // Sin dígitos se cae al texto: si `no figura` diera '', un campo inventado
+    // empataría con una columna en NULL y contaría como acierto.
+    return digitos || v.toLowerCase()
+  }
   // `fecha` y `hora` ya salen canónicas de `paraColumna`; el resto es texto.
   return campo === 'fecha' || campo === 'hora' ? v : v.toLowerCase()
 }

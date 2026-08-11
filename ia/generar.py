@@ -15,6 +15,12 @@ con los cambios que la sesión 3 dejó diagnosticados:
      de mlx-vlm 0.1.15 realmente lee (viejo/gestionar_dataset.py escribía
      image/prompt/answer: ninguna de esas tres claves existe para el trainer, y
      es el bug que mató el intento anterior).
+  5. (2026-08-11) La etiqueta ya no se declara: la arma `Lienzo`, que anota qué
+     campos se dibujaron y con qué texto, y `_gt` verifica las dos direcciones
+     contra la imagen. Antes había una lista `ocultos=[...]` escrita a mano que
+     se despegó del dibujo dos veces sin que nada se quejara.
+  6. (2026-08-11) Se dibuja a ESCALA y se entrega achicado: la mitad nítida y la
+     mitad degradada con severidad continua. Ver `finalizar()`.
 
 Bancos soportados (transferencia_saliente):
   Mercado Pago, Banco Macro, Santander, Galicia, BBVA Francés,
@@ -42,6 +48,13 @@ SALIDA_DIR = AQUI / "sinteticos"
 OUT_DIR = SALIDA_DIR / "imagenes"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
+sys.path.insert(0, str(AQUI))
+from extraer import CAMPOS, PROMPT_V3  # noqa: E402
+
+# El prompt de entrenamiento es el MISMO con el que se infiere. Entrenar con uno
+# y medir con otro invalidaría la comparación zero-shot vs fine-tuned de F10.
+PROMPT = PROMPT_V3
+
 # ---------------------------------------------------------------------------
 # FUENTES — paths reales en macOS
 # ---------------------------------------------------------------------------
@@ -54,8 +67,109 @@ FUENTES = {
 }
 
 
+# Todo se dibuja al doble y se baja al guardar. El texto queda suavizado como en
+# un screenshot de verdad —los celulares renderizan a 2x o 3x y bajan— en vez de
+# con el borde duro de dibujar directo al tamaño final.
+#
+# ⚠️ Lo que NO se puede es entregar la imagen grande. Medido con el procesador
+# instalado (Qwen2VLImageProcessor, 28x28 px por token, sin resize a tamaño
+# fijo): 820x1340 son 1.392 tokens y 1640x2680 son 5.664. El tope probado del
+# entrenamiento es 1.848, y 3.078 mató dos corridas sin dejar traceback.
+# Por eso `finalizar()` SIEMPRE achica.
+ESCALA = 2
+ANCHO_ENTREGA = 820
+
+
 def fnt(familia: str, size: int) -> ImageFont.FreeTypeFont:
-    return ImageFont.truetype(FUENTES[familia], size)
+    return ImageFont.truetype(FUENTES[familia], size * ESCALA)
+
+
+# ---------------------------------------------------------------------------
+# EL LIENZO — una sola verdad sobre qué campos están en la imagen
+# ---------------------------------------------------------------------------
+class Lienzo:
+    """`ImageDraw` que además anota TODO el texto que dibuja.
+
+    Antes había dos verdades sobre cada plantilla: el código que dibujaba, y una
+    lista `ocultos=[...]` escrita a mano al lado del `return`. Se separaron en
+    silencio dos veces —Mercado Pago etiquetaba `hora: null` con la hora escrita
+    en la imagen, y pesa la mitad del dataset— y el chequeo que existía no podía
+    verlo: leía el código fuente con regex y la hora entraba por un helper.
+
+    Con esto `ocultos` deja de escribirse: sale de restar los campos registrados
+    contra los 16. Y como queda el texto realmente dibujado, `_gt` puede
+    verificar las dos direcciones —lo etiquetado está en la imagen, y lo que
+    está en la imagen no queda en null— que es la única prueba que no depende
+    de cómo esté escrito el código.
+    """
+
+    # Las que reciben la geometría en el primer argumento y hay que escalar.
+    _GEOMETRICOS = {"line", "rectangle", "rounded_rectangle", "ellipse",
+                    "polygon", "arc", "chord", "pieslice"}
+
+    def __init__(self, d: ImageDraw.ImageDraw, escala: int = 1) -> None:
+        self._d = d
+        self.escala = escala
+        self.dibujado: list[str] = []
+        self.visto: set[str] = set()
+
+    def _escalar(self, v):
+        """Las plantillas siguen escritas en coordenadas de 820 de ancho: acá se
+        multiplican. Sirve para (x, y), para [x0, y0, x1, y1] y para la lista de
+        puntos de un polígono."""
+        if isinstance(v, bool):
+            return v
+        if isinstance(v, (int, float)):
+            return v * self.escala
+        if isinstance(v, (list, tuple)):
+            return type(v)(self._escalar(x) for x in v)
+        return v
+
+    def __getattr__(self, nombre):        # line, rectangle, textlength, ...
+        atributo = getattr(self._d, nombre)
+        if nombre not in self._GEOMETRICOS:
+            return atributo
+
+        def envuelto(xy, *a, **kw):
+            for k in ("width", "radius"):
+                if k in kw:
+                    kw[k] = max(1, int(kw[k] * self.escala))
+            return atributo(self._escalar(xy), *a, **kw)
+        return envuelto
+
+    def textlength(self, texto, *a, **kw) -> float:
+        # La fuente ya viene escalada, así que esto mide en píxeles finales; las
+        # plantillas lo usan para posicionar, o sea que esperan los suyos.
+        return self._d.textlength(texto, *a, **kw) / self.escala
+
+    def text(self, xy, texto, *a, **kw) -> None:
+        self.dibujado.append(str(texto))
+        self._d.text(self._escalar(xy), texto, *a, **kw)
+
+    def campo(self, campos, xy, texto, *a, leido: Optional[str] = None, **kw) -> None:
+        """Dibuja y registra. `campos` es un nombre, varios (una fecha larga
+        lleva la fecha Y la hora en la misma cadena) o None: hay filas que se
+        dibujan y no son ninguno de los 16 ("Plazo de acreditación").
+
+        `leido` es lo que una persona LEE cuando el valor queda partido en dos
+        dibujos — Naranja X escribe los centavos aparte y en chico.
+        """
+        if campos:
+            self.visto.update({campos} if isinstance(campos, str) else set(campos))
+        self._d.text(self._escalar(xy), texto, *a, **kw)
+        self.dibujado.append(str(texto if leido is None else leido))
+
+    def visible(self, *campos: str) -> None:
+        """Para lo que se lee en la imagen pero no sale de un `text` con el
+        valor crudo: el banco emisor lo dice el LOGO, el tipo de operación lo
+        dice el título, la moneda la dice el símbolo."""
+        self.visto.update(campos)
+
+    def logo(self, dibujar, x: int, y: int) -> None:
+        """El logo es la prueba de quién emitió: dibujarlo registra
+        `banco_emisor`. Así una plantilla nueva no puede olvidarse."""
+        self.visible("banco_emisor")
+        dibujar(self, x, y)
 
 
 # ---------------------------------------------------------------------------
@@ -153,30 +267,66 @@ def banco_destino_random(excluir: Optional[str] = None) -> str:
     return random.choice(candidatos)
 
 
+# Hasta 2026-08-11 el concepto era la constante "Varios" en las 300 sintéticas:
+# el modelo no podía aprender a LEER un concepto, solo a ESCRIBIR "Varios". Y es
+# el campo que le pone el techo a la meta del 98%, porque es texto libre.
+CONCEPTOS = [
+    "Varios", "Alquiler", "Honorarios", "Pago de servicios", "Préstamo",
+    "Expensas", "Sueldo", "Compra", "Devolución", "Anticipo", "Cuota",
+    "Pago proveedor", "Reintegro", "Seña", "Materiales",
+]
+
+
 # ---------------------------------------------------------------------------
-# RUIDO WHATSAPP REALISTA
+# LOS DOS PERFILES DE CALIDAD
 # ---------------------------------------------------------------------------
-def ruido_whatsapp(img: Image.Image) -> Image.Image:
-    # 80% derechos, 20% rotación leve — los screenshots móviles reales casi nunca
-    # están torcidos; reservamos la inclinación para robustez ocasional.
-    if random.random() < 0.20:
-        angulo = random.uniform(-2.0, 2.0)
-        img = img.rotate(angulo, resample=Image.BICUBIC, expand=True, fillcolor=(245, 245, 245))
-
-    if random.random() < 0.55:
-        target_w = random.choice([720, 600, 540])
-        ratio = target_w / img.width
-        img = img.resize((target_w, int(img.height * ratio)), Image.LANCZOS)
-
-    if random.random() < 0.10:
-        img = img.filter(ImageFilter.GaussianBlur(radius=random.uniform(0.2, 0.4)))
-
-    return img
+# La mitad del dataset sale nítida y la otra mitad maltratada, y dentro de la
+# mitad maltratada la severidad es CONTINUA: no hay dos degradadas iguales, van
+# desde "se nota apenas" hasta "captura de pantalla de una captura reenviada
+# tres veces". Sin variedad el modelo aprende un único nivel de ruido.
+NITIDO, DEGRADADO = "nitido", "degradado"
+_perfil = NITIDO          # lo fija `ejemplo()` antes de llamar a la plantilla
 
 
-def guardar_con_compresion(img: Image.Image, ruta: Path) -> None:
-    quality = random.randint(65, 88)
-    img.convert("RGB").save(ruta, "JPEG", quality=quality, optimize=True)
+def _a_ancho(img: Image.Image, ancho: int) -> Image.Image:
+    return img.resize((ancho, round(img.height * ancho / img.width)), Image.LANCZOS)
+
+
+def finalizar(img: Image.Image, ruta: Path) -> None:
+    """Baja la imagen dibujada en grande al tamaño de entrega y la guarda.
+
+    ⚠️ El tamaño FINAL es lo único que decide cuántos tokens consume el modelo
+    (ver el comentario de ESCALA). Los dos caminos achican; ninguno entrega la
+    imagen a 2x.
+    """
+    if _perfil == NITIDO:
+        # Bajar de 2x con LANCZOS es lo que da el suavizado: el texto queda como
+        # el de un screenshot real, no con el borde duro de dibujar al tamaño.
+        finalizada = _a_ancho(img, ANCHO_ENTREGA)
+        calidad = random.randint(90, 97)
+    else:
+        # El piso está puesto a propósito y no es "lo peor que se puede ver": si
+        # el CBU de 22 dígitos queda ilegible, la etiqueta le estaría enseñando
+        # al modelo a escribir un número que la imagen NO muestra. Es el mismo
+        # error que `_gt` persigue, entrando por la puerta de la calidad.
+        severidad = random.random()          # 0 = apenas se nota · 1 = el piso legible
+        if random.random() < 0.35:
+            img = img.rotate(random.uniform(-2.5, 2.5), resample=Image.BICUBIC,
+                             expand=True, fillcolor=(245, 245, 245))
+        finalizada = _a_ancho(img, round(760 - severidad * 280))       # 760 → 480
+        if severidad > 0.15:
+            finalizada = finalizada.filter(
+                ImageFilter.GaussianBlur(radius=severidad * 0.9))
+        calidad = round(72 - severidad * 40)                            # 72 → 32
+
+    finalizada.convert("RGB").save(ruta, "JPEG", quality=calidad, optimize=True)
+
+
+def lienzo_nuevo(W: int, H: int, fondo="white") -> Tuple[Image.Image, "Lienzo"]:
+    """La plantilla sigue escribiendo coordenadas de 820 de ancho; acá se
+    multiplican por ESCALA y nadie más se entera."""
+    img = Image.new("RGB", (W * ESCALA, H * ESCALA), fondo)
+    return img, Lienzo(ImageDraw.Draw(img), ESCALA)
 
 
 # ===========================================================================
@@ -262,7 +412,7 @@ def logo_personalpay(d: ImageDraw.ImageDraw, x: int, y: int) -> None:
 # ===========================================================================
 # HELPER LAYOUT KEY-VALUE (Santander, BBVA, Macro web, Nación)
 # ===========================================================================
-def fila_kv_izq_der(d, y, w, label, valor, *,
+def fila_kv_izq_der(d, y, w, label, valor, campos=None, *,
                     color_label="#6E6E6E", color_valor="#1A1A1A",
                     f_label=None, f_valor=None,
                     margen=50, con_linea=True):
@@ -270,7 +420,7 @@ def fila_kv_izq_der(d, y, w, label, valor, *,
     f_valor = f_valor or fnt("arial_bold", 22)
     d.text((margen, y), label, fill=color_label, font=f_label)
     ancho_v = d.textlength(valor, font=f_valor)
-    d.text((w - margen - ancho_v, y), valor, fill=color_valor, font=f_valor)
+    d.campo(campos, (w - margen - ancho_v, y), valor, fill=color_valor, font=f_valor)
     if con_linea:
         d.line([(margen, y + 42), (w - margen, y + 42)], fill="#EEEEEE", width=1)
 
@@ -282,6 +432,10 @@ def _datos_comunes(banco_emisor: str) -> dict:
     """Genera el set de datos que comparten todos los templates."""
     dt = gen_fecha_hora_reciente()
     monto = round(random.uniform(500, 350_000), 2)
+    # Una transferencia de cada tres es un número redondo. Antes ninguna lo era:
+    # el modelo nunca veía un `,00`, que en la realidad es lo más frecuente.
+    if random.random() < 0.35:
+        monto = float(round(monto, -2))
     nombre_emi = nombre_persona()
     nombre_rec = nombre_persona()
     cuit_emi = gen_cuit_ar()
@@ -291,6 +445,7 @@ def _datos_comunes(banco_emisor: str) -> dict:
     cbu_rec = gen_cbu(banco_rec)
     return {
         "dt": dt, "monto": monto,
+        "concepto": random.choice(CONCEPTOS),
         "nombre_emi": nombre_emi, "nombre_rec": nombre_rec,
         "cuit_emi": cuit_emi, "cuit_rec": cuit_rec,
         "cbu_emi": cbu_emi, "cbu_rec": cbu_rec,
@@ -302,33 +457,59 @@ def solo_digitos(s: str) -> str:
     return "".join(c for c in s if c.isdigit())
 
 
-def _gt(banco_emisor: str, datos: dict, *,
-        referencia: str, coelsa_id: Optional[str] = None,
-        moneda: str = "ARS", concepto: str = "Varios",
-        con_decimales: bool = True, ocultos: Sequence[str] = ()) -> dict:
+# Los cuatro campos que ninguna plantilla escribe como valor crudo: la fecha va
+# en formato argentino (`05/08/2026`) contra el canónico `2026-08-05`, el banco
+# emisor lo dice el logo, el tipo de operación lo dice el título y la moneda la
+# dice el símbolo. Se declaran con `lienzo.visible()` y quedan fuera del cotejo
+# literal; los otros doce tienen que aparecer tal cual en la imagen.
+_NO_LITERALES = {"fecha", "banco_emisor", "tipo_operacion", "moneda"}
+
+
+# Un "número" tal como se ve escrito, con sus separadores: `20-27705919-4`,
+# `275.054,91`, `05/08/2026`, `19:21`. Arranca en dígito para no comerse el `$`.
+_NUMERO_ESCRITO = re.compile(r"\d[\d.,:/\-]*")
+
+
+def _en_la_imagen(valor: str, dibujado: Sequence[str], con_digitos: bool = True) -> bool:
+    """¿Este valor se lee en la imagen? Primero como texto; si no, por dígitos.
+
+    El cotejo por dígitos es el que importa: la etiqueta dice `20277059194` y la
+    imagen `20-27705919-4`; el monto va `275054.91` contra `$ 275.054,91`.
+
+    Compara NÚMERO COMPLETO, no subcadena, y ese detalle no es cosmético: con
+    subcadenas, la hora `11:07` "aparecía" dentro de `CTA $ 811-075716/5` porque
+    sus dígitos contienen `1107`, y el generador se plantaba con un error falso.
+    """
+    if any(valor.casefold() in t.casefold() for t in dibujado):
+        return True
+    if not con_digitos:
+        return False
+    v_dig = solo_digitos(valor)
+    return bool(v_dig) and any(
+        solo_digitos(numero) == v_dig
+        for t in dibujado for numero in _NUMERO_ESCRITO.findall(t)
+    )
+
+
+def _gt(banco_emisor: str, datos: dict, lienzo: "Lienzo", *,
+        referencia: str, coelsa_id: Optional[str] = None) -> dict:
     """La etiqueta, en formato CANÓNICO — no en el que muestra la imagen.
 
     La imagen dice `$ 275.054,91` y `20-53594652-7`; la etiqueta dice
     `275054.91` y `20535946527`. Esa traducción es lo que el fine-tuning tiene
     que aprender, y es la que `web/src/lib/motor.ts` necesita para conciliar.
 
-    `con_decimales` tiene que valer lo mismo que usó el template al DIBUJAR el
-    monto: si la imagen muestra `$ 198.005` sin centavos, la etiqueta dice
-    `198005.00`. Etiquetar `198004.87` sería enseñarle a inventar centavos que
-    no están en la imagen.
+    **La etiqueta describe la imagen, no los datos con que se generó.** Un
+    comprobante del Santander no muestra el CUIT del emisor; etiquetarlo igual
+    le enseña al modelo a inventar un CUIT de 11 dígitos que pasa cualquier
+    validación de formato. Es el peor error posible en este proyecto, porque
+    acusa a un cliente honesto con un dato que parece perfectamente válido.
 
-    `ocultos` son los campos que ESTE template no dibuja. Van a null, y esa es
-    la regla de la que depende todo: **la etiqueta describe la imagen, no los
-    datos con que se generó.** Un comprobante del Santander no muestra el CUIT
-    del emisor; etiquetarlo igual le enseña al modelo a inventar un CUIT de 11
-    dígitos que pasa cualquier validación de formato. Es el peor error posible
-    en este proyecto, porque acusa a un cliente honesto con un dato que parece
-    perfectamente válido.
-
-    Mismo criterio que `coelsa_id` y `con_decimales`, que ya lo aplicaban:
-    la diferencia es que ahora vale para los 16 campos y no para dos.
+    Esa regla ya no se declara a mano: los campos ocultos son los que nadie
+    registró en el lienzo, y las dos direcciones se verifican contra el texto
+    que de verdad se dibujó.
     """
-    monto = round(datos["monto"], 2 if con_decimales else 0)
+    monto = round(datos["monto"], 2)
     etiqueta = {
         # El vocabulario lo fija la VERDAD, no el generador: la columna
         # `comprobante.tipo_operacion` dice "Transferencia" en 50 de 55 revisados. Hasta
@@ -340,7 +521,7 @@ def _gt(banco_emisor: str, datos: dict, *,
         # otra cosa — enrutan qué función dibuja el comprobante y NO salen en la etiqueta.
         "tipo_operacion": "Transferencia",
         "monto": f"{monto:.2f}",
-        "moneda": moneda,
+        "moneda": "ARS",   # el proyecto es solo pesos, por decisión del usuario
         "fecha": datos["dt"].strftime("%Y-%m-%d"),
         "hora": datos["dt"].strftime("%H:%M"),
         "nombre_emisor": datos["nombre_emi"],
@@ -351,12 +532,27 @@ def _gt(banco_emisor: str, datos: dict, *,
         "cuit_receptor": solo_digitos(datos["cuit_rec"]),
         "cbu_cvu_receptor": datos["cbu_rec"],
         "banco_receptor": datos["banco_rec"],
-        "concepto": concepto,
+        "concepto": datos["concepto"],
         "referencia": referencia,
         "coelsa_id": coelsa_id,
     }
-    desconocidos = set(ocultos) - set(etiqueta)
-    assert not desconocidos, f"campo inexistente en `ocultos`: {desconocidos}"
+    assert list(etiqueta) == CAMPOS, f"claves fuera de orden: {list(etiqueta)}"
+
+    ocultos = set(CAMPOS) - lienzo.visto
+    for campo in sorted(set(CAMPOS) - _NO_LITERALES):
+        # `hora` se dibuja siempre como `HH:MM`, igual que la etiqueta: no
+        # necesita el cotejo por dígitos y con 4 dígitos sueltos es el único que
+        # puede chocar por casualidad contra un número de cuenta.
+        valor = etiqueta[campo]
+        esta = _en_la_imagen(valor or "", lienzo.dibujado, con_digitos=campo != "hora")
+        if valor is not None and campo in ocultos and esta:
+            raise AssertionError(
+                f"{banco_emisor}: `{campo}` se lee en la imagen ({valor!r}) y la "
+                f"etiqueta lo deja en null — falta registrarlo con lienzo.campo()")
+        if valor is not None and campo not in ocultos and not esta:
+            raise AssertionError(
+                f"{banco_emisor}: `{campo}` se etiqueta {valor!r} pero eso NO se "
+                f"lee en la imagen — la etiqueta le enseña a inventar")
     return {k: (None if k in ocultos else v) for k, v in etiqueta.items()}
 
 
@@ -371,58 +567,62 @@ def comp_mp_saliente() -> Tuple[str, dict]:
     cod_id = gen_coelsa()
 
     W, H = 820, 1340
-    img = Image.new("RGB", (W, H), "white")
-    d = ImageDraw.Draw(img)
+    img, d = lienzo_nuevo(W, H, "white")
 
     if random.random() < 0.55:
-        wm = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-        ImageDraw.Draw(wm).text((-30, H//2 - 200), "ACREDITADA",
-                                fill=(220, 232, 245, 120), font=fnt("arial_bold", 150))
+        wm = Image.new("RGBA", (W * ESCALA, H * ESCALA), (0, 0, 0, 0))
+        # Lienzo aparte a propósito: la marca de agua no es ninguno de los 16
+        # campos, así que su texto no tiene que entrar en el cotejo.
+        Lienzo(ImageDraw.Draw(wm), ESCALA).text((-30, H//2 - 200), "ACREDITADA",
+                                                fill=(220, 232, 245, 120),
+                                                font=fnt("arial_bold", 150))
         wm = wm.rotate(-22, resample=Image.BICUBIC)
         img.paste(wm, (0, 0), wm)
 
-    logo_mp(d, 55, 65)
-    d.text((55, 175), "Comprobante de transferencia",
-           fill="#1A1A1A", font=fnt("arial_bold", 38))
-    d.text((55, 230), fmt_fecha_larga_ar(dat["dt"]),
-           fill="#7A7A7A", font=fnt("arial", 22))
+    d.logo(logo_mp, 55, 65)
+    d.campo("tipo_operacion", (55, 175), "Comprobante de transferencia",
+            fill="#1A1A1A", font=fnt("arial_bold", 38))
+    # La fecha larga termina en "a las 14:35 hs": trae la fecha Y la hora. Que
+    # acá dijera solo `fecha` es lo que dejó 150 ejemplos enseñando a no leer
+    # una hora que está escrita.
+    d.campo(("fecha", "hora"), (55, 230), fmt_fecha_larga_ar(dat["dt"]),
+            fill="#7A7A7A", font=fnt("arial", 22))
     d.line([(55, 280), (W - 55, 280)], fill="#E5E5E5", width=1)
 
-    d.text((55, 320), f"$ {fmt_monto_ar(dat['monto'], False)}",
-           fill="#1A1A1A", font=fnt("arial_bold", 64))
-    d.text((55, 410), "Motivo: Varios", fill="#7A7A7A", font=fnt("arial", 22))
+    d.campo(("monto", "moneda"), (55, 320), f"$ {fmt_monto_ar(dat['monto'])}",
+            fill="#1A1A1A", font=fnt("arial_bold", 64))
+    d.campo("concepto", (55, 410), f"Motivo: {dat['concepto']}",
+            fill="#7A7A7A", font=fnt("arial", 22))
 
     y_de = 495
     d.ellipse([48, y_de, 64, y_de + 16], fill="#00B1EA")
     d.line([(56, y_de + 16), (56, y_de + 220)], fill="#00B1EA", width=2)
     d.text((90, y_de - 6), "De", fill="#7A7A7A", font=fnt("arial", 22))
-    d.text((90, y_de + 24), dat["nombre_emi"], fill="#1A1A1A", font=fnt("arial_bold", 26))
-    d.text((90, y_de + 62), f"CUIT/CUIL: {dat['cuit_emi']}", fill="#7A7A7A", font=fnt("arial", 22))
-    d.text((90, y_de + 94), "Mercado Pago", fill="#7A7A7A", font=fnt("arial", 22))
-    d.text((90, y_de + 126), f"CVU: {dat['cbu_emi']}", fill="#7A7A7A", font=fnt("arial", 22))
+    d.campo("nombre_emisor", (90, y_de + 24), dat["nombre_emi"], fill="#1A1A1A", font=fnt("arial_bold", 26))
+    d.campo("cuit_emisor", (90, y_de + 62), f"CUIT/CUIL: {dat['cuit_emi']}", fill="#7A7A7A", font=fnt("arial", 22))
+    d.campo("banco_emisor", (90, y_de + 94), "Mercado Pago", fill="#7A7A7A", font=fnt("arial", 22))
+    d.campo("cbu_cvu_emisor", (90, y_de + 126), f"CVU: {dat['cbu_emi']}", fill="#7A7A7A", font=fnt("arial", 22))
 
     y_pa = y_de + 230
     d.ellipse([48, y_pa, 64, y_pa + 16], fill="#00B1EA")
     d.text((90, y_pa - 6), "Para", fill="#7A7A7A", font=fnt("arial", 22))
-    d.text((90, y_pa + 24), dat["nombre_rec"], fill="#1A1A1A", font=fnt("arial_bold", 26))
-    d.text((90, y_pa + 62), f"CUIT/CUIL: {dat['cuit_rec']}", fill="#7A7A7A", font=fnt("arial", 22))
-    d.text((90, y_pa + 94), dat["banco_rec"], fill="#7A7A7A", font=fnt("arial", 22))
-    d.text((90, y_pa + 126), f"CVU: {dat['cbu_rec']}", fill="#7A7A7A", font=fnt("arial", 22))
+    d.campo("nombre_receptor", (90, y_pa + 24), dat["nombre_rec"], fill="#1A1A1A", font=fnt("arial_bold", 26))
+    d.campo("cuit_receptor", (90, y_pa + 62), f"CUIT/CUIL: {dat['cuit_rec']}", fill="#7A7A7A", font=fnt("arial", 22))
+    d.campo("banco_receptor", (90, y_pa + 94), dat["banco_rec"], fill="#7A7A7A", font=fnt("arial", 22))
+    d.campo("cbu_cvu_receptor", (90, y_pa + 126), f"CVU: {dat['cbu_rec']}", fill="#7A7A7A", font=fnt("arial", 22))
 
     y_ref = y_pa + 210
     d.line([(55, y_ref), (W - 55, y_ref)], fill="#E5E5E5", width=1)
     d.text((55, y_ref + 30), "Número de operación de Mercado Pago",
            fill="#7A7A7A", font=fnt("arial", 22))
-    d.text((55, y_ref + 62), referencia, fill="#1A1A1A", font=fnt("arial_bold", 24))
+    d.campo("referencia", (55, y_ref + 62), referencia, fill="#1A1A1A", font=fnt("arial_bold", 24))
     d.text((55, y_ref + 110), "Código de identificación",
            fill="#7A7A7A", font=fnt("arial", 22))
-    d.text((55, y_ref + 142), cod_id, fill="#1A1A1A", font=fnt("arial_bold", 24))
+    d.campo("coelsa_id", (55, y_ref + 142), cod_id, fill="#1A1A1A", font=fnt("arial_bold", 24))
 
-    guardar_con_compresion(ruido_whatsapp(img), ruta)
-    return str(ruta), _gt("Mercado Pago", dat,
-                          referencia=referencia, coelsa_id=cod_id,
-                          con_decimales=False,
-                          ocultos=["hora"])
+    finalizar(img, ruta)
+    return str(ruta), _gt("Mercado Pago", dat, d,
+                          referencia=referencia, coelsa_id=cod_id)
 
 
 # ---------------------------------------------------------------------------
@@ -436,14 +636,13 @@ def comp_macro_saliente() -> Tuple[str, dict]:
     coelsa = gen_coelsa()
 
     W, H = 820, 1500
-    img = Image.new("RGB", (W, H), "white")
-    d = ImageDraw.Draw(img)
+    img, d = lienzo_nuevo(W, H, "white")
 
     # Header lavanda
     d.rectangle([0, 0, W, 320], fill="#E8E8F5")
-    logo_macro(d, W//2 - 60, 50)
+    d.logo(logo_macro, W//2 - 60, 50)
     d.text((90, 160), "Comprobante de", fill="#1A1A1A", font=fnt("arial_bold", 44))
-    d.text((90, 215), "transferencia", fill="#1A1A1A", font=fnt("arial_bold", 44))
+    d.campo("tipo_operacion", (90, 215), "transferencia", fill="#1A1A1A", font=fnt("arial_bold", 44))
 
     # Datos de transferencia
     d.text((50, 370), "Datos de transferencia",
@@ -451,44 +650,45 @@ def comp_macro_saliente() -> Tuple[str, dict]:
 
     y = 430
     d.text((50, y), "Para", fill="#1A1A1A", font=fnt("arial_bold", 24))
-    d.text((50, y + 36), dat["nombre_rec"], fill="#1A1A1A", font=fnt("arial", 24))
+    d.campo("nombre_receptor", (50, y + 36), dat["nombre_rec"], fill="#1A1A1A", font=fnt("arial", 24))
     d.text((50, y + 80), "Cuenta:", fill="#1A1A1A", font=fnt("arial_bold", 24))
-    d.text((50, y + 116), f"{dat['banco_rec']} - CA ARS {random.randint(1000, 9999)}",
-           fill="#1A1A1A", font=fnt("arial", 24))
+    d.campo("banco_receptor", (50, y + 116),
+            f"{dat['banco_rec']} - CA ARS {random.randint(1000, 9999)}",
+            fill="#1A1A1A", font=fnt("arial", 24))
     d.text((50, y + 160), "CUIL/CUIT:", fill="#1A1A1A", font=fnt("arial_bold", 24))
-    d.text((50, y + 196), dat["cuit_rec"].replace("-", ""),
-           fill="#1A1A1A", font=fnt("arial", 24))
+    d.campo("cuit_receptor", (50, y + 196), dat["cuit_rec"].replace("-", ""),
+            fill="#1A1A1A", font=fnt("arial", 24))
 
     d.line([(50, y + 260), (W - 50, y + 260)], fill="#EFEFEF", width=1)
 
     y2 = y + 290
     d.text((50, y2), "Desde", fill="#1A1A1A", font=fnt("arial_bold", 24))
-    d.text((50, y2 + 36), dat["nombre_emi"], fill="#1A1A1A", font=fnt("arial", 24))
+    d.campo("nombre_emisor", (50, y2 + 36), dat["nombre_emi"], fill="#1A1A1A", font=fnt("arial", 24))
     d.text((50, y2 + 80), "Cuenta:", fill="#1A1A1A", font=fnt("arial_bold", 24))
-    d.text((50, y2 + 116), f"Banco Macro - CA $ {random.randint(1000, 9999)}",
-           fill="#1A1A1A", font=fnt("arial", 24))
+    d.campo("banco_emisor", (50, y2 + 116),
+            f"Banco Macro - CA $ {random.randint(1000, 9999)}",
+            fill="#1A1A1A", font=fnt("arial", 24))
     d.text((50, y2 + 160), "CUIL/CUIT:", fill="#1A1A1A", font=fnt("arial_bold", 24))
-    d.text((50, y2 + 196), dat["cuit_emi"].replace("-", ""),
-           fill="#1A1A1A", font=fnt("arial", 24))
+    d.campo("cuit_emisor", (50, y2 + 196), dat["cuit_emi"].replace("-", ""),
+            fill="#1A1A1A", font=fnt("arial", 24))
 
     d.line([(50, y2 + 260), (W - 50, y2 + 260)], fill="#EFEFEF", width=1)
 
     y3 = y2 + 290
-    for i, (k, v) in enumerate([
-        ("Monto:", f"$ {fmt_monto_ar(dat['monto'], False)}"),
-        ("Concepto:", "Varios"),
-        ("N° de operación:", referencia),
-        ("Fecha y hora:", f"{fmt_fecha_corta(dat['dt'])} - {dat['dt'].strftime('%H:%M')} h"),
-        ("ID COELSA:", coelsa),
+    for i, (k, v, c) in enumerate([
+        ("Monto:", f"$ {fmt_monto_ar(dat['monto'])}", ("monto", "moneda")),
+        ("Concepto:", dat["concepto"], "concepto"),
+        ("N° de operación:", referencia, "referencia"),
+        ("Fecha y hora:", f"{fmt_fecha_corta(dat['dt'])} - {dat['dt'].strftime('%H:%M')} h",
+         ("fecha", "hora")),
+        ("ID COELSA:", coelsa, "coelsa_id"),
     ]):
         d.text((50, y3 + i*86), k, fill="#1A1A1A", font=fnt("arial_bold", 22))
-        d.text((50, y3 + i*86 + 32), v, fill="#1A1A1A", font=fnt("arial", 22))
+        d.campo(c, (50, y3 + i*86 + 32), v, fill="#1A1A1A", font=fnt("arial", 22))
 
-    guardar_con_compresion(ruido_whatsapp(img), ruta)
-    return str(ruta), _gt("Banco Macro", dat,
-                          referencia=referencia, coelsa_id=coelsa,
-                          con_decimales=False,
-                          ocultos=["cbu_cvu_emisor", "cbu_cvu_receptor"])
+    finalizar(img, ruta)
+    return str(ruta), _gt("Banco Macro", dat, d,
+                          referencia=referencia, coelsa_id=coelsa)
 
 
 # ---------------------------------------------------------------------------
@@ -501,28 +701,30 @@ def comp_santander_saliente() -> Tuple[str, dict]:
     referencia = str(random.randint(10**7, 10**8 - 1))
 
     W, H = 820, 1500
-    img = Image.new("RGB", (W, H), "white")
-    d = ImageDraw.Draw(img)
+    img, d = lienzo_nuevo(W, H, "white")
 
-    logo_santander(d, W//2 - 130, 50)
-    d.text((50, 170), "Comprobante de Transferencia",
-           fill="#1A1A1A", font=fnt("arial_bold", 36))
+    d.logo(logo_santander, W//2 - 130, 50)
+    d.campo("tipo_operacion", (50, 170), "Comprobante de Transferencia",
+            fill="#1A1A1A", font=fnt("arial_bold", 36))
     d.line([(50, 240), (W - 50, 240)], fill="#E5E5E5", width=1)
 
+    # El Santander no muestra nada del emisor salvo el logo, ni el CUIT ni el
+    # banco del destinatario: la "Cuenta débito" es un número de cuenta, no un
+    # CBU. Todo eso queda en null porque nadie lo registra.
     filas = [
-        ("Importe debitado", f"$ {fmt_monto_ar(dat['monto'])}"),
-        ("Cuenta destino", dat["cbu_rec"]),
-        ("Titular cuenta destino", dat["nombre_rec"]),
-        ("Cuenta débito", f"CTA $ {random.randint(100, 999)}-{random.randint(100000, 999999)}/{random.randint(0, 9)}"),
-        ("Concepto transferencia", "Varios"),
-        ("Información adicional", "Varios"),
-        ("Plazo de acreditación", "Inmediato"),
-        ("Fecha de ejecución", fmt_fecha_corta(dat["dt"])),
-        ("N° comprobante", referencia),
+        ("Importe debitado", f"$ {fmt_monto_ar(dat['monto'])}", ("monto", "moneda")),
+        ("Cuenta destino", dat["cbu_rec"], "cbu_cvu_receptor"),
+        ("Titular cuenta destino", dat["nombre_rec"], "nombre_receptor"),
+        ("Cuenta débito", f"CTA $ {random.randint(100, 999)}-{random.randint(100000, 999999)}/{random.randint(0, 9)}", None),
+        ("Concepto transferencia", dat["concepto"], "concepto"),
+        ("Información adicional", "-", None),
+        ("Plazo de acreditación", "Inmediato", None),
+        ("Fecha de ejecución", fmt_fecha_corta(dat["dt"]), "fecha"),
+        ("N° comprobante", referencia, "referencia"),
     ]
     y = 290
-    for lbl, val in filas:
-        fila_kv_izq_der(d, y, W, lbl, val)
+    for lbl, val, campos in filas:
+        fila_kv_izq_der(d, y, W, lbl, val, campos)
         y += 90
 
     # Disclaimer al pie
@@ -533,9 +735,8 @@ def comp_santander_saliente() -> Tuple[str, dict]:
            "módulo de Pagos y Transferencias en Online Banking Personas.",
            fill="#7A7A7A", font=fnt("arial", 18))
 
-    guardar_con_compresion(ruido_whatsapp(img), ruta)
-    return str(ruta), _gt("Banco Santander", dat, referencia=referencia,
-                          ocultos=["hora", "nombre_emisor", "cuit_emisor", "cbu_cvu_emisor", "cuit_receptor", "banco_receptor"])
+    finalizar(img, ruta)
+    return str(ruta), _gt("Banco Santander", dat, d, referencia=referencia)
 
 
 # ---------------------------------------------------------------------------
@@ -548,44 +749,44 @@ def comp_galicia_saliente() -> Tuple[str, dict]:
     referencia = str(random.randint(10**5, 10**6 - 1))
 
     W, H = 820, 1340
-    img = Image.new("RGB", (W, H), "white")
-    d = ImageDraw.Draw(img)
+    img, d = lienzo_nuevo(W, H, "white")
 
-    logo_galicia(d, 55, 55)
-    d.text((55, 130), "Comprobante de transferencia",
-           fill="#2A2A2A", font=fnt("arial_bold", 32))
+    d.logo(logo_galicia, 55, 55)
+    d.campo("tipo_operacion", (55, 130), "Comprobante de transferencia",
+            fill="#2A2A2A", font=fnt("arial_bold", 32))
     d.line([(55, 195), (W - 55, 195)], fill="#E5E5E5", width=1)
 
     d.text((55, 225), "Importe", fill="#7A7A7A", font=fnt("arial", 24))
-    d.text((55, 265), f"$ {fmt_monto_ar(dat['monto'])}",
-           fill="#2A2A2A", font=fnt("arial_bold", 38))
+    d.campo(("monto", "moneda"), (55, 265), f"$ {fmt_monto_ar(dat['monto'])}",
+            fill="#2A2A2A", font=fnt("arial_bold", 38))
     d.line([(55, 340), (W - 55, 340)], fill="#EFEFEF", width=1)
 
     d.text((55, 370), "Destino", fill="#7A7A7A", font=fnt("arial", 24))
-    d.text((55, 410), dat["nombre_rec"], fill="#2A2A2A", font=fnt("arial_bold", 28))
-    d.text((55, 455), f"CBU/CVU: {dat['cbu_rec']}", fill="#2A2A2A", font=fnt("arial", 22))
-    d.text((55, 495), f"CUIT/CUIL: {dat['cuit_rec']}", fill="#7A7A7A", font=fnt("arial", 22))
+    d.campo("nombre_receptor", (55, 410), dat["nombre_rec"], fill="#2A2A2A", font=fnt("arial_bold", 28))
+    d.campo("cbu_cvu_receptor", (55, 455), f"CBU/CVU: {dat['cbu_rec']}", fill="#2A2A2A", font=fnt("arial", 22))
+    d.campo("cuit_receptor", (55, 495), f"CUIT/CUIL: {dat['cuit_rec']}", fill="#7A7A7A", font=fnt("arial", 22))
     d.line([(55, 560), (W - 55, 560)], fill="#EFEFEF", width=1)
 
+    # El Galicia no dice de qué banco es la cuenta destino ni el concepto.
     d.text((55, 590), "Origen", fill="#7A7A7A", font=fnt("arial", 24))
-    d.text((55, 630), dat["nombre_emi"], fill="#2A2A2A", font=fnt("arial_bold", 28))
+    d.campo("nombre_emisor", (55, 630), dat["nombre_emi"], fill="#2A2A2A", font=fnt("arial_bold", 28))
     d.text((55, 675), "Cuenta Corriente / Caja de Ahorros",
            fill="#2A2A2A", font=fnt("arial", 22))
     d.line([(55, 740), (W - 55, 740)], fill="#EFEFEF", width=1)
 
     d.text((55, 770), "Número de transacción", fill="#7A7A7A", font=fnt("arial", 22))
-    d.text((55, 810), referencia, fill="#2A2A2A", font=fnt("arial_bold", 26))
+    d.campo("referencia", (55, 810), referencia, fill="#2A2A2A", font=fnt("arial_bold", 26))
 
     d.text((55, 870), "Fecha", fill="#7A7A7A", font=fnt("arial", 22))
-    d.text((55, 910), f"{fmt_fecha_corta(dat['dt'])} a las {dat['dt'].strftime('%H:%M')} hs",
-           fill="#2A2A2A", font=fnt("arial", 24))
+    d.campo(("fecha", "hora"), (55, 910),
+            f"{fmt_fecha_corta(dat['dt'])} a las {dat['dt'].strftime('%H:%M')} hs",
+            fill="#2A2A2A", font=fnt("arial", 24))
 
     d.text((55, 970), "Canal", fill="#7A7A7A", font=fnt("arial", 22))
     d.text((55, 1010), "App Galicia", fill="#2A2A2A", font=fnt("arial", 24))
 
-    guardar_con_compresion(ruido_whatsapp(img), ruta)
-    return str(ruta), _gt("Banco Galicia", dat, referencia=referencia,
-                          ocultos=["cuit_emisor", "cbu_cvu_emisor", "banco_receptor", "concepto"])
+    finalizar(img, ruta)
+    return str(ruta), _gt("Banco Galicia", dat, d, referencia=referencia)
 
 
 # ---------------------------------------------------------------------------
@@ -598,48 +799,48 @@ def comp_bbva_saliente() -> Tuple[str, dict]:
     referencia = str(random.randint(10**7, 10**8 - 1))
 
     W, H = 820, 1380
-    img = Image.new("RGB", (W, H), "white")
-    d = ImageDraw.Draw(img)
+    img, d = lienzo_nuevo(W, H, "white")
 
-    logo_bbva(d, 55, 55)
-    d.text((55, 135), "Comprobante de transferencia",
-           fill="#072146", font=fnt("arial_bold", 30))
+    d.logo(logo_bbva, 55, 55)
+    d.campo("tipo_operacion", (55, 135), "Comprobante de transferencia",
+            fill="#072146", font=fnt("arial_bold", 30))
     d.line([(55, 195), (W - 55, 195)], fill="#072146", width=2)
 
-    # Card monto
+    # Card monto — la única plantilla que escribe la moneda con todas las letras
     d.rectangle([55, 230, W - 55, 360], fill="#F4F6F9")
     d.text((80, 255), "Monto de la operación", fill="#7A7A7A", font=fnt("arial", 22))
-    d.text((80, 300), f"$ {fmt_monto_ar(dat['monto'])} ARS",
-           fill="#072146", font=fnt("arial_bold", 32))
+    d.campo(("monto", "moneda"), (80, 300),
+            f"$ {fmt_monto_ar(dat['monto'])} ARS",
+            fill="#072146", font=fnt("arial_bold", 32))
 
     d.text((55, 395), "Cuenta de origen", fill="#7A7A7A", font=fnt("arial", 22))
-    d.text((55, 430), dat["nombre_emi"], fill="#2A2A2A", font=fnt("arial_bold", 24))
+    d.campo("nombre_emisor", (55, 430), dat["nombre_emi"], fill="#2A2A2A", font=fnt("arial_bold", 24))
     d.text((55, 470), "Caja de ahorros en pesos", fill="#7A7A7A", font=fnt("arial", 22))
     d.line([(55, 525), (W - 55, 525)], fill="#EEEEEE", width=1)
 
     d.text((55, 555), "Cuenta de destino", fill="#7A7A7A", font=fnt("arial", 22))
-    d.text((55, 590), dat["nombre_rec"], fill="#2A2A2A", font=fnt("arial_bold", 24))
-    d.text((55, 630), f"CBU: {dat['cbu_rec']}", fill="#2A2A2A", font=fnt("arial", 22))
-    d.text((55, 670), f"CUIT/CUIL: {dat['cuit_rec']}", fill="#7A7A7A", font=fnt("arial", 22))
+    d.campo("nombre_receptor", (55, 590), dat["nombre_rec"], fill="#2A2A2A", font=fnt("arial_bold", 24))
+    d.campo("cbu_cvu_receptor", (55, 630), f"CBU: {dat['cbu_rec']}", fill="#2A2A2A", font=fnt("arial", 22))
+    d.campo("cuit_receptor", (55, 670), f"CUIT/CUIL: {dat['cuit_rec']}", fill="#7A7A7A", font=fnt("arial", 22))
     d.line([(55, 725), (W - 55, 725)], fill="#EEEEEE", width=1)
 
     d.text((55, 755), "Fecha y hora de ejecución", fill="#7A7A7A", font=fnt("arial", 22))
-    d.text((55, 790), f"{fmt_fecha_corta(dat['dt'])} - {dat['dt'].strftime('%H:%M')} hs",
-           fill="#2A2A2A", font=fnt("arial", 24))
+    d.campo(("fecha", "hora"), (55, 790),
+            f"{fmt_fecha_corta(dat['dt'])} - {dat['dt'].strftime('%H:%M')} hs",
+            fill="#2A2A2A", font=fnt("arial", 24))
 
     d.text((55, 855), "Número de referencia / operación", fill="#7A7A7A", font=fnt("arial", 22))
-    d.text((55, 890), referencia, fill="#2A2A2A", font=fnt("arial_bold", 24))
+    d.campo("referencia", (55, 890), referencia, fill="#2A2A2A", font=fnt("arial_bold", 24))
 
     d.text((55, 955), "Concepto", fill="#7A7A7A", font=fnt("arial", 22))
-    d.text((55, 990), "Varios", fill="#2A2A2A", font=fnt("arial", 24))
+    d.campo("concepto", (55, 990), dat["concepto"], fill="#2A2A2A", font=fnt("arial", 24))
 
     d.text((55, 1180), "Este documento sirve como constancia oficial de la operación efectuada.",
            fill="#9E9E9E", font=fnt("arial", 18))
     d.text((55, 1210), "BBVA Argentina S.A.", fill="#9E9E9E", font=fnt("arial", 18))
 
-    guardar_con_compresion(ruido_whatsapp(img), ruta)
-    return str(ruta), _gt("BBVA Francés", dat, referencia=referencia,
-                          ocultos=["cuit_emisor", "cbu_cvu_emisor", "banco_receptor"])
+    finalizar(img, ruta)
+    return str(ruta), _gt("BBVA Francés", dat, d, referencia=referencia)
 
 
 # ---------------------------------------------------------------------------
@@ -652,37 +853,40 @@ def comp_nacion_saliente() -> Tuple[str, dict]:
     referencia = f"{random.randint(0, 99999999):08d}"
 
     W, H = 820, 1400
-    img = Image.new("RGB", (W, H), "white")
-    d = ImageDraw.Draw(img)
+    img, d = lienzo_nuevo(W, H, "white")
 
     # Header celeste con "Transferencia"
     d.rectangle([0, 0, W, 130], fill="#3FA9F5")
     d.polygon([(40, 65), (75, 50), (75, 80)], fill="white")  # flecha back
-    d.text((W//2 - 110, 50), "Transferencia",
-           fill="white", font=fnt("arial_bold", 32))
+    d.campo("tipo_operacion", (W//2 - 110, 50), "Transferencia",
+            fill="white", font=fnt("arial_bold", 32))
 
-    logo_nacion(d, W//2 - 90, 200)
+    d.logo(logo_nacion, W//2 - 90, 200)
 
+    # El BNA escribe en mayúsculas, y eso se conserva: la etiqueta se compara
+    # plegando mayúsculas. Lo que NO se conserva es el `.replace("Banco ", "")`
+    # que tenía antes: dibujaba `GALICIA` contra una etiqueta `Banco Galicia`,
+    # o sea le pedía al modelo escribir una palabra que no está en la imagen.
     y = 350
     items = [
-        ("Destinatario", dat["nombre_rec"].upper()),
-        ("CUIT", dat["cuit_rec"].replace("-", "")),
-        ("Monto", f"${fmt_monto_ar(dat['monto'])}"),
-        ("CBU", dat["cbu_rec"]),
-        ("Banco", dat["banco_rec"].replace("Banco ", "").upper()),
-        ("Motivo", "Varios"),
-        ("Número de transacción", referencia),
-        ("Fecha", f"{fmt_fecha_corta(dat['dt'])} {dat['dt'].strftime('%H:%M:%S')}"),
+        ("Destinatario", dat["nombre_rec"].upper(), "nombre_receptor"),
+        ("CUIT", dat["cuit_rec"].replace("-", ""), "cuit_receptor"),
+        ("Monto", f"${fmt_monto_ar(dat['monto'])}", ("monto", "moneda")),
+        ("CBU", dat["cbu_rec"], "cbu_cvu_receptor"),
+        ("Banco", dat["banco_rec"].upper(), "banco_receptor"),
+        ("Motivo", dat["concepto"], "concepto"),
+        ("Número de transacción", referencia, "referencia"),
+        ("Fecha", f"{fmt_fecha_corta(dat['dt'])} {dat['dt'].strftime('%H:%M:%S')}",
+         ("fecha", "hora")),
     ]
-    for k, v in items:
+    for k, v, c in items:
         d.text((55, y), k, fill="#2A2A2A", font=fnt("arial_bold", 24))
-        d.text((55, y + 36), v, fill="#5E5E5E", font=fnt("arial", 22))
+        d.campo(c, (55, y + 36), v, fill="#5E5E5E", font=fnt("arial", 22))
         d.line([(55, y + 86), (W - 55, y + 86)], fill="#EEEEEE", width=1)
         y += 100
 
-    guardar_con_compresion(ruido_whatsapp(img), ruta)
-    return str(ruta), _gt("Banco Nación", dat, referencia=referencia,
-                          ocultos=["nombre_emisor", "cuit_emisor", "cbu_cvu_emisor"])
+    finalizar(img, ruta)
+    return str(ruta), _gt("Banco Nación", dat, d, referencia=referencia)
 
 
 # ---------------------------------------------------------------------------
@@ -692,30 +896,33 @@ def comp_naranjax_saliente() -> Tuple[str, dict]:
     uid = str(uuid.uuid4())[:8]
     ruta = OUT_DIR / f"naranjax_saliente_{uid}.jpg"
     dat = _datos_comunes("Naranja X")
-    referencia = str(uuid.uuid4())
+    # Antes era un `uuid4`: ningún banco emite eso, y el modelo aprendía como
+    # válido un formato de referencia que no existe en la realidad.
+    referencia = str(random.randint(10**11, 10**12 - 1))
     coelsa = gen_coelsa()
 
     W, H = 820, 1600
-    img = Image.new("RGB", (W, H), "white")
-    d = ImageDraw.Draw(img)
+    img, d = lienzo_nuevo(W, H, "white")
 
-    logo_naranjax(d, 55, 50)
-    d.text((55, 130), "Comprobante de transferencia",
-           fill="#1A1A1A", font=fnt("arial_bold", 30))
+    d.logo(logo_naranjax, 55, 50)
+    d.campo("tipo_operacion", (55, 130), "Comprobante de transferencia",
+            fill="#1A1A1A", font=fnt("arial_bold", 30))
 
-    # Card "Enviaste"
+    # Card "Enviaste" — los centavos van aparte y en chico, como en la app
     d.rounded_rectangle([55, 200, W - 55, 360], radius=24,
                         outline="#E5E5E5", width=1, fill="white")
     d.text((85, 225), "Enviaste", fill="#1A1A1A", font=fnt("arial_bold", 28))
     monto_str = fmt_monto_ar(dat['monto'])
     parte_entera, decimales = monto_str.split(",")
-    d.text((85, 270), f"$ {parte_entera}",
-           fill="#1A1A1A", font=fnt("arial_bold", 50))
+    d.campo(("monto", "moneda"), (85, 270), f"$ {parte_entera}",
+            fill="#1A1A1A", font=fnt("arial_bold", 50),
+            leido=f"$ {monto_str}")
     ancho_ent = d.textlength(f"$ {parte_entera}", font=fnt("arial_bold", 50))
     d.text((85 + ancho_ent + 4, 275), decimales,
            fill="#1A1A1A", font=fnt("arial_bold", 28))
-    d.text((85, 330), f"{fmt_fecha_corta(dat['dt'])} - {dat['dt'].strftime('%H:%M')} h",
-           fill="#7A7A7A", font=fnt("arial", 20))
+    d.campo(("fecha", "hora"), (85, 330),
+            f"{fmt_fecha_corta(dat['dt'])} - {dat['dt'].strftime('%H:%M')} h",
+            fill="#7A7A7A", font=fnt("arial", 20))
 
     # Card origen
     d.rounded_rectangle([55, 400, W - 55, 660], radius=24,
@@ -723,34 +930,34 @@ def comp_naranjax_saliente() -> Tuple[str, dict]:
     d.text((85, 425), "Cuenta origen", fill="#1A1A1A", font=fnt("arial_bold", 24))
     d.rectangle([85, 470, 125, 510], outline="#F25A22", width=2)
     d.text((92, 477), "NX", fill="#F25A22", font=fnt("arial_bold", 18))
-    d.text((140, 470), dat["nombre_emi"], fill="#1A1A1A", font=fnt("arial_bold", 22))
-    d.text((140, 500), "Naranja X", fill="#7A7A7A", font=fnt("arial", 20))
+    d.campo("nombre_emisor", (140, 470), dat["nombre_emi"], fill="#1A1A1A", font=fnt("arial_bold", 22))
+    d.campo("banco_emisor", (140, 500), "Naranja X", fill="#7A7A7A", font=fnt("arial", 20))
     d.text((85, 540), "CBU", fill="#7A7A7A", font=fnt("arial", 20))
-    d.text((85, 565), dat["cbu_emi"], fill="#1A1A1A", font=fnt("arial", 22))
+    d.campo("cbu_cvu_emisor", (85, 565), dat["cbu_emi"], fill="#1A1A1A", font=fnt("arial", 22))
     d.text((85, 605), "CUIL", fill="#7A7A7A", font=fnt("arial", 20))
-    d.text((85, 630), dat["cuit_emi"], fill="#1A1A1A", font=fnt("arial", 22))
+    d.campo("cuit_emisor", (85, 630), dat["cuit_emi"], fill="#1A1A1A", font=fnt("arial", 22))
 
     # Card destino
     d.rounded_rectangle([55, 700, W - 55, 960], radius=24,
                         outline="#E5E5E5", width=1, fill="white")
     d.text((85, 725), "Cuenta destino", fill="#1A1A1A", font=fnt("arial_bold", 24))
-    d.text((140, 770), dat["nombre_rec"], fill="#1A1A1A", font=fnt("arial_bold", 22))
-    d.text((140, 800), dat["banco_rec"], fill="#7A7A7A", font=fnt("arial", 20))
+    d.campo("nombre_receptor", (140, 770), dat["nombre_rec"], fill="#1A1A1A", font=fnt("arial_bold", 22))
+    d.campo("banco_receptor", (140, 800), dat["banco_rec"], fill="#7A7A7A", font=fnt("arial", 20))
     d.text((85, 840), "CBU", fill="#7A7A7A", font=fnt("arial", 20))
-    d.text((85, 865), dat["cbu_rec"], fill="#1A1A1A", font=fnt("arial", 22))
+    d.campo("cbu_cvu_receptor", (85, 865), dat["cbu_rec"], fill="#1A1A1A", font=fnt("arial", 22))
     d.text((85, 905), "CUIL", fill="#7A7A7A", font=fnt("arial", 20))
-    d.text((85, 930), dat["cuit_rec"], fill="#1A1A1A", font=fnt("arial", 22))
+    d.campo("cuit_receptor", (85, 930), dat["cuit_rec"], fill="#1A1A1A", font=fnt("arial", 22))
 
-    # Card operación
+    # Card operación — Naranja X no muestra el concepto
     d.rounded_rectangle([55, 1000, W - 55, 1270], radius=24,
                         outline="#E5E5E5", width=1, fill="white")
     d.text((85, 1025), "Información de la operación",
            fill="#1A1A1A", font=fnt("arial_bold", 24))
     d.text((85, 1075), "COELSA ID", fill="#7A7A7A", font=fnt("arial", 20))
-    d.text((85, 1105), coelsa, fill="#1A1A1A", font=fnt("arial_bold", 22))
+    d.campo("coelsa_id", (85, 1105), coelsa, fill="#1A1A1A", font=fnt("arial_bold", 22))
     d.text((85, 1160), "Código de transacción",
            fill="#7A7A7A", font=fnt("arial", 20))
-    d.text((85, 1190), referencia, fill="#1A1A1A", font=fnt("arial", 22))
+    d.campo("referencia", (85, 1190), referencia, fill="#1A1A1A", font=fnt("arial", 22))
 
     d.text((55, 1320),
            "Naranja Digital Compañía Financiera S.A.U es una entidad financiera",
@@ -759,10 +966,9 @@ def comp_naranjax_saliente() -> Tuple[str, dict]:
            "autorizada por el Banco Central de la República Argentina.",
            fill="#9E9E9E", font=fnt("arial", 16))
 
-    guardar_con_compresion(ruido_whatsapp(img), ruta)
-    return str(ruta), _gt("Naranja X", dat,
-                          referencia=referencia, coelsa_id=coelsa,
-                          ocultos=["concepto"])
+    finalizar(img, ruta)
+    return str(ruta), _gt("Naranja X", dat, d,
+                          referencia=referencia, coelsa_id=coelsa)
 
 
 # ---------------------------------------------------------------------------
@@ -775,36 +981,35 @@ def comp_brubank_saliente() -> Tuple[str, dict]:
     referencia = str(random.randint(10**9, 10**10 - 1))
 
     W, H = 820, 1340
-    img = Image.new("RGB", (W, H), "white")
-    d = ImageDraw.Draw(img)
+    img, d = lienzo_nuevo(W, H, "white")
 
     # Header violeta
     d.rectangle([0, 0, W, 280], fill="#5B2D90")
-    logo_brubank(d, 55, 55)
-    d.text((55, 130), "Transferencia enviada",
-           fill="white", font=fnt("arial_bold", 26))
-    d.text((55, 175), f"$ {fmt_monto_ar(dat['monto'])}",
-           fill="white", font=fnt("arial_bold", 50))
+    d.logo(logo_brubank, 55, 55)
+    d.campo("tipo_operacion", (55, 130), "Transferencia enviada",
+            fill="white", font=fnt("arial_bold", 26))
+    d.campo(("monto", "moneda"), (55, 175), f"$ {fmt_monto_ar(dat['monto'])}",
+            fill="white", font=fnt("arial_bold", 50))
 
     y = 330
     items = [
-        ("Para", dat["nombre_rec"]),
-        ("CUIT/CUIL", dat["cuit_rec"]),
-        ("Banco", dat["banco_rec"]),
-        ("CBU", dat["cbu_rec"]),
-        ("Motivo", "Varios"),
-        ("Fecha", f"{fmt_fecha_corta(dat['dt'])} - {dat['dt'].strftime('%H:%M')} hs"),
-        ("Número de operación", referencia),
+        ("Para", dat["nombre_rec"], "nombre_receptor"),
+        ("CUIT/CUIL", dat["cuit_rec"], "cuit_receptor"),
+        ("Banco", dat["banco_rec"], "banco_receptor"),
+        ("CBU", dat["cbu_rec"], "cbu_cvu_receptor"),
+        ("Motivo", dat["concepto"], "concepto"),
+        ("Fecha", f"{fmt_fecha_corta(dat['dt'])} - {dat['dt'].strftime('%H:%M')} hs",
+         ("fecha", "hora")),
+        ("Número de operación", referencia, "referencia"),
     ]
-    for k, v in items:
+    for k, v, c in items:
         d.text((55, y), k, fill="#7A7A7A", font=fnt("arial", 22))
-        d.text((55, y + 32), v, fill="#1A1A1A", font=fnt("arial_bold", 24))
+        d.campo(c, (55, y + 32), v, fill="#1A1A1A", font=fnt("arial_bold", 24))
         d.line([(55, y + 80), (W - 55, y + 80)], fill="#EEEEEE", width=1)
         y += 96
 
-    guardar_con_compresion(ruido_whatsapp(img), ruta)
-    return str(ruta), _gt("Brubank", dat, referencia=referencia,
-                          ocultos=["nombre_emisor", "cuit_emisor", "cbu_cvu_emisor"])
+    finalizar(img, ruta)
+    return str(ruta), _gt("Brubank", dat, d, referencia=referencia)
 
 
 # ---------------------------------------------------------------------------
@@ -817,37 +1022,36 @@ def comp_uala_saliente() -> Tuple[str, dict]:
     referencia = str(random.randint(10**9, 10**10 - 1))
 
     W, H = 820, 1280
-    img = Image.new("RGB", (W, H), "#F5F8FA")
-    d = ImageDraw.Draw(img)
+    img, d = lienzo_nuevo(W, H, "#F5F8FA")
 
-    logo_uala(d, 55, 55)
-    d.text((55, 145), "Transferiste",
-           fill="#5E5E5E", font=fnt("arial", 24))
-    d.text((55, 185), f"$ {fmt_monto_ar(dat['monto'])}",
-           fill="#1A1A1A", font=fnt("arial_bold", 58))
-    d.text((55, 270), f"a {dat['nombre_rec']}",
-           fill="#1A1A1A", font=fnt("arial_bold", 28))
+    d.logo(logo_uala, 55, 55)
+    d.campo("tipo_operacion", (55, 145), "Transferiste",
+            fill="#5E5E5E", font=fnt("arial", 24))
+    d.campo(("monto", "moneda"), (55, 185), f"$ {fmt_monto_ar(dat['monto'])}",
+            fill="#1A1A1A", font=fnt("arial_bold", 58))
+    d.campo("nombre_receptor", (55, 270), f"a {dat['nombre_rec']}",
+            fill="#1A1A1A", font=fnt("arial_bold", 28))
 
     d.rounded_rectangle([40, 340, W - 40, 920], radius=20,
                         outline="#DCE4EA", width=1, fill="white")
     y = 370
     items = [
-        ("Cuenta destino", dat["banco_rec"]),
-        ("CBU", dat["cbu_rec"]),
-        ("CUIT/CUIL", dat["cuit_rec"]),
-        ("Motivo", "Varios"),
-        ("Fecha y hora", f"{fmt_fecha_corta(dat['dt'])} {dat['dt'].strftime('%H:%M')} hs"),
-        ("Comprobante N°", referencia),
+        ("Cuenta destino", dat["banco_rec"], "banco_receptor"),
+        ("CBU", dat["cbu_rec"], "cbu_cvu_receptor"),
+        ("CUIT/CUIL", dat["cuit_rec"], "cuit_receptor"),
+        ("Motivo", dat["concepto"], "concepto"),
+        ("Fecha y hora", f"{fmt_fecha_corta(dat['dt'])} {dat['dt'].strftime('%H:%M')} hs",
+         ("fecha", "hora")),
+        ("Comprobante N°", referencia, "referencia"),
     ]
-    for k, v in items:
+    for k, v, c in items:
         d.text((75, y), k, fill="#7A7A7A", font=fnt("arial", 20))
-        d.text((75, y + 30), v, fill="#1A1A1A", font=fnt("arial_bold", 22))
+        d.campo(c, (75, y + 30), v, fill="#1A1A1A", font=fnt("arial_bold", 22))
         d.line([(75, y + 76), (W - 75, y + 76)], fill="#EEF2F5", width=1)
         y += 90
 
-    guardar_con_compresion(ruido_whatsapp(img), ruta)
-    return str(ruta), _gt("Ualá", dat, referencia=referencia,
-                          ocultos=["nombre_emisor", "cuit_emisor", "cbu_cvu_emisor"])
+    finalizar(img, ruta)
+    return str(ruta), _gt("Ualá", dat, d, referencia=referencia)
 
 
 # ---------------------------------------------------------------------------
@@ -860,36 +1064,36 @@ def comp_personalpay_saliente() -> Tuple[str, dict]:
     referencia = str(random.randint(10**9, 10**10 - 1))
 
     W, H = 820, 1300
-    img = Image.new("RGB", (W, H), "white")
-    d = ImageDraw.Draw(img)
+    img, d = lienzo_nuevo(W, H, "white")
 
-    # Header violeta degradé simple
+    # Header violeta degradé simple — el logo va escrito, no dibujado aparte
     d.rectangle([0, 0, W, 240], fill="#7B2D9F")
+    d.visible("banco_emisor")
     d.text((55, 55), "personal", fill="white", font=fnt("arial_bold", 32))
     d.text((205, 55), "pay", fill="#FFE066", font=fnt("arial_bold", 32))
-    d.text((55, 130), "Enviaste", fill="white", font=fnt("arial", 24))
-    d.text((55, 165), f"$ {fmt_monto_ar(dat['monto'])}",
-           fill="white", font=fnt("arial_bold", 46))
+    d.campo("tipo_operacion", (55, 130), "Enviaste", fill="white", font=fnt("arial", 24))
+    d.campo(("monto", "moneda"), (55, 165), f"$ {fmt_monto_ar(dat['monto'])}",
+            fill="white", font=fnt("arial_bold", 46))
 
     y = 290
     items = [
-        ("Destinatario", dat["nombre_rec"]),
-        ("Banco", dat["banco_rec"]),
-        ("CBU/CVU", dat["cbu_rec"]),
-        ("CUIT/CUIL", dat["cuit_rec"]),
-        ("Concepto", "Varios"),
-        ("Fecha", f"{fmt_fecha_corta(dat['dt'])} - {dat['dt'].strftime('%H:%M')} hs"),
-        ("N° de operación", referencia),
+        ("Destinatario", dat["nombre_rec"], "nombre_receptor"),
+        ("Banco", dat["banco_rec"], "banco_receptor"),
+        ("CBU/CVU", dat["cbu_rec"], "cbu_cvu_receptor"),
+        ("CUIT/CUIL", dat["cuit_rec"], "cuit_receptor"),
+        ("Concepto", dat["concepto"], "concepto"),
+        ("Fecha", f"{fmt_fecha_corta(dat['dt'])} - {dat['dt'].strftime('%H:%M')} hs",
+         ("fecha", "hora")),
+        ("N° de operación", referencia, "referencia"),
     ]
-    for k, v in items:
+    for k, v, c in items:
         d.text((55, y), k, fill="#7A7A7A", font=fnt("arial", 22))
-        d.text((55, y + 32), v, fill="#1A1A1A", font=fnt("arial_bold", 24))
+        d.campo(c, (55, y + 32), v, fill="#1A1A1A", font=fnt("arial_bold", 24))
         d.line([(55, y + 80), (W - 55, y + 80)], fill="#EEEEEE", width=1)
         y += 96
 
-    guardar_con_compresion(ruido_whatsapp(img), ruta)
-    return str(ruta), _gt("Personal Pay", dat, referencia=referencia,
-                          ocultos=["nombre_emisor", "cuit_emisor", "cbu_cvu_emisor"])
+    finalizar(img, ruta)
+    return str(ruta), _gt("Personal Pay", dat, d, referencia=referencia)
 
 
 # ===========================================================================
@@ -908,34 +1112,24 @@ TEMPLATES = {
     ("Personal Pay",   "transferencia_saliente"): comp_personalpay_saliente,
 }
 
-# Cuántas veces aparece cada banco, en proporción a los 51 comprobantes REALES
-# ya revisados a mano. Medido sobre la base el 2026-08-07:
+# Todos los bancos por igual, decidido el 2026-08-11.
 #
-#   Mercado Pago 25 (49%) · Macro 8 · Galicia 6 · Santander 5
-#   Nación 2 · Naranja X 2 · Brubank 1 · (BBVA, Ualá, Personal Pay: 0)
+# Hasta acá esto copiaba la proporción de los 51 comprobantes reales, medida
+# sobre la base el 2026-08-07: Mercado Pago 25 (49%) · Macro 8 · Galicia 6 ·
+# Santander 5 · Nación 2 · Naranja X 2 · Brubank 1 · y CERO de BBVA, Ualá y
+# Personal Pay. El resultado era que tres bancos quedaban con 11 ejemplos en
+# 600, que no alcanza para aprender una maqueta — y la medición de F10 ya venía
+# diciendo que el modelo es un especialista en Mercado Pago y mediocre en el
+# resto, que es exactamente lo que esa proporción enseña.
 #
-# Generar 10% de cada banco —lo que se hacía antes— le enseña en partes iguales
-# algo que en la realidad es mitad Mercado Pago, y le da el mismo peso a tres
-# bancos que en este negocio nunca aparecieron. A los que no aparecen se les
-# deja peso 1 y no 0: si mañana entra uno, el modelo ya vio el formato.
-PESOS = {
-    "Mercado Pago": 25, "Banco Macro": 8, "Banco Galicia": 6, "Banco Santander": 5,
-    "Banco Nación": 2, "Naranja X": 2, "Brubank": 1,
-    "BBVA Francés": 1, "Ualá": 1, "Personal Pay": 1,
-}
+# El ejemplo número 200 de Mercado Pago casi no agrega; el número 40 de BBVA sí.
+# Parte del sesgo real vuelve solo: los comprobantes reales que `reales.py` le
+# suma al dataset siguen siendo mayormente Mercado Pago.
 
 
 # ===========================================================================
 # EL DATASET
 # ===========================================================================
-sys.path.insert(0, str(AQUI))
-from extraer import CAMPOS, PROMPT_V3  # noqa: E402
-
-# El prompt de entrenamiento es el MISMO con el que se infiere. Entrenar con uno
-# y medir con otro invalidaría la comparación zero-shot vs fine-tuned de F10.
-PROMPT = PROMPT_V3
-
-
 def verificar(gt: dict) -> None:
     """Que la etiqueta esté canónica. Es el chequeo que faltó la vez pasada.
 
@@ -946,6 +1140,7 @@ def verificar(gt: dict) -> None:
     assert list(gt) == CAMPOS, f"claves fuera de orden: {list(gt)}"
     assert re.fullmatch(r"\d+\.\d{2}", gt["monto"]), f"monto {gt['monto']!r}"
     assert re.fullmatch(r"\d{4}-\d{2}-\d{2}", gt["fecha"]), f"fecha {gt['fecha']!r}"
+    assert gt["moneda"] == "ARS", f"moneda {gt['moneda']!r}"
 
     # null es una respuesta VÁLIDA y no una falla: significa "no está en la
     # imagen". Antes estas cuatro líneas exigían valor y por eso blindaban el
@@ -963,7 +1158,7 @@ def verificar(gt: dict) -> None:
     opcional("coelsa_id", r"[0-9A-Z]{22}")
 
 
-def ejemplo(plantilla) -> dict:
+def ejemplo(plantilla, perfil: str = NITIDO) -> dict:
     """Un registro en el formato que lee mlx_vlm.trainer.Dataset de 0.1.15.
 
     Las claves son `images` y `messages` — verificado leyendo el código
@@ -985,6 +1180,8 @@ def ejemplo(plantilla) -> dict:
     El token de imagen entra igual en las dos formas —lo pone el wrapper—, así
     que este error no se nota mirando los input_ids: se nota mirando el texto.
     """
+    global _perfil
+    _perfil = perfil
     ruta, gt = plantilla()
     verificar(gt)
     return {
@@ -996,78 +1193,29 @@ def ejemplo(plantilla) -> dict:
     }
 
 
-# Qué tiene que aparecer en el código de dibujo de un template para que ese
-# campo sea legible en la imagen que produce.
-_MARCAS_DIBUJO = {
-    "fecha":            [r"fmt_fecha", r"%d/%m", r"%Y-%m-%d"],
-    "hora":             [r"%H:%M"],
-    "nombre_emisor":    [r"nombre_emi"],
-    "cuit_emisor":      [r"cuit_emi"],
-    "cbu_cvu_emisor":   [r"cbu_emi"],
-    "nombre_receptor":  [r"nombre_rec"],
-    "cuit_receptor":    [r"cuit_rec"],
-    "cbu_cvu_receptor": [r"cbu_rec"],
-    "banco_receptor":   [r"banco_rec"],
-    "concepto":         [r"Concepto", r"Motivo"],
-    "referencia":       [r"referencia"],
-}
-
-
-def verificar_templates() -> None:
-    """Que lo que cada template DECLARA como oculto sea lo que de verdad no dibuja.
-
-    Es el chequeo que faltaba y por el que el primer dataset salió envenenado:
-    `_gt` emitía los 16 campos siempre, así que 270 de 300 ejemplos le enseñaban
-    al modelo a inventar algo —el `cuit_emisor` en 240 de ellos— y ni los 7
-    asserts de `verificar()` ni mirar las imágenes lo mostraban, porque cada
-    etiqueta por separado estaba perfectamente bien formada.
-
-    Lee el código fuente de este mismo archivo: si alguien agrega un campo a un
-    template o saca uno, la declaración deja de coincidir y esto se queja. Sin
-    esto, `ocultos` se desactualiza en silencio, que es exactamente cómo nació
-    el bug original.
-    """
-    import ast
-    fuente = Path(__file__).read_text(encoding="utf-8")
-    problemas = []
-    for nodo in ast.parse(fuente).body:
-        if not (isinstance(nodo, ast.FunctionDef) and nodo.name.startswith("comp_")):
-            continue
-        cuerpo = ast.get_source_segment(fuente, nodo)
-        # el `return ... _gt(...)` nombra variables que no son dibujo
-        dibujo = re.sub(r"return\s+str\(ruta\).*", "", cuerpo, flags=re.S)
-        declarados = set(re.findall(r'"([a-z_]+)"', re.search(
-            r"ocultos=\[(.*?)\]", cuerpo, re.S).group(1))) \
-            if "ocultos=" in cuerpo else set()
-        reales = {c for c, pats in _MARCAS_DIBUJO.items()
-                  if not any(re.search(p, dibujo) for p in pats)}
-        # coelsa_id ya se pasa explícito, no entra por `ocultos`
-        if reales - declarados:
-            problemas.append(f"{nodo.name}: NO dibuja {sorted(reales - declarados)} "
-                             f"pero la etiqueta los llena")
-        if declarados - reales:
-            problemas.append(f"{nodo.name}: declara ocultos {sorted(declarados - reales)} "
-                             f"pero sí los dibuja")
-    assert not problemas, "templates y etiquetas no coinciden:\n  " + "\n  ".join(problemas)
-
-
 def main() -> None:
     p = argparse.ArgumentParser(description="Genera el dataset sintético de F8.")
     p.add_argument("--n", type=int, default=4,
-                   help="ejemplos totales, repartidos en partes iguales entre los 10 bancos")
+                   help="ejemplos totales, en partes iguales entre los 10 bancos")
+    p.add_argument("--degradados", type=float, default=0.5,
+                   help="fracción con calidad de foto reenviada (0.5 = mitad y mitad)")
     p.add_argument("--semilla", type=int, default=42)
     p.add_argument("--salida", type=Path, default=SALIDA_DIR / "train.jsonl")
     args = p.parse_args()
-
-    verificar_templates()   # antes de generar nada: si no coinciden, no se genera
 
     random.seed(args.semilla)
     Faker.seed(args.semilla)
 
     # La bolsa repite cada banco según su peso, y después se recorre en orden:
     # así la proporción sale exacta y no librada al azar de 300 tiradas.
-    bolsa = [f for (banco, _), f in TEMPLATES.items() for _ in range(PESOS[banco])]
-    registros = [ejemplo(bolsa[i % len(bolsa)]) for i in range(args.n)]
+    bolsa = list(TEMPLATES.values())
+
+    # El perfil se reparte por posición y no al azar, para que la proporción
+    # salga exacta y quede pareja entre los bancos: si se sorteara, un banco de
+    # peso 1 podría quedar entero de un solo lado.
+    corte = round(args.n * args.degradados)
+    perfiles = [DEGRADADO] * corte + [NITIDO] * (args.n - corte)
+    registros = [ejemplo(bolsa[i % len(bolsa)], perfiles[i]) for i in range(args.n)]
     random.shuffle(registros)
 
     args.salida.write_text(

@@ -16,6 +16,7 @@ import {
   guardarRevision as escribirRevision, cargarComprobante,
   aceptarFormato, proximo, type Filtro,
 } from '@/lib/revision'
+import { elegir, borrarEleccion } from '@/lib/eleccion'
 
 /** Las imágenes van al disco local, nunca a la base ni afuera de la máquina. */
 const CARPETA = join(process.cwd(), 'comprobantes')
@@ -279,4 +280,40 @@ export async function probarComprobante(
   } finally {
     await rm(carpeta, { recursive: true, force: true })
   }
+}
+
+/**
+ * "Esta fila del extracto es la de este comprobante", desde /encontrar.
+ *
+ * Va sin `useActionState` a propósito: la tabla es un Server Component y meterle
+ * estado la volvería cliente entera, arrastrando `pg` al bundle. Un `<form>` con
+ * su botón alcanza, y el error viaja por la URL — que además deja el aviso
+ * enlazable si hay que mostrárselo a alguien.
+ */
+export async function elegirMovimiento(formData: FormData): Promise<void> {
+  const comprobante = Number(formData.get('comprobante'))
+  const movimiento = Number(formData.get('movimiento'))
+  const r = await elegir(comprobante, movimiento)
+  revalidatePath('/encontrar', 'layout')
+  if (!r.ok) redirect(`${destino(formData)}?error=${encodeURIComponent(r.error)}`)
+}
+
+/** Deshacer: el comprobante vuelve a mostrar lo que dice el algoritmo. */
+export async function quitarEleccion(formData: FormData): Promise<void> {
+  await borrarEleccion(Number(formData.get('comprobante')))
+  revalidatePath('/encontrar', 'layout')
+}
+
+/**
+ * A qué pantalla vuelve el aviso de error. Se manda en un hidden porque una
+ * Server Action no sabe desde dónde la llamaron, y volver siempre a la lista
+ * haría perder el comprobante que se estaba mirando.
+ *
+ * Solo se aceptan rutas de /encontrar: un `volverA` que viene del formulario es
+ * entrada del navegador, y redirigir a donde diga sin mirarlo es lo que hace
+ * que un enlace preparado por otro te mande a cualquier lado.
+ */
+function destino(formData: FormData): string {
+  const v = String(formData.get('volverA') ?? '')
+  return /^\/encontrar(\/\d+)?$/.test(v) ? v : '/encontrar'
 }
