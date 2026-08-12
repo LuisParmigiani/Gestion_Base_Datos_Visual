@@ -14,7 +14,7 @@
 import { db } from './src/lib/db.ts'
 import { CAMPOS, type Campo, normalizarCampo } from './src/lib/importar-comprobantes.ts'
 
-const CORRIDAS = ['v1', 'v2', 'v4', 'lora_v3_mejor', 'lora_v3_final']
+const CORRIDAS = ['v1', 'v2', 'v4', 'lora_v3_mejor', 'lora_v3_final', 'lora_v4_final']
 const REFERENCIA = 'lora_v3_mejor'   // define el conjunto de comprobantes a comparar
 
 type Fila = {

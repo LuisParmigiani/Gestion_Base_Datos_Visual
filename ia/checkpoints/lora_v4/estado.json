@@ -1,0 +1,16 @@
+{
+  "epoch": 0,
+  "paso": 841,
+  "loss": 6.0536840464919806e-05,
+  "pasos": 842,
+  "epochs": 1,
+  "dataset": "ia/sinteticos/train_v4.jsonl",
+  "modelo": "mlx-community/Qwen2-VL-7B-Instruct-4bit",
+  "lr": 0.0001,
+  "rank": 16,
+  "alpha": 0.1,
+  "dropout": 0.05,
+  "batch": 1,
+  "resize": null,
+  "guardado": "2026-08-12 15:59:33"
+}
