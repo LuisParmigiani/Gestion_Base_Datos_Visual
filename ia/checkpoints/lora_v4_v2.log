@@ -1,0 +1,681 @@
+cargando mlx-community/Qwen2-VL-7B-Instruct-4bit...
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 5410.10it/s]
+The image processor of type `Qwen2VLImageProcessor` is now loaded as a fast processor by default, even if the model checkpoint was saved with a slow processor. This is a breaking change and may produce slightly different outputs. To continue using the slow processor, instantiate this class with `use_fast=False`. Note that this behavior will be extended to all models in a future release.
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 5820.28it/s]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 1642 examples [00:00, 466981.77 examples/s]
+Map:   0%|          | 0/1642 [00:00<?, ? examples/s]Map: 100%|██████████| 1642/1642 [00:00<00:00, 48704.07 examples/s]
+#trainable params: 40.370176 M || all params: 7615.487488 M || trainable%: 0.530%
+partiendo de los pesos de ia/checkpoints/lora_v4 · 392 tensores · contador de pasos en 0 y optimizador limpio
+1642 ejemplos · 1 epoch(s) · 1642 pasos · batch 1 · lr 5e-05 · rank 16
+  epoch 0 · paso 1/1642 · loss 0.0001 · 30.4s
+  epoch 0 · paso 2/1642 · loss 0.0291 · 113.2s
+  epoch 0 · paso 3/1642 · loss 0.0020 · 83.0s
+  epoch 0 · paso 4/1642 · loss 0.0018 · 113.4s
+  epoch 0 · paso 5/1642 · loss 0.0001 · 151.5s · ✓
+  epoch 0 · paso 6/1642 · loss 0.0081 · 19.3s
+  epoch 0 · paso 7/1642 · loss 0.0003 · 87.5s
+  epoch 0 · paso 8/1642 · loss 0.0001 · 133.8s
+  epoch 0 · paso 9/1642 · loss 0.0081 · 139.3s
+  epoch 0 · paso 10/1642 · loss 0.0070 · 137.0s · ✓
+  epoch 0 · paso 11/1642 · loss 0.0001 · 35.2s
+  epoch 0 · paso 12/1642 · loss 0.0001 · 139.9s
+  epoch 0 · paso 13/1642 · loss 0.0052 · 144.1s
+  epoch 0 · paso 14/1642 · loss 0.0024 · 120.6s
+  epoch 0 · paso 15/1642 · loss 0.0000 · 110.0s · ✓
+  epoch 0 · paso 16/1642 · loss 0.0200 · 23.8s
+  epoch 0 · paso 17/1642 · loss 0.0002 · 84.4s
+  epoch 0 · paso 18/1642 · loss 0.0735 · 111.0s
+  epoch 0 · paso 19/1642 · loss 0.0001 · 90.9s
+  epoch 0 · paso 20/1642 · loss 0.0053 · 146.5s · ✓
+  epoch 0 · paso 21/1642 · loss 0.0158 · 29.5s
+  epoch 0 · paso 22/1642 · loss 0.0095 · 111.3s
+  epoch 0 · paso 23/1642 · loss 0.0263 · 106.1s
+  epoch 0 · paso 24/1642 · loss 0.0000 · 110.8s
+mx.metal.get_peak_memory is deprecated and will be removed in a future version. Use mx.get_peak_memory instead.
+  epoch 0 · paso 25/1642 · loss 0.0000 · 155.6s · ✓ · 🐤
+  epoch 0 · paso 26/1642 · loss 0.0057 · 19.5s
+  epoch 0 · paso 27/1642 · loss 0.0171 · 87.7s
+  epoch 0 · paso 28/1642 · loss 0.0075 · 114.8s
+  epoch 0 · paso 29/1642 · loss 0.0003 · 137.3s
+  epoch 0 · paso 30/1642 · loss 0.0002 · 138.4s · ✓
+  epoch 0 · paso 31/1642 · loss 0.0000 · 36.6s
+  epoch 0 · paso 32/1642 · loss 0.0002 · 135.4s
+  epoch 0 · paso 33/1642 · loss 0.0053 · 100.7s
+  epoch 0 · paso 34/1642 · loss 0.0005 · 96.8s
+  epoch 0 · paso 35/1642 · loss 0.0028 · 150.6s · ✓
+  epoch 0 · paso 36/1642 · loss 0.0001 · 25.6s
+  epoch 0 · paso 37/1642 · loss 0.0001 · 99.7s
+  epoch 0 · paso 38/1642 · loss 0.0000 · 126.9s
+  epoch 0 · paso 39/1642 · loss 0.0064 · 134.9s
+  epoch 0 · paso 40/1642 · loss 0.0033 · 97.9s · ✓
+  epoch 0 · paso 41/1642 · loss 0.0002 · 37.1s
+  epoch 0 · paso 42/1642 · loss 0.0056 · 138.0s
+  epoch 0 · paso 43/1642 · loss 0.0000 · 79.9s
+  epoch 0 · paso 44/1642 · loss 0.0026 · 101.7s
+  epoch 0 · paso 45/1642 · loss 0.0001 · 109.9s · ✓
+  epoch 0 · paso 46/1642 · loss 0.0000 · 30.6s
+  epoch 0 · paso 47/1642 · loss 0.0091 · 129.0s
+  epoch 0 · paso 48/1642 · loss 0.0033 · 110.6s
+  epoch 0 · paso 49/1642 · loss 0.0001 · 82.4s
+  epoch 0 · paso 50/1642 · loss 0.0001 · 162.8s · ✓ · 🐤
+  epoch 0 · paso 51/1642 · loss 0.0000 · 27.1s
+  epoch 0 · paso 52/1642 · loss 0.0000 · 131.3s
+  epoch 0 · paso 53/1642 · loss 0.0000 · 140.2s
+  epoch 0 · paso 54/1642 · loss 0.0001 · 133.4s
+  epoch 0 · paso 55/1642 · loss 0.0004 · 108.6s · ✓
+  epoch 0 · paso 56/1642 · loss 0.0055 · 40.5s
+  epoch 0 · paso 57/1642 · loss 0.0051 · 142.3s
+  epoch 0 · paso 58/1642 · loss 0.0000 · 148.9s
+  epoch 0 · paso 59/1642 · loss 0.0000 · 157.3s
+  epoch 0 · paso 60/1642 · loss 0.0135 · 157.0s · ✓
+  epoch 0 · paso 61/1642 · loss 0.0031 · 35.6s
+  epoch 0 · paso 62/1642 · loss 0.0004 · 133.4s
+  epoch 0 · paso 63/1642 · loss 0.0123 · 129.3s
+  epoch 0 · paso 64/1642 · loss 0.0000 · 126.1s
+  epoch 0 · paso 65/1642 · loss 0.0006 · 149.2s · ✓
+  epoch 0 · paso 66/1642 · loss 0.0016 · 22.8s
+  epoch 0 · paso 67/1642 · loss 0.0058 · 85.7s
+  epoch 0 · paso 68/1642 · loss 0.0000 · 121.1s
+  epoch 0 · paso 69/1642 · loss 0.0000 · 152.0s
+  epoch 0 · paso 70/1642 · loss 0.0000 · 154.6s · ✓
+  epoch 0 · paso 71/1642 · loss 0.0214 · 21.7s
+  epoch 0 · paso 72/1642 · loss 0.0053 · 74.2s
+  epoch 0 · paso 73/1642 · loss 0.0000 · 126.2s
+  epoch 0 · paso 74/1642 · loss 0.0106 · 126.5s
+  epoch 0 · paso 75/1642 · loss 0.0004 · 90.4s · ✓ · 🐤
+  epoch 0 · paso 76/1642 · loss 0.0184 · 10.3s
+  epoch 0 · paso 77/1642 · loss 0.0000 · 62.6s
+  epoch 0 · paso 78/1642 · loss 0.0000 · 129.2s
+  epoch 0 · paso 79/1642 · loss 0.0039 · 131.8s
+  epoch 0 · paso 80/1642 · loss 0.0030 · 115.5s · ✓
+  epoch 0 · paso 81/1642 · loss 0.0088 · 17.6s
+  epoch 0 · paso 82/1642 · loss 0.0032 · 80.0s
+  epoch 0 · paso 83/1642 · loss 0.0000 · 123.8s
+  epoch 0 · paso 84/1642 · loss 0.0000 · 133.3s
+  epoch 0 · paso 85/1642 · loss 0.0046 · 122.1s · ✓
+  epoch 0 · paso 86/1642 · loss 0.0000 · 32.7s
+  epoch 0 · paso 87/1642 · loss 0.0000 · 137.6s
+  epoch 0 · paso 88/1642 · loss 0.0003 · 133.6s
+  epoch 0 · paso 89/1642 · loss 0.0000 · 132.8s
+  epoch 0 · paso 90/1642 · loss 0.0010 · 138.4s · ✓
+  epoch 0 · paso 91/1642 · loss 0.0006 · 31.2s
+  epoch 0 · paso 92/1642 · loss 0.0000 · 125.4s
+  epoch 0 · paso 93/1642 · loss 0.0326 · 99.6s
+  epoch 0 · paso 94/1642 · loss 0.0006 · 70.3s
+  epoch 0 · paso 95/1642 · loss 0.0003 · 84.0s · ✓
+  epoch 0 · paso 96/1642 · loss 0.0001 · 28.6s
+  epoch 0 · paso 97/1642 · loss 0.0001 · 116.3s
+  epoch 0 · paso 98/1642 · loss 0.0048 · 113.7s
+  epoch 0 · paso 99/1642 · loss 0.0011 · 113.4s
+  epoch 0 · paso 100/1642 · loss 0.0000 · 112.4s · ✓ · MEJOR (0.002) · 🐤
+  epoch 0 · paso 101/1642 · loss 0.0000 · 27.9s
+  epoch 0 · paso 102/1642 · loss 0.0000 · 131.2s
+  epoch 0 · paso 103/1642 · loss 0.0157 · 120.0s
+  epoch 0 · paso 104/1642 · loss 0.0003 · 69.8s
+  epoch 0 · paso 105/1642 · loss 0.0000 · 112.9s · ✓ · MEJOR (0.002)
+  epoch 0 · paso 106/1642 · loss 0.0001 · 32.6s
+  epoch 0 · paso 107/1642 · loss 0.0000 · 141.1s
+  epoch 0 · paso 108/1642 · loss 0.0006 · 128.8s
+  epoch 0 · paso 109/1642 · loss 0.0000 · 114.5s
+  epoch 0 · paso 110/1642 · loss 0.0439 · 136.6s · ✓
+  epoch 0 · paso 111/1642 · loss 0.0001 · 27.1s
+  epoch 0 · paso 112/1642 · loss 0.0013 · 125.2s
+  epoch 0 · paso 113/1642 · loss 0.0003 · 130.0s
+  epoch 0 · paso 114/1642 · loss 0.0287 · 87.8s
+  epoch 0 · paso 115/1642 · loss 0.0289 · 56.4s · ✓
+  epoch 0 · paso 116/1642 · loss 0.0001 · 28.6s
+  epoch 0 · paso 117/1642 · loss 0.0001 · 133.5s
+  epoch 0 · paso 118/1642 · loss 0.0000 · 144.1s
+  epoch 0 · paso 119/1642 · loss 0.0032 · 117.7s
+  epoch 0 · paso 120/1642 · loss 0.0229 · 62.7s · ✓
+  epoch 0 · paso 121/1642 · loss 0.0037 · 29.3s
+  epoch 0 · paso 122/1642 · loss 0.0000 · 124.2s
+  epoch 0 · paso 123/1642 · loss 0.0331 · 112.3s
+  epoch 0 · paso 124/1642 · loss 0.0002 · 53.0s
+  epoch 0 · paso 125/1642 · loss 0.0074 · 83.1s · ✓ · 🐤
+  epoch 0 · paso 126/1642 · loss 0.0001 · 28.3s
+  epoch 0 · paso 127/1642 · loss 0.0000 · 125.5s
+  epoch 0 · paso 128/1642 · loss 0.0000 · 143.4s
+  epoch 0 · paso 129/1642 · loss 0.0316 · 135.9s
+  epoch 0 · paso 130/1642 · loss 0.0003 · 63.9s · ✓
+  epoch 0 · paso 131/1642 · loss 0.0496 · 10.2s
+  epoch 0 · paso 132/1642 · loss 0.0000 · 52.5s
+  epoch 0 · paso 133/1642 · loss 0.0058 · 111.2s
+  epoch 0 · paso 134/1642 · loss 0.0000 · 93.7s
+  epoch 0 · paso 135/1642 · loss 0.0001 · 121.1s · ✓
+  epoch 0 · paso 136/1642 · loss 0.0047 · 27.8s
+  epoch 0 · paso 137/1642 · loss 0.0149 · 112.0s
+  epoch 0 · paso 138/1642 · loss 0.0055 · 83.1s
+  epoch 0 · paso 139/1642 · loss 0.0004 · 82.3s
+  epoch 0 · paso 140/1642 · loss 0.0033 · 100.5s · ✓
+  epoch 0 · paso 141/1642 · loss 0.0000 · 29.3s
+  epoch 0 · paso 142/1642 · loss 0.0000 · 125.7s
+  epoch 0 · paso 143/1642 · loss 0.0001 · 139.6s
+  epoch 0 · paso 144/1642 · loss 0.0441 · 129.8s
+  epoch 0 · paso 145/1642 · loss 0.0000 · 70.3s · ✓
+  epoch 0 · paso 146/1642 · loss 0.0000 · 30.6s
+  epoch 0 · paso 147/1642 · loss 0.0084 · 107.3s
+  epoch 0 · paso 148/1642 · loss 0.0709 · 53.5s
+  epoch 0 · paso 149/1642 · loss 0.0114 · 45.0s
+  epoch 0 · paso 150/1642 · loss 0.0010 · 57.2s · ✓ · 🐤
+  epoch 0 · paso 151/1642 · loss 0.0000 · 22.5s
+  epoch 0 · paso 152/1642 · loss 0.0000 · 123.8s
+  epoch 0 · paso 153/1642 · loss 0.0000 · 145.3s
+  epoch 0 · paso 154/1642 · loss 0.0003 · 138.5s
+  epoch 0 · paso 155/1642 · loss 0.0000 · 146.3s · ✓
+  epoch 0 · paso 156/1642 · loss 0.0009 · 27.4s
+  epoch 0 · paso 157/1642 · loss 0.0000 · 112.3s
+  epoch 0 · paso 158/1642 · loss 0.0364 · 71.1s
+  epoch 0 · paso 159/1642 · loss 0.0000 · 58.9s
+  epoch 0 · paso 160/1642 · loss 0.0000 · 123.4s · ✓
+  epoch 0 · paso 161/1642 · loss 0.0004 · 30.4s
+  epoch 0 · paso 162/1642 · loss 0.0073 · 113.2s
+  epoch 0 · paso 163/1642 · loss 0.0001 · 80.7s
+  epoch 0 · paso 164/1642 · loss 0.0000 · 137.2s
+  epoch 0 · paso 165/1642 · loss 0.0010 · 132.5s · ✓
+  epoch 0 · paso 166/1642 · loss 0.0039 · 28.8s
+  epoch 0 · paso 167/1642 · loss 0.0137 · 118.1s
+  epoch 0 · paso 168/1642 · loss 0.0001 · 113.8s
+  epoch 0 · paso 169/1642 · loss 0.0387 · 114.4s
+  epoch 0 · paso 170/1642 · loss 0.0006 · 79.5s · ✓
+  epoch 0 · paso 171/1642 · loss 0.0151 · 18.6s
+  epoch 0 · paso 172/1642 · loss 0.0005 · 83.2s
+  epoch 0 · paso 173/1642 · loss 0.0137 · 122.2s
+  epoch 0 · paso 174/1642 · loss 0.0173 · 99.5s
+  epoch 0 · paso 175/1642 · loss 0.0334 · 79.4s · ✓ · 🐤
+  epoch 0 · paso 176/1642 · loss 0.0028 · 20.2s
+  epoch 0 · paso 177/1642 · loss 0.0002 · 100.8s
+  epoch 0 · paso 178/1642 · loss 0.0027 · 115.2s
+  epoch 0 · paso 179/1642 · loss 0.0074 · 88.0s
+  epoch 0 · paso 180/1642 · loss 0.0107 · 60.6s · ✓
+  epoch 0 · paso 181/1642 · loss 0.0090 · 12.1s
+  epoch 0 · paso 182/1642 · loss 0.0011 · 61.2s
+  epoch 0 · paso 183/1642 · loss 0.0292 · 88.3s
+  epoch 0 · paso 184/1642 · loss 0.0349 · 44.2s
+  epoch 0 · paso 185/1642 · loss 0.0000 · 45.1s · ✓
+  epoch 0 · paso 186/1642 · loss 0.0000 · 35.3s
+  epoch 0 · paso 187/1642 · loss 0.0032 · 145.2s
+  epoch 0 · paso 188/1642 · loss 0.0011 · 133.2s
+  epoch 0 · paso 189/1642 · loss 0.0069 · 137.0s
+  epoch 0 · paso 190/1642 · loss 0.0064 · 84.6s · ✓
+  epoch 0 · paso 191/1642 · loss 0.0000 · 30.0s
+  epoch 0 · paso 192/1642 · loss 0.0000 · 125.4s
+  epoch 0 · paso 193/1642 · loss 0.0000 · 140.5s
+  epoch 0 · paso 194/1642 · loss 0.0634 · 137.1s
+  epoch 0 · paso 195/1642 · loss 0.0014 · 73.7s · ✓
+  epoch 0 · paso 196/1642 · loss 0.0000 · 17.2s
+  epoch 0 · paso 197/1642 · loss 0.0000 · 80.4s
+  epoch 0 · paso 198/1642 · loss 0.0012 · 117.6s
+  epoch 0 · paso 199/1642 · loss 0.0001 · 96.5s
+  epoch 0 · paso 200/1642 · loss 0.0052 · 125.9s · ✓ · 🐤
+  epoch 0 · paso 201/1642 · loss 0.0068 · 24.9s
+  epoch 0 · paso 202/1642 · loss 0.0178 · 117.1s
+  epoch 0 · paso 203/1642 · loss 0.0001 · 94.0s
+  epoch 0 · paso 204/1642 · loss 0.0001 · 139.1s
+  epoch 0 · paso 205/1642 · loss 0.0000 · 151.6s · ✓
+  epoch 0 · paso 206/1642 · loss 0.0004 · 23.6s
+  epoch 0 · paso 207/1642 · loss 0.0000 · 102.0s
+  epoch 0 · paso 208/1642 · loss 0.0001 · 121.5s
+  epoch 0 · paso 209/1642 · loss 0.0078 · 104.3s
+  epoch 0 · paso 210/1642 · loss 0.0000 · 110.5s · ✓
+  epoch 0 · paso 211/1642 · loss 0.0078 · 22.8s
+  epoch 0 · paso 212/1642 · loss 0.0095 · 92.9s
+  epoch 0 · paso 213/1642 · loss 0.0079 · 116.0s
+  epoch 0 · paso 214/1642 · loss 0.0356 · 105.2s
+  epoch 0 · paso 215/1642 · loss 0.0152 · 52.8s · ✓
+  epoch 0 · paso 216/1642 · loss 0.0000 · 29.5s
+  epoch 0 · paso 217/1642 · loss 0.0213 · 107.9s
+  epoch 0 · paso 218/1642 · loss 0.0036 · 78.2s
+  epoch 0 · paso 219/1642 · loss 0.0000 · 104.9s
+  epoch 0 · paso 220/1642 · loss 0.0007 · 141.8s · ✓
+  epoch 0 · paso 221/1642 · loss 0.0199 · 13.9s
+  epoch 0 · paso 222/1642 · loss 0.0075 · 76.9s
+  epoch 0 · paso 223/1642 · loss 0.0002 · 132.1s
+  epoch 0 · paso 224/1642 · loss 0.0001 · 125.1s
+  epoch 0 · paso 225/1642 · loss 0.0002 · 108.4s · ✓ · 🐤
+  epoch 0 · paso 226/1642 · loss 0.0000 · 25.6s
+  epoch 0 · paso 227/1642 · loss 0.0001 · 113.0s
+  epoch 0 · paso 228/1642 · loss 0.0072 · 100.7s
+  epoch 0 · paso 229/1642 · loss 0.0304 · 63.6s
+  epoch 0 · paso 230/1642 · loss 0.0018 · 51.0s · ✓
+  epoch 0 · paso 231/1642 · loss 0.0000 · 18.9s
+  epoch 0 · paso 232/1642 · loss 0.0000 · 89.5s
+  epoch 0 · paso 233/1642 · loss 0.0062 · 125.6s
+  epoch 0 · paso 234/1642 · loss 0.0046 · 99.8s
+  epoch 0 · paso 235/1642 · loss 0.0000 · 88.5s · ✓
+  epoch 0 · paso 236/1642 · loss 0.0030 · 28.2s
+  epoch 0 · paso 237/1642 · loss 0.0000 · 126.0s
+  epoch 0 · paso 238/1642 · loss 0.0000 · 135.9s
+  epoch 0 · paso 239/1642 · loss 0.0000 · 124.4s
+  epoch 0 · paso 240/1642 · loss 0.0000 · 132.1s · ✓
+  epoch 0 · paso 241/1642 · loss 0.0000 · 32.0s
+  epoch 0 · paso 242/1642 · loss 0.0002 · 138.8s
+  epoch 0 · paso 243/1642 · loss 0.0000 · 149.4s
+  epoch 0 · paso 244/1642 · loss 0.0000 · 143.3s
+  epoch 0 · paso 245/1642 · loss 0.0001 · 147.6s · ✓
+  epoch 0 · paso 246/1642 · loss 0.0001 · 16.6s
+  epoch 0 · paso 247/1642 · loss 0.0000 · 78.1s
+  epoch 0 · paso 248/1642 · loss 0.0007 · 116.1s
+  epoch 0 · paso 249/1642 · loss 0.0000 · 94.8s
+  epoch 0 · paso 250/1642 · loss 0.0034 · 130.4s · ✓ · 🐤
+  epoch 0 · paso 251/1642 · loss 0.0000 · 26.5s
+  epoch 0 · paso 252/1642 · loss 0.0002 · 106.3s
+  epoch 0 · paso 253/1642 · loss 0.0000 · 87.2s
+  epoch 0 · paso 254/1642 · loss 0.0021 · 131.4s
+  epoch 0 · paso 255/1642 · loss 0.0018 · 136.8s · ✓
+  epoch 0 · paso 256/1642 · loss 0.0001 · 29.9s
+  epoch 0 · paso 257/1642 · loss 0.0070 · 127.8s
+  epoch 0 · paso 258/1642 · loss 0.0000 · 130.7s
+  epoch 0 · paso 259/1642 · loss 0.0263 · 131.0s
+  epoch 0 · paso 260/1642 · loss 0.0046 · 75.7s · ✓
+  epoch 0 · paso 261/1642 · loss 0.0001 · 22.8s
+  epoch 0 · paso 262/1642 · loss 0.0088 · 81.3s
+  epoch 0 · paso 263/1642 · loss 0.0159 · 58.7s
+  epoch 0 · paso 264/1642 · loss 0.0002 · 58.9s
+  epoch 0 · paso 265/1642 · loss 0.0003 · 88.4s · ✓
+  epoch 0 · paso 266/1642 · loss 0.0070 · 20.2s
+  epoch 0 · paso 267/1642 · loss 0.0188 · 65.9s
+  epoch 0 · paso 268/1642 · loss 0.0552 · 57.7s
+  epoch 0 · paso 269/1642 · loss 0.0073 · 81.8s
+  epoch 0 · paso 270/1642 · loss 0.0003 · 113.6s · ✓
+  epoch 0 · paso 271/1642 · loss 0.0000 · 27.8s
+  epoch 0 · paso 272/1642 · loss 0.0003 · 126.7s
+  epoch 0 · paso 273/1642 · loss 0.0178 · 130.4s
+  epoch 0 · paso 274/1642 · loss 0.0017 · 78.7s
+  epoch 0 · paso 275/1642 · loss 0.0000 · 112.3s · ✓ · 🐤
+  epoch 0 · paso 276/1642 · loss 0.0000 · 29.3s
+  epoch 0 · paso 277/1642 · loss 0.0080 · 122.6s
+  epoch 0 · paso 278/1642 · loss 0.0000 · 92.9s
+  epoch 0 · paso 279/1642 · loss 0.0006 · 100.5s
+  epoch 0 · paso 280/1642 · loss 0.0000 · 100.6s · ✓ · MEJOR (0.002)
+  epoch 0 · paso 281/1642 · loss 0.0016 · 21.2s
+  epoch 0 · paso 282/1642 · loss 0.0000 · 92.1s
+  epoch 0 · paso 283/1642 · loss 0.0000 · 146.8s
+  epoch 0 · paso 284/1642 · loss 0.0016 · 134.3s
+  epoch 0 · paso 285/1642 · loss 0.0002 · 119.6s · ✓
+  epoch 0 · paso 286/1642 · loss 0.0091 · 21.2s
+  epoch 0 · paso 287/1642 · loss 0.0009 · 93.8s
+  epoch 0 · paso 288/1642 · loss 0.0000 · 134.3s
+  epoch 0 · paso 289/1642 · loss 0.0000 · 134.6s
+  epoch 0 · paso 290/1642 · loss 0.0001 · 146.3s · ✓ · MEJOR (0.002)
+  epoch 0 · paso 291/1642 · loss 0.0001 · 33.1s
+  epoch 0 · paso 292/1642 · loss 0.0000 · 141.5s
+  epoch 0 · paso 293/1642 · loss 0.0006 · 121.9s
+  epoch 0 · paso 294/1642 · loss 0.0000 · 102.7s
+  epoch 0 · paso 295/1642 · loss 0.0001 · 135.7s · ✓ · MEJOR (0.002)
+  epoch 0 · paso 296/1642 · loss 0.0442 · 17.9s
+  epoch 0 · paso 297/1642 · loss 0.0059 · 77.6s
+  epoch 0 · paso 298/1642 · loss 0.0023 · 122.2s
+  epoch 0 · paso 299/1642 · loss 0.0011 · 129.9s
+  epoch 0 · paso 300/1642 · loss 0.0000 · 136.6s · ✓ · MEJOR (0.001) · 🐤
+  epoch 0 · paso 301/1642 · loss 0.0001 · 30.4s
+  epoch 0 · paso 302/1642 · loss 0.0015 · 127.9s
+  epoch 0 · paso 303/1642 · loss 0.0221 · 74.7s
+  epoch 0 · paso 304/1642 · loss 0.0001 · 66.5s
+  epoch 0 · paso 305/1642 · loss 0.0261 · 98.3s · ✓
+  epoch 0 · paso 306/1642 · loss 0.0068 · 25.7s
+  epoch 0 · paso 307/1642 · loss 0.0000 · 117.7s
+  epoch 0 · paso 308/1642 · loss 0.0000 · 136.7s
+  epoch 0 · paso 309/1642 · loss 0.0012 · 132.9s
+  epoch 0 · paso 310/1642 · loss 0.0000 · 100.4s · ✓
+  epoch 0 · paso 311/1642 · loss 0.0000 · 31.5s
+  epoch 0 · paso 312/1642 · loss 0.0029 · 134.8s
+  epoch 0 · paso 313/1642 · loss 0.0150 · 126.3s
+  epoch 0 · paso 314/1642 · loss 0.0136 · 115.1s
+  epoch 0 · paso 315/1642 · loss 0.0167 · 62.4s · ✓
+  epoch 0 · paso 316/1642 · loss 0.0000 · 30.5s
+  epoch 0 · paso 317/1642 · loss 0.0000 · 125.6s
+  epoch 0 · paso 318/1642 · loss 0.0350 · 113.3s
+  epoch 0 · paso 319/1642 · loss 0.0002 · 88.5s
+  epoch 0 · paso 320/1642 · loss 0.0001 · 124.7s · ✓
+  epoch 0 · paso 321/1642 · loss 0.0001 · 30.7s
+  epoch 0 · paso 322/1642 · loss 0.0087 · 140.5s
+  epoch 0 · paso 323/1642 · loss 0.0004 · 161.7s
+  epoch 0 · paso 324/1642 · loss 0.0000 · 148.2s
+  epoch 0 · paso 325/1642 · loss 0.0000 · 145.3s · ✓ · 🐤
+  epoch 0 · paso 326/1642 · loss 0.0000 · 26.5s
+  epoch 0 · paso 327/1642 · loss 0.0006 · 110.4s
+  epoch 0 · paso 328/1642 · loss 0.0015 · 101.3s
+  epoch 0 · paso 329/1642 · loss 0.0512 · 125.8s
+  epoch 0 · paso 330/1642 · loss 0.0000 · 85.4s · ✓
+  epoch 0 · paso 331/1642 · loss 0.0000 · 29.6s
+  epoch 0 · paso 332/1642 · loss 0.0095 · 110.4s
+  epoch 0 · paso 333/1642 · loss 0.0175 · 75.5s
+  epoch 0 · paso 334/1642 · loss 0.0000 · 81.7s
+  epoch 0 · paso 335/1642 · loss 0.0000 · 136.2s · ✓
+  epoch 0 · paso 336/1642 · loss 0.0072 · 14.4s
+  epoch 0 · paso 337/1642 · loss 0.0001 · 73.7s
+  epoch 0 · paso 338/1642 · loss 0.0001 · 132.1s
+  epoch 0 · paso 339/1642 · loss 0.0207 · 106.8s
+  epoch 0 · paso 340/1642 · loss 0.0202 · 63.7s · ✓
+  epoch 0 · paso 341/1642 · loss 0.0481 · 12.3s
+  epoch 0 · paso 342/1642 · loss 0.0000 · 66.7s
+  epoch 0 · paso 343/1642 · loss 0.0000 · 130.4s
+  epoch 0 · paso 344/1642 · loss 0.0001 · 125.1s
+  epoch 0 · paso 345/1642 · loss 0.0000 · 106.6s · ✓
+  epoch 0 · paso 346/1642 · loss 0.0149 · 18.4s
+  epoch 0 · paso 347/1642 · loss 0.0001 · 81.4s
+  epoch 0 · paso 348/1642 · loss 0.0011 · 129.6s
+  epoch 0 · paso 349/1642 · loss 0.0067 · 130.0s
+  epoch 0 · paso 350/1642 · loss 0.0249 · 80.0s · ✓ · 🐤
+  epoch 0 · paso 351/1642 · loss 0.0000 · 28.2s
+  epoch 0 · paso 352/1642 · loss 0.0001 · 133.6s
+  epoch 0 · paso 353/1642 · loss 0.0024 · 113.9s
+  epoch 0 · paso 354/1642 · loss 0.0000 · 80.6s
+  epoch 0 · paso 355/1642 · loss 0.0061 · 111.5s · ✓
+  epoch 0 · paso 356/1642 · loss 0.0246 · 11.0s
+  epoch 0 · paso 357/1642 · loss 0.0073 · 49.1s
+  epoch 0 · paso 358/1642 · loss 0.0169 · 65.6s
+  epoch 0 · paso 359/1642 · loss 0.0001 · 68.6s
+  epoch 0 · paso 360/1642 · loss 0.0000 · 133.8s · ✓
+  epoch 0 · paso 361/1642 · loss 0.0000 · 23.9s
+  epoch 0 · paso 362/1642 · loss 0.0002 · 86.9s
+  epoch 0 · paso 363/1642 · loss 0.0000 · 84.3s
+  epoch 0 · paso 364/1642 · loss 0.0029 · 114.7s
+  epoch 0 · paso 365/1642 · loss 0.0000 · 91.7s · ✓
+  epoch 0 · paso 366/1642 · loss 0.0050 · 18.4s
+  epoch 0 · paso 367/1642 · loss 0.0000 · 88.7s
+  epoch 0 · paso 368/1642 · loss 0.0009 · 130.6s
+  epoch 0 · paso 369/1642 · loss 0.0517 · 130.1s
+  epoch 0 · paso 370/1642 · loss 0.0000 · 70.9s · ✓
+  epoch 0 · paso 371/1642 · loss 0.0000 · 29.5s
+  epoch 0 · paso 372/1642 · loss 0.0115 · 110.8s
+  epoch 0 · paso 373/1642 · loss 0.0002 · 80.2s
+  epoch 0 · paso 374/1642 · loss 0.0001 · 106.0s
+  epoch 0 · paso 375/1642 · loss 0.0001 · 101.8s · ✓ · 🐤
+  epoch 0 · paso 376/1642 · loss 0.0000 · 28.1s
+  epoch 0 · paso 377/1642 · loss 0.0000 · 121.7s
+  epoch 0 · paso 378/1642 · loss 0.0000 · 115.0s
+  epoch 0 · paso 379/1642 · loss 0.0165 · 116.0s
+  epoch 0 · paso 380/1642 · loss 0.0020 · 80.5s · ✓
+  epoch 0 · paso 381/1642 · loss 0.0000 · 29.3s
+  epoch 0 · paso 382/1642 · loss 0.0050 · 123.9s
+  epoch 0 · paso 383/1642 · loss 0.0047 · 115.2s
+  epoch 0 · paso 384/1642 · loss 0.0014 · 86.0s
+  epoch 0 · paso 385/1642 · loss 0.0003 · 95.5s · ✓
+  epoch 0 · paso 386/1642 · loss 0.0039 · 25.2s
+  epoch 0 · paso 387/1642 · loss 0.0035 · 104.3s
+  epoch 0 · paso 388/1642 · loss 0.0000 · 126.9s
+  epoch 0 · paso 389/1642 · loss 0.0000 · 137.3s
+  epoch 0 · paso 390/1642 · loss 0.0000 · 144.2s · ✓
+  epoch 0 · paso 391/1642 · loss 0.0000 · 33.5s
+  epoch 0 · paso 392/1642 · loss 0.0000 · 138.2s
+  epoch 0 · paso 393/1642 · loss 0.0079 · 125.3s
+  epoch 0 · paso 394/1642 · loss 0.0000 · 100.5s
+  epoch 0 · paso 395/1642 · loss 0.0000 · 143.0s · ✓
+  epoch 0 · paso 396/1642 · loss 0.0119 · 16.5s
+  epoch 0 · paso 397/1642 · loss 0.0002 · 79.8s
+  epoch 0 · paso 398/1642 · loss 0.0000 · 134.6s
+  epoch 0 · paso 399/1642 · loss 0.0029 · 129.9s
+  epoch 0 · paso 400/1642 · loss 0.0015 · 134.4s · ✓ · 🐤
+  epoch 0 · paso 401/1642 · loss 0.0002 · 31.3s
+  epoch 0 · paso 402/1642 · loss 0.0000 · 142.0s
+  epoch 0 · paso 403/1642 · loss 0.0134 · 97.0s
+  epoch 0 · paso 404/1642 · loss 0.0000 · 78.8s
+  epoch 0 · paso 405/1642 · loss 0.0001 · 140.2s · ✓
+  epoch 0 · paso 406/1642 · loss 0.0004 · 23.2s
+  epoch 0 · paso 407/1642 · loss 0.0032 · 101.5s
+  epoch 0 · paso 408/1642 · loss 0.0000 · 127.1s
+  epoch 0 · paso 409/1642 · loss 0.0000 · 138.6s
+  epoch 0 · paso 410/1642 · loss 0.0001 · 151.4s · ✓
+  epoch 0 · paso 411/1642 · loss 0.0001 · 33.3s
+  epoch 0 · paso 412/1642 · loss 0.0000 · 143.6s
+  epoch 0 · paso 413/1642 · loss 0.0012 · 151.5s
+  epoch 0 · paso 414/1642 · loss 0.0000 · 119.2s
+  epoch 0 · paso 415/1642 · loss 0.0132 · 134.7s · ✓
+  epoch 0 · paso 416/1642 · loss 0.0006 · 29.8s
+  epoch 0 · paso 417/1642 · loss 0.0002 · 132.4s
+  epoch 0 · paso 418/1642 · loss 0.0003 · 138.2s
+  epoch 0 · paso 419/1642 · loss 0.0000 · 133.2s
+  epoch 0 · paso 420/1642 · loss 0.0049 · 131.4s · ✓
+  epoch 0 · paso 421/1642 · loss 0.0036 · 27.9s
+  epoch 0 · paso 422/1642 · loss 0.0000 · 121.1s
+  epoch 0 · paso 423/1642 · loss 0.0000 · 139.3s
+  epoch 0 · paso 424/1642 · loss 0.0104 · 137.5s
+  epoch 0 · paso 425/1642 · loss 0.0007 · 90.0s · ✓ · 🐤
+  epoch 0 · paso 426/1642 · loss 0.0000 · 24.4s
+  epoch 0 · paso 427/1642 · loss 0.0150 · 110.6s
+  epoch 0 · paso 428/1642 · loss 0.0129 · 81.9s
+  epoch 0 · paso 429/1642 · loss 0.0012 · 78.6s
+  epoch 0 · paso 430/1642 · loss 0.0000 · 112.8s · ✓
+  epoch 0 · paso 431/1642 · loss 0.0000 · 28.6s
+  epoch 0 · paso 432/1642 · loss 0.0000 · 128.5s
+  epoch 0 · paso 433/1642 · loss 0.0157 · 123.9s
+  epoch 0 · paso 434/1642 · loss 0.0000 · 120.0s
+  epoch 0 · paso 435/1642 · loss 0.0008 · 138.1s · ✓
+  epoch 0 · paso 436/1642 · loss 0.0305 · 14.6s
+  epoch 0 · paso 437/1642 · loss 0.0040 · 65.4s
+  epoch 0 · paso 438/1642 · loss 0.0120 · 96.6s
+  epoch 0 · paso 439/1642 · loss 0.0000 · 118.8s
+  epoch 0 · paso 440/1642 · loss 0.0190 · 130.9s · ✓
+  epoch 0 · paso 441/1642 · loss 0.0000 · 29.3s
+  epoch 0 · paso 442/1642 · loss 0.0000 · 120.7s
+  epoch 0 · paso 443/1642 · loss 0.0002 · 100.4s
+  epoch 0 · paso 444/1642 · loss 0.0049 · 117.0s
+  epoch 0 · paso 445/1642 · loss 0.0002 · 107.3s · ✓
+  epoch 0 · paso 446/1642 · loss 0.0001 · 20.3s
+  epoch 0 · paso 447/1642 · loss 0.0000 · 96.3s
+  epoch 0 · paso 448/1642 · loss 0.0036 · 127.0s
+  epoch 0 · paso 449/1642 · loss 0.0263 · 70.3s
+  epoch 0 · paso 450/1642 · loss 0.0000 · 79.0s · ✓ · 🐤
+  epoch 0 · paso 451/1642 · loss 0.0000 · 21.9s
+  epoch 0 · paso 452/1642 · loss 0.0166 · 79.9s
+  epoch 0 · paso 453/1642 · loss 0.0005 · 55.0s
+  epoch 0 · paso 454/1642 · loss 0.0000 · 95.3s
+  epoch 0 · paso 455/1642 · loss 0.0357 · 114.0s · ✓
+  epoch 0 · paso 456/1642 · loss 0.0026 · 27.6s
+  epoch 0 · paso 457/1642 · loss 0.0000 · 122.3s
+  epoch 0 · paso 458/1642 · loss 0.0000 · 134.1s
+  epoch 0 · paso 459/1642 · loss 0.0000 · 131.1s
+  epoch 0 · paso 460/1642 · loss 0.0128 · 109.2s · ✓
+  epoch 0 · paso 461/1642 · loss 0.0033 · 13.3s
+  epoch 0 · paso 462/1642 · loss 0.0000 · 75.4s
+  epoch 0 · paso 463/1642 · loss 0.0104 · 122.3s
+  epoch 0 · paso 464/1642 · loss 0.0001 · 82.7s
+  epoch 0 · paso 465/1642 · loss 0.0002 · 125.9s · ✓
+  epoch 0 · paso 466/1642 · loss 0.0066 · 26.4s
+  epoch 0 · paso 467/1642 · loss 0.0000 · 114.9s
+  epoch 0 · paso 468/1642 · loss 0.0044 · 120.0s
+  epoch 0 · paso 469/1642 · loss 0.0000 · 90.4s
+  epoch 0 · paso 470/1642 · loss 0.0004 · 142.1s · ✓
+  epoch 0 · paso 471/1642 · loss 0.0183 · 21.3s
+  epoch 0 · paso 472/1642 · loss 0.0011 · 96.2s
+  epoch 0 · paso 473/1642 · loss 0.0092 · 130.1s
+  epoch 0 · paso 474/1642 · loss 0.0000 · 120.3s
+  epoch 0 · paso 475/1642 · loss 0.0000 · 152.6s · ✓ · 🐤
+  epoch 0 · paso 476/1642 · loss 0.0000 · 21.6s
+  epoch 0 · paso 477/1642 · loss 0.0000 · 122.8s
+  epoch 0 · paso 478/1642 · loss 0.0001 · 144.5s
+  epoch 0 · paso 479/1642 · loss 0.0107 · 121.7s
+  epoch 0 · paso 480/1642 · loss 0.0123 · 81.7s · ✓
+  epoch 0 · paso 481/1642 · loss 0.0083 · 17.4s
+  epoch 0 · paso 482/1642 · loss 0.0000 · 86.0s
+  epoch 0 · paso 483/1642 · loss 0.0104 · 108.6s
+  epoch 0 · paso 484/1642 · loss 0.0000 · 80.3s
+  epoch 0 · paso 485/1642 · loss 0.0000 · 148.1s · ✓
+  epoch 0 · paso 486/1642 · loss 0.0043 · 27.6s
+  epoch 0 · paso 487/1642 · loss 0.0000 · 115.7s
+  epoch 0 · paso 488/1642 · loss 0.0000 · 136.1s
+  epoch 0 · paso 489/1642 · loss 0.0000 · 138.3s
+  epoch 0 · paso 490/1642 · loss 0.0092 · 145.5s · ✓
+  epoch 0 · paso 491/1642 · loss 0.0114 · 13.7s
+  epoch 0 · paso 492/1642 · loss 0.0009 · 55.2s
+  epoch 0 · paso 493/1642 · loss 0.0047 · 79.9s
+  epoch 0 · paso 494/1642 · loss 0.0000 · 102.9s
+  epoch 0 · paso 495/1642 · loss 0.0057 · 125.7s · ✓
+  epoch 0 · paso 496/1642 · loss 0.0034 · 17.3s
+  epoch 0 · paso 497/1642 · loss 0.0077 · 65.6s
+  epoch 0 · paso 498/1642 · loss 0.0049 · 55.6s
+  epoch 0 · paso 499/1642 · loss 0.0000 · 87.3s
+  epoch 0 · paso 500/1642 · loss 0.0001 · 117.8s · ✓ · 🐤
+  epoch 0 · paso 501/1642 · loss 0.0204 · 11.8s
+  epoch 0 · paso 502/1642 · loss 0.0310 · 34.8s
+  epoch 0 · paso 503/1642 · loss 0.0018 · 56.8s
+  epoch 0 · paso 504/1642 · loss 0.0002 · 113.9s
+  epoch 0 · paso 505/1642 · loss 0.0010 · 151.8s · ✓
+  epoch 0 · paso 506/1642 · loss 0.0001 · 25.2s
+  epoch 0 · paso 507/1642 · loss 0.0398 · 92.7s
+  epoch 0 · paso 508/1642 · loss 0.0112 · 84.0s
+  epoch 0 · paso 509/1642 · loss 0.0000 · 109.6s
+  epoch 0 · paso 510/1642 · loss 0.0140 · 135.2s · ✓
+  epoch 0 · paso 511/1642 · loss 0.0000 · 40.9s
+  epoch 0 · paso 512/1642 · loss 0.0001 · 158.1s
+  epoch 0 · paso 513/1642 · loss 0.0187 · 171.9s
+  epoch 0 · paso 514/1642 · loss 0.0000 · 127.3s
+  epoch 0 · paso 515/1642 · loss 0.0000 · 160.6s · ✓
+  epoch 0 · paso 516/1642 · loss 0.0004 · 39.0s
+  epoch 0 · paso 517/1642 · loss 0.0000 · 147.7s
+  epoch 0 · paso 518/1642 · loss 0.0031 · 152.1s
+  epoch 0 · paso 519/1642 · loss 0.0021 · 136.5s
+  epoch 0 · paso 520/1642 · loss 0.0118 · 130.6s · ✓
+  epoch 0 · paso 521/1642 · loss 0.0030 · 37.4s
+  epoch 0 · paso 522/1642 · loss 0.0097 · 147.6s
+  epoch 0 · paso 523/1642 · loss 0.0001 · 156.6s
+  epoch 0 · paso 524/1642 · loss 0.0000 · 146.8s
+  epoch 0 · paso 525/1642 · loss 0.0000 · 170.3s · ✓ · 🐤
+  epoch 0 · paso 526/1642 · loss 0.0046 · 31.0s
+  epoch 0 · paso 527/1642 · loss 0.0008 · 134.9s
+  epoch 0 · paso 528/1642 · loss 0.0669 · 143.6s
+  epoch 0 · paso 529/1642 · loss 0.0006 · 87.2s
+  epoch 0 · paso 530/1642 · loss 0.0302 · 94.6s · ✓
+  epoch 0 · paso 531/1642 · loss 0.0131 · 21.0s
+  epoch 0 · paso 532/1642 · loss 0.0064 · 83.0s
+  epoch 0 · paso 533/1642 · loss 0.0126 · 109.1s
+  epoch 0 · paso 534/1642 · loss 0.0031 · 97.3s
+  epoch 0 · paso 535/1642 · loss 0.0118 · 82.4s · ✓
+  epoch 0 · paso 536/1642 · loss 0.0000 · 40.1s
+  epoch 0 · paso 537/1642 · loss 0.0003 · 169.7s
+  epoch 0 · paso 538/1642 · loss 0.0070 · 165.9s
+  epoch 0 · paso 539/1642 · loss 0.0000 · 154.7s
+  epoch 0 · paso 540/1642 · loss 0.0001 · 157.2s · ✓
+  epoch 0 · paso 541/1642 · loss 0.0029 · 36.6s
+  epoch 0 · paso 542/1642 · loss 0.0111 · 137.6s
+  epoch 0 · paso 543/1642 · loss 0.0021 · 99.4s
+  epoch 0 · paso 544/1642 · loss 0.1137 · 103.3s
+  epoch 0 · paso 545/1642 · loss 0.0036 · 95.1s · ✓
+  epoch 0 · paso 546/1642 · loss 0.0078 · 28.6s
+  epoch 0 · paso 547/1642 · loss 0.0034 · 95.8s
+  epoch 0 · paso 548/1642 · loss 0.0000 · 112.8s
+  epoch 0 · paso 549/1642 · loss 0.0089 · 146.0s
+  epoch 0 · paso 550/1642 · loss 0.0098 · 108.4s · ✓ · 🐤
+  epoch 0 · paso 551/1642 · loss 0.0000 · 31.6s
+  epoch 0 · paso 552/1642 · loss 0.0001 · 144.2s
+  epoch 0 · paso 553/1642 · loss 0.0000 · 175.5s
+  epoch 0 · paso 554/1642 · loss 0.0002 · 174.2s
+  epoch 0 · paso 555/1642 · loss 0.0349 · 168.8s · ✓
+  epoch 0 · paso 556/1642 · loss 0.0129 · 23.4s
+  epoch 0 · paso 557/1642 · loss 0.0001 · 100.2s
+  epoch 0 · paso 558/1642 · loss 0.0000 · 162.5s
+  epoch 0 · paso 559/1642 · loss 0.0027 · 169.6s
+  epoch 0 · paso 560/1642 · loss 0.0001 · 176.1s · ✓
+  epoch 0 · paso 561/1642 · loss 0.0001 · 42.7s
+  epoch 0 · paso 562/1642 · loss 0.0000 · 138.3s
+  epoch 0 · paso 563/1642 · loss 0.0038 · 129.5s
+  epoch 0 · paso 564/1642 · loss 0.0059 · 126.8s
+  epoch 0 · paso 565/1642 · loss 0.0033 · 148.7s · ✓
+  epoch 0 · paso 566/1642 · loss 0.0001 · 34.6s
+  epoch 0 · paso 567/1642 · loss 0.0300 · 130.8s
+  epoch 0 · paso 568/1642 · loss 0.0428 · 91.3s
+  epoch 0 · paso 569/1642 · loss 0.0001 · 81.2s
+  epoch 0 · paso 570/1642 · loss 0.0001 · 119.9s · ✓
+  epoch 0 · paso 571/1642 · loss 0.0000 · 37.6s
+  epoch 0 · paso 572/1642 · loss 0.0004 · 164.9s
+  epoch 0 · paso 573/1642 · loss 0.0000 · 159.1s
+  epoch 0 · paso 574/1642 · loss 0.0089 · 146.4s
+  epoch 0 · paso 575/1642 · loss 0.0085 · 95.0s · ✓ · 🐤
+  epoch 0 · paso 576/1642 · loss 0.0113 · 38.4s
+  epoch 0 · paso 577/1642 · loss 0.0000 · 154.5s
+  epoch 0 · paso 578/1642 · loss 0.0000 · 124.7s
+  epoch 0 · paso 579/1642 · loss 0.0000 · 166.1s
+  epoch 0 · paso 580/1642 · loss 0.0015 · 155.9s · ✓
+  epoch 0 · paso 581/1642 · loss 0.0000 · 37.4s
+  epoch 0 · paso 582/1642 · loss 0.0298 · 141.8s
+  epoch 0 · paso 583/1642 · loss 0.0025 · 110.9s
+  epoch 0 · paso 584/1642 · loss 0.0178 · 88.3s
+  epoch 0 · paso 585/1642 · loss 0.0002 · 91.0s · ✓
+  epoch 0 · paso 586/1642 · loss 0.0007 · 45.5s
+  epoch 0 · paso 587/1642 · loss 0.0000 · 165.5s
+  epoch 0 · paso 588/1642 · loss 0.0153 · 158.2s
+  epoch 0 · paso 589/1642 · loss 0.0001 · 105.2s
+  epoch 0 · paso 590/1642 · loss 0.0000 · 153.7s · ✓
+  epoch 0 · paso 591/1642 · loss 0.0133 · 31.6s
+  epoch 0 · paso 592/1642 · loss 0.0000 · 142.4s
+  epoch 0 · paso 593/1642 · loss 0.0188 · 151.4s
+  epoch 0 · paso 594/1642 · loss 0.0036 · 121.5s
+  epoch 0 · paso 595/1642 · loss 0.0001 · 136.2s · ✓
+  epoch 0 · paso 596/1642 · loss 0.0001 · 39.5s
+  epoch 0 · paso 597/1642 · loss 0.0473 · 144.0s
+  epoch 0 · paso 598/1642 · loss 0.0000 · 91.2s
+  epoch 0 · paso 599/1642 · loss 0.0592 · 103.8s
+  epoch 0 · paso 600/1642 · loss 0.0166 · 61.2s · ✓ · 🐤
+  epoch 0 · paso 601/1642 · loss 0.0001 · 15.8s
+  epoch 0 · paso 602/1642 · loss 0.0020 · 79.2s
+  epoch 0 · paso 603/1642 · loss 0.0000 · 132.5s
+  epoch 0 · paso 604/1642 · loss 0.0002 · 135.4s
+  epoch 0 · paso 605/1642 · loss 0.0000 · 110.5s · ✓
+  epoch 0 · paso 606/1642 · loss 0.0001 · 35.8s
+  epoch 0 · paso 607/1642 · loss 0.0727 · 144.8s
+  epoch 0 · paso 608/1642 · loss 0.0722 · 57.0s
+  epoch 0 · paso 609/1642 · loss 0.0051 · 40.1s
+  epoch 0 · paso 610/1642 · loss 0.0005 · 76.4s · ✓
+  epoch 0 · paso 611/1642 · loss 0.0000 · 32.8s
+  epoch 0 · paso 612/1642 · loss 0.0000 · 139.7s
+  epoch 0 · paso 613/1642 · loss 0.0029 · 141.7s
+  epoch 0 · paso 614/1642 · loss 0.0078 · 134.5s
+  epoch 0 · paso 615/1642 · loss 0.0001 · 85.1s · ✓
+  epoch 0 · paso 616/1642 · loss 0.0341 · 10.2s
+  epoch 0 · paso 617/1642 · loss 0.0015 · 50.8s
+  epoch 0 · paso 618/1642 · loss 0.0000 · 103.7s
+  epoch 0 · paso 619/1642 · loss 0.0000 · 140.7s
+  epoch 0 · paso 620/1642 · loss 0.0015 · 161.2s · ✓
+  epoch 0 · paso 621/1642 · loss 0.0140 · 15.9s
+  epoch 0 · paso 622/1642 · loss 0.0177 · 55.3s
+  epoch 0 · paso 623/1642 · loss 0.0001 · 74.4s
+  epoch 0 · paso 624/1642 · loss 0.0076 · 112.2s
+  epoch 0 · paso 625/1642 · loss 0.0000 · 86.5s · ✓ · 🐤
+  epoch 0 · paso 626/1642 · loss 0.0268 · 13.1s
+  epoch 0 · paso 627/1642 · loss 0.0249 · 52.5s
+  epoch 0 · paso 628/1642 · loss 0.0068 · 60.1s
+  epoch 0 · paso 629/1642 · loss 0.0000 · 73.9s
+  epoch 0 · paso 630/1642 · loss 0.0004 · 93.4s · ✓
+  epoch 0 · paso 631/1642 · loss 0.0000 · 24.9s
+  epoch 0 · paso 632/1642 · loss 0.0000 · 109.2s
+  epoch 0 · paso 633/1642 · loss 0.0000 · 147.6s
+  epoch 0 · paso 634/1642 · loss 0.0001 · 159.3s
+  epoch 0 · paso 635/1642 · loss 0.0277 · 133.4s · ✓
+  epoch 0 · paso 636/1642 · loss 0.0132 · 20.3s
+  epoch 0 · paso 637/1642 · loss 0.0358 · 83.2s
+  epoch 0 · paso 638/1642 · loss 0.0831 · 55.7s
+  epoch 0 · paso 639/1642 · loss 0.0148 · 64.2s
+  epoch 0 · paso 640/1642 · loss 0.0386 · 86.6s · ✓
+  epoch 0 · paso 641/1642 · loss 0.0000 · 27.1s
+  epoch 0 · paso 642/1642 · loss 0.0029 · 114.8s
+  epoch 0 · paso 643/1642 · loss 0.0000 · 135.4s
+  epoch 0 · paso 644/1642 · loss 0.0000 · 148.3s
+  epoch 0 · paso 645/1642 · loss 0.0000 · 145.5s · ✓
+  epoch 0 · paso 646/1642 · loss 0.0000 · 30.7s
+  epoch 0 · paso 647/1642 · loss 0.0000 · 122.9s
+  epoch 0 · paso 648/1642 · loss 0.0001 · 132.3s
+  epoch 0 · paso 649/1642 · loss 0.0035 · 109.2s
+  epoch 0 · paso 650/1642 · loss 0.0008 · 117.5s · ✓ · 🐤
+  epoch 0 · paso 651/1642 · loss 0.0012 · 34.6s
+  epoch 0 · paso 652/1642 · loss 0.0000 · 161.9s
+  epoch 0 · paso 653/1642 · loss 0.0017 · 129.9s
+  epoch 0 · paso 654/1642 · loss 0.0010 · 131.5s
+  epoch 0 · paso 655/1642 · loss 0.0162 · 153.4s · ✓
+  epoch 0 · paso 656/1642 · loss 0.0001 · 34.9s
+  epoch 0 · paso 657/1642 · loss 0.0143 · 132.9s
+  epoch 0 · paso 658/1642 · loss 0.0000 · 103.6s
+  epoch 0 · paso 659/1642 · loss 0.0000 · 137.5s
+  epoch 0 · paso 660/1642 · loss 0.0019 · 134.2s · ✓
+  epoch 0 · paso 661/1642 · loss 0.0002 · 33.0s
+  epoch 0 · paso 662/1642 · loss 0.0010 · 132.4s
+  epoch 0 · paso 663/1642 · loss 0.0163 · 65.0s
+  epoch 0 · paso 664/1642 · loss 0.0010 · 74.8s
+  epoch 0 · paso 665/1642 · loss 0.0000 · 137.2s · ✓
+  epoch 0 · paso 666/1642 · loss 0.0000 · 30.1s
+  epoch 0 · paso 667/1642 · loss 0.0078 · 119.0s
+  epoch 0 · paso 668/1642 · loss 0.0002 · 68.8s
+  epoch 0 · paso 669/1642 · loss 0.0001 · 112.6s
+/opt/homebrew/Cellar/python@3.12/3.12.13_4/Frameworks/Python.framework/Versions/3.12/lib/python3.12/multiprocessing/resource_tracker.py:279: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '

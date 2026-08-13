@@ -180,11 +180,6 @@ MESES_ES = ["enero", "febrero", "marzo", "abril", "mayo", "junio",
 DIAS_ES = ["lunes", "martes", "miércoles", "jueves",
            "viernes", "sábado", "domingo"]
 
-_PREFIJO_SALUDO = re.compile(
-    r"^(sr\(?a?\)?\.?|sra\.?|dr\(?a?\)?\.?|dra\.?|don|doña|ing\.?|lic\.?)\s+",
-    re.IGNORECASE,
-)
-
 
 def gen_cuit_ar(con_guiones: bool = True) -> str:
     prefijo = random.choice([20, 23, 24, 27])
@@ -242,8 +237,40 @@ def fmt_fecha_larga_ar(dt: datetime) -> str:
     return f"{dia.capitalize()}, {dt.day} de {mes} de {dt.year} a las {dt.strftime('%H:%M')} hs"
 
 
+# Cuántos dígitos enteros tiene un monto, con las proporciones MEDIDAS el 2026-08-12
+# sobre los 2822 movimientos del extracto real: 3 dígitos 1,0% · 4 dígitos 27,9% ·
+# 5 dígitos 60,2% · 6 dígitos 9,6% · 7 dígitos 1,3%. Coinciden con los 62 comprobantes
+# revisados a mano (25,8% y 62,9%), así que el extracto sirve para calibrar.
+#
+# Antes esto era `uniform(500, 350_000)`, que por ser uniforme deja el 72% en 6 dígitos:
+# el modelo se entrenó esperando cientos de miles donde la realidad son decenas de miles,
+# y ante una imagen dudosa caía en ese sesgo (28.000 leído como 1.126.081,9).
+_DIGITOS_MONTO = [3] + [4] * 28 + [5] * 60 + [6] * 10 + [7]
+
+
+def gen_monto() -> float:
+    """Un importe con la forma que tienen los importes de verdad.
+
+    Medido sobre las mismas 2822 filas: el 90,3% no tiene centavos, el 89,4% termina
+    en `00` y el 48,8% en `000`. Un generador que reparte centavos al azar le enseña
+    al modelo a esperar decimales que casi nunca existen.
+    """
+    digitos = random.choice(_DIGITOS_MONTO)
+    monto = random.uniform(10 ** (digitos - 1), 10 ** digitos)
+    if random.random() >= 0.90:
+        return round(monto, 2)                      # el 10% que sí lleva centavos
+    if monto >= 10_000 and random.random() < 0.60:
+        return float(round(monto, -3))
+    return float(round(monto, -2))
+
+
 def gen_fecha_hora_reciente() -> datetime:
-    base = datetime.now() - timedelta(days=random.randint(0, 60))
+    # Hasta 2026-08-12 esto era `randint(0, 60)`: las 800 sintéticas caían en una ventana
+    # de dos meses y sólo había 61 fechas distintas. El modelo aprendió el año y el mes
+    # en vez de leerlos — en 044.jpeg, con la verdad en 2023, contestó 2026. El rango va
+    # ancho a propósito: lo que fuerza a LEER una fecha es no poder adivinarla.
+    dias = random.randint(0, 365) if random.random() < 0.70 else random.randint(0, 1460)
+    base = datetime.now() - timedelta(days=dias)
     return base.replace(
         hour=random.randint(6, 23),
         minute=random.randint(0, 59),
@@ -252,14 +279,24 @@ def gen_fecha_hora_reciente() -> datetime:
     )
 
 
+# Cuántas palabras tiene un nombre, MEDIDO el 2026-08-12 sobre los 108 nombres de emisor
+# y receptor de los 62 comprobantes revisados: 1 palabra 0,9% · 2 → 11,1% · 3 → 49,1% ·
+# 4 → 7,4% · 5 → 31,5%. Son más largos de lo que uno supone, y por eso se midieron.
+_PALABRAS_NOMBRE = [1] + [2] * 11 + [3] * 49 + [4] * 7 + [5] * 32
+
+
 def nombre_persona() -> str:
-    nombre = fake.name()
-    while True:
-        nuevo = _PREFIJO_SALUDO.sub("", nombre).strip()
-        if nuevo == nombre:
-            break
-        nombre = nuevo
-    return nombre.title()
+    """Un nombre con la cantidad de palabras que tienen los nombres de verdad.
+
+    Se arma pieza por pieza en vez de usar `fake.name()` porque ésa mezcla nombres de
+    pila dentro de los apellidos (devuelve "Thiago Lionel Ledesma Herrera") y no deja
+    elegir el largo. `first_name()` y `last_name()` sí tienen los dos pools separados.
+    """
+    palabras = random.choice(_PALABRAS_NOMBRE)
+    de_pila = 1 if palabras <= 2 else random.choice([1, 2])
+    partes = [fake.first_name().split()[0] for _ in range(de_pila)]
+    partes += [fake.last_name().split()[0] for _ in range(palabras - de_pila)]
+    return " ".join(partes).title()
 
 
 def banco_destino_random(excluir: Optional[str] = None) -> str:
@@ -431,11 +468,7 @@ def fila_kv_izq_der(d, y, w, label, valor, campos=None, *,
 def _datos_comunes(banco_emisor: str) -> dict:
     """Genera el set de datos que comparten todos los templates."""
     dt = gen_fecha_hora_reciente()
-    monto = round(random.uniform(500, 350_000), 2)
-    # Una transferencia de cada tres es un número redondo. Antes ninguna lo era:
-    # el modelo nunca veía un `,00`, que en la realidad es lo más frecuente.
-    if random.random() < 0.35:
-        monto = float(round(monto, -2))
+    monto = gen_monto()
     nombre_emi = nombre_persona()
     nombre_rec = nombre_persona()
     cuit_emi = gen_cuit_ar()

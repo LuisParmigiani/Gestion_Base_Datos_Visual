@@ -80,6 +80,16 @@ def main() -> None:
                         "lo que corresponde: está medido que no alarga el entrenamiento")
     p.add_argument("--continuar", action="store_true",
                    help="reanudar desde el adapter y el estado.json que haya en --salida")
+    p.add_argument("--desde", type=Path, metavar="DIR",
+                   help="arrancar desde los pesos de OTRO adaptador ya entrenado, con el "
+                        "contador de pasos en 0. Es lo que hace falta para seguir "
+                        "entrenando a uno existente sobre un dataset NUEVO: --continuar no "
+                        "sirve para eso, porque lee el estado.json y ve que la corrida "
+                        "anterior ya terminó sus pasos, así que no da ninguno. El rank, el "
+                        "alpha y el modelo base tienen que ser los mismos que los de DIR o "
+                        "los tensores no coinciden (se verifica antes de entrenar). El "
+                        "optimizador arranca limpio a propósito: los momentos de Adam están "
+                        "calibrados para los gradientes y el lr de la corrida vieja")
     p.add_argument("--canario", type=int, default=25, metavar="N",
                    help="cada N pasos, generar sobre --canario-imagen y verificar que la "
                         "salida siga siendo JSON. 0 lo apaga. LA LOSS NO DETECTA EL "
@@ -116,6 +126,16 @@ def main() -> None:
     # `extraer.py --adaptador <salida>/mejor`. Existe porque una corrida que diverge
     # pisa los pesos buenos paso a paso — pasó el 8-ago y costó 5 h de cómputo.
     mejor_dir = args.salida / "mejor"
+    if args.desde:
+        if args.continuar:
+            raise SystemExit("--desde y --continuar son incompatibles: uno arranca de 0 "
+                             "con otros pesos y el otro retoma la corrida de --salida.")
+        pesos_desde = args.desde / "adapters.safetensors"
+        if not pesos_desde.exists():
+            raise SystemExit(f"no existe {pesos_desde}")
+        if args.desde.resolve() == args.salida.resolve():
+            raise SystemExit("--desde y --salida no pueden ser el mismo directorio: la "
+                             "corrida nueva pisaría los pesos de los que parte.")
     if args.continuar:
         faltan = [f.name for f in (pesos, optim_f, estado) if not f.exists()]
         if faltan:
@@ -204,6 +224,21 @@ def main() -> None:
     adapter = args.salida / "adapters"
 
     epoch_inicial, paso_inicial = 0, 0
+    if args.desde:
+        # Mismo chequeo de claves que en --continuar, y por el mismo motivo: `strict=False`
+        # es obligatorio (el checkpoint trae solo los parámetros entrenables) y justamente
+        # por eso no avisaría si los nombres no coincidieran — cargaría cero tensores y
+        # entrenaría desde pesos random sin un solo error.
+        guardados = mx.load(str(args.desde / "adapters.safetensors"))
+        esperados = {k for k, _ in tree_flatten(model.trainable_parameters())}
+        if set(guardados) != esperados:
+            raise SystemExit(
+                f"el adaptador de {args.desde} no corresponde a este modelo: "
+                f"{len(guardados)} tensores guardados contra {len(esperados)} esperados. "
+                f"¿Coinciden --rank, --alpha y el modelo base con los de esa corrida?")
+        model.load_weights(list(guardados.items()), strict=False)
+        print(f"partiendo de los pesos de {args.desde} · {len(guardados)} tensores · "
+              f"contador de pasos en 0 y optimizador limpio", flush=True)
     if args.continuar:
         previo = json.loads(estado.read_text(encoding="utf-8"))
         # strict=False es obligatorio — el checkpoint tiene solo los parámetros

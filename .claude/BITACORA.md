@@ -11,7 +11,7 @@ quedó.
 
 # ⏭️ ESTADO ACTUAL — leer esto primero
 
-**Última actualización:** 2026-08-11, sesiones 13 y 14 (corrieron en paralelo).
+**Última actualización:** 2026-08-13, sesión 15.
 
 ```bash
 nc -z localhost 5432 && echo arriba || open -a Postgres   # Postgres NO arranca solo
@@ -21,8 +21,22 @@ cd web && pnpm test        # 200 en verde        ·        cd web && pnpm dev
 ps -eo command | grep -E '[e]ntrenar\.py' | grep -vcE '^(bash|caffeinate|/bin/zsh)'
 ```
 
-🔭 **No hay nada corriendo.** `lora_v3` terminó las 333 pasos el 2026-08-10 20:29 y **ya está
-medido** — ver la sección 🎯. Lo siguiente es un experimento nuevo, no esperar nada.
+## 🏃 HAY UNA CORRIDA VIVA — `lora_v4_v2`
+
+**Al 2026-08-13 13:27 iba por el paso 663 de 1642, con 26 canarios verdes y 0 fallidos.**
+
+```bash
+tail -3 ia/checkpoints/lora_v4_v2.log      # por qué paso va
+grep -c "🐤✗" ia/checkpoints/lora_v4_v2.log   # canarios fallidos: tiene que dar 0
+```
+
+Parte de `lora_v4` (flag `--desde`) sobre `train_v5.jsonl`, con las cuatro distribuciones del
+generador corregidas. **Se puede cortar en cualquier momento y usar lo que haya**: guarda cada 5
+pasos y el dataset está mezclado, así que un corte temprano no deja bancos afuera. Si la máquina
+se apagó, se retoma con `--continuar --salida ia/checkpoints/lora_v4_v2` sin perder nada.
+
+⚠️ **El reloj lo decide la memoria, no el dataset:** ~30 s/paso con la Mac libre contra ~110 con
+Safari, VS Code, la web y Postgres abiertos. Son 14 h contra 39 h para los mismos pasos.
 
 ⚡ **Antes de lanzar cualquier entrenamiento: `pmset -g batt | grep "AC Power"`.** A batería
 la Mac duerme y no hay flag que lo evite: una calibración hizo **9 pasos en 12 horas** por
@@ -50,8 +64,8 @@ F6 ✅  F7 ✅  F8 ✅  F9 ✅  F10 🟡           BLOQUE B — la IA
 F11 ⬜  F12 ⬜                              BLOQUE C
 ```
 
-**F9 cerrado el 2026-08-10:** `lora_v3` entrenó las 333 pasos sin colapsar y está medido.
-F10 en curso: el número es bueno, falta `lora_v4` para confirmarlo.
+**F9 cerrado.** F10 en curso: `lora_v4` está entrenado y medido (abajo), y `lora_v4_v2` corrige
+los sesgos que la medición destapó.
 
 En la base real: **2822 movimientos** · **78 comprobantes** (58 reales + 20 sintéticos) ·
 **58 reales revisados a mano** · 9 corridas con su linaje · **37 elecciones humanas** en
@@ -90,43 +104,61 @@ criterio se aplica al CUIT en la cascada de `/encontrar` (ver más abajo) y al C
 **una métrica de entrenamiento no valida una capacidad que no mide.**
 `bitacora/sesion-09-colapso-alpha.md`.
 
-## 🎯 `lora_v3` ESTÁ MEDIDO — y **le gana al base** donde la medición es limpia
+## 🎯 `lora_v4` ES EL MEJOR — 81,7% contra 72,8% de `lora_v3`
 
-333/333 pasos, `alpha 0.1`, `lr 1e-4`. **12 canarios verdes, 0 fallidos: la primera corrida
-larga del proyecto que termina entera y sana.** El colapso, como causa de fracaso, está
-cerrado. Cómo se entrenó y se midió: `bitacora/sesion-11-medicion-lora-v3.md`.
+842/842 pasos, 21 h, **33 canarios verdes y 0 fallidos**. Medido contra la vara de siempre
+(`node --env-file=.env.local comparar-lora.ts`). Detalle en
+`bitacora/sesion-15-lora-v4-y-sesgos-del-generador.md` §2.
 
-Medido el 2026-08-11 **con la verdad repasada, mayúsculas plegadas y separadores plegados**
-(`cd web && node --env-file=.env.local comparar-lora.ts`):
+| Corte | base v1 | `lora_v3_final` | `lora_v4_final` |
+|---|---|---|---|
+| **Sin `tipo_operacion` NI `moneda`** ← el honesto | 66,1% | 72,8% | **81,7%** |
+| Los 6 de la conciliación | 76,0% | 87,5% | **91,7%** |
+| Sin Mercado Pago | 53,6% | 67,9% | **80,4%** |
+| Solo Mercado Pago | 81,9% | 71,5% | **86,8%** |
+| Global (inflado, no usar) | 69,5% | 69,9% | 84,0% |
 
-| Corte | v1 (base) | `lora_v3_final` |
+⛔ **`tipo_operacion` y `moneda` NO son evidencia de nada.** En los 800 sintéticos tienen **un
+solo valor** cada uno ("Transferencia" y "ARS"): el modelo los emite siempre, no los lee. Y la
+vara resulta ser toda Transferencia en ARS, así que son **32 de 256 campos regalados**. Por eso
+el número que se reporta es **81,7%, no 84%**. Mientras la vara sea así, van a dar 100% sin
+significar nada.
+
+**El base dejó de ganar en Mercado Pago**, que era el único corte donde `lora_v3` perdía: ya no
+hay ningún corte donde convenga el modelo sin entrenar. **`nombre_receptor` se arregló** (1/16 →
+9/16) y `cuit_emisor` y `cbu_cvu_emisor` quedaron en 16/16. Empeoraron dos: `concepto` 11→9 y
+`banco_emisor` 13→11.
+
+⚠️ **Estos números NO son comparables con nada anterior al 11-ago.** Y `lora_v4` cambió muchas
+variables a la vez: la mejora no se puede atribuir a ninguna en particular.
+
+## 🔴 El generador le enseñaba cuatro cosas falsas — corregidas el 13-ago
+
+Al investigar por qué `lora_v4` fallaba sobre un comprobante del usuario apareció la causa raíz.
+Todo medido contra los **2822 movimientos del extracto** y los **62 revisados**, no supuesto.
+Relato entero en `bitacora/sesion-15-lora-v4-y-sesgos-del-generador.md` §4.
+
+| Sesgo | Estaba | La realidad |
 |---|---|---|
-| **Los 6 de la conciliación** | 76,0% | **87,5%** (84/96) |
-| **Sin `tipo_operacion`** ← el corte limpio | 67,9% | **74,6%** |
-| **Sin Mercado Pago** | 53,6% | **67,9%** |
-| Global | 69,5% | **69,9%** |
-| Solo Mercado Pago | **81,9%** | 71,5% |
+| **Montos** | 72% de 6 dígitos (`uniform(500, 350_000)`) | 60% de 5 dígitos, 28% de 4 |
+| **Decimales** | 35% terminaba en `,00` | **90%** |
+| **Fechas** | 61 fechas, ventana de **2 meses** | — |
+| **Nombres** | `fake.name()` mezcla pila y apellido | 49% de 3 palabras, 31% de 5 |
 
-**El LoRA le gana en todos los cortes menos Mercado Pago solo.** El base es un especialista
-en MP y mediocre en el resto; el LoRA es parejo. **Reportar siempre desagregado por
-entidad.** Fuera de MP son 7 comprobantes: es señal, no conclusión.
+**El sesgo del monto explica el peor error medido:** 28.000 leído como 1.126.081,9. **El de la
+fecha explica el otro:** en `044.jpeg` la verdad dice 2023 y el modelo contestó 2026, arrastrando
+el año a su ventana de entrenamiento.
 
-⚠️ **Estos números NO son comparables con nada anterior al 11-ago**, y `lora_v4` habrá que
-medirlo contra esta misma vara. Tablas por campo: `bitacora/sesion-13-generador.md` §9.
+⚠️ **La memorización era de la FORMA, no de los valores**: `monto` tenía 787 valores distintos de
+800 y los CUIT/CBU todos distintos.
 
-### ✅ DECIDIDO — los guiones del CUIT se pliegan (2026-08-11)
+✅ **Decisión del usuario (13-ago): `moneda` y `tipo_operacion` se dejan constantes.** Se le
+advirtió que el modelo no puede decir USD ni aunque lo vea. Todo lo que procesa son
+transferencias en pesos.
 
-`normalizarCampo` compara los 4 campos de CUIT/CBU **solo por sus dígitos** (`SOLO_DIGITOS`).
-⛔ `coelsa_id` y `referencia` quedan afuera: son alfanuméricos y **un falso acierto es peor que
-un falso error**. **La prueba de que corrige un sesgo y no infla un número: los cortes del base
-no se movieron ni un campo** — no escribe guiones. `bitacora/sesion-14-cascada-encontrar.md` §1.
-
-### ⛔ Descuentos abiertos
-
-**`tipo_operacion` contó 0/16 habiendo acertado los 16** (el LoRA decía
-`transferencia_saliente`, la verdad `Transferencia`): **6,3 puntos regalados**, ya alineado en
-el generador. Lección: **revisar todo campo de vocabulario cerrado antes de creerle a un
-porcentaje.** Y la vara usa prompt v1 contra LoRA v3: variable mezclada, decirlo al reportar.
+✅ **Los guiones del CUIT se pliegan** (11-ago): `normalizarCampo` compara los 4 campos de
+CUIT/CBU solo por sus dígitos. ⛔ `coelsa_id` y `referencia` quedan afuera, son alfanuméricos.
+`bitacora/sesion-14-cascada-encontrar.md` §1.
 
 ### 🔴 El techo está en la librería
 
@@ -141,22 +173,34 @@ secuencia) **ya está arreglado**. `bitacora/sesion-11-medicion-lora-v3.md` §6.
 
 ### 🐌 Operación de una corrida larga — ya medido, no volver a medirlo
 
-**La memoria decide el reloj:** 136 s/paso con todo abierto contra 17-31 s con la Mac liberada
-(`sysctl vm.swapusage`). **⛔ No tocar `--cada`.** **Cerrar la terminal es seguro** (`PPID=1`);
-lo que mata la corrida es apagar, reiniciar o suspender. Al reanudar el canario cuenta los pasos
-de la corrida en curso y el log va en `>>`, nunca en `>`. Sesiones 10 y 11.
+**La memoria decide el reloj:** 110-136 s/paso con todo abierto contra 24-31 s con la Mac
+liberada. Confirmado otra vez el 13-ago: **memoria libre 33% contra 72%, y son 39 h contra 14 h
+para los mismos pasos.** ⚠️ **`sysctl vm.swapusage` ENGAÑA** —macOS agranda el swap solo—: el que
+sirve es `memory_pressure`.
 
-**➡️ LO PRIMERO DE LA PRÓXIMA SESIÓN.** El bloqueante del dataset **ya está resuelto**
-(sesión 13): `train_v4.jsonl` está armado y verificado. Queda una decisión y la corrida.
+⛔ **La columna `segundos` de `curva_loss.csv` NO mide lo que tarda un paso.** El cronómetro para
+en `loss.item()` (`entrenar.py:370-382`), así que el guardado de 484 MB y el canario quedan
+afuera: marcó 24,3 s/paso mientras el reloj real era 89,7. **Para estimar una corrida se usa
+`ps -o etime`, nunca la curva.** La nota vieja —*"`--cada 1` está medido que no alarga"*— salía
+de esa métrica ciega. En `lora_v4_v2` se usó `--cada 5` a conciencia.
 
-1. ✅ Lo de los guiones **ya está decidido y medido** (sección de arriba). No queda nada
-   pendiente antes de la corrida.
-2. **Revisar 6 elecciones humanas** en `/encontrar/[id]` — 10 minutos, y deja limpio el número
+**Cerrar la terminal es seguro** (`PPID=1`), y también cerrar VS Code, la web y Postgres: la
+corrida no depende de ninguno. Lo que la mata es **apagar, reiniciar o suspender**. Al reanudar
+el canario cuenta los pasos de la corrida en curso y el log va en `>>`, nunca en `>`.
+
+**➡️ LO PRIMERO DE LA PRÓXIMA SESIÓN.**
+
+1. **Ver cómo quedó `lora_v4_v2`** (comandos arriba, en 🏃). Si terminó o se cortó, **medirlo
+   igual que a `lora_v4`** — la vara está verificada idéntica, así que los números se comparan
+   directo. Los tres comandos están en `bitacora/sesion-15-...md` §2.
+2. **Mirar tres imágenes, 5 minutos, y es lo que más despeja:** `005.jpeg` (¿aparece "11300" en
+   la pantalla?), `026.jpeg` (¿hay dos fechas?) y `044.jpeg` (¿el año es 2023 o 2026?). Decide si
+   los errores son alucinación o campo equivocado. **Claude no puede mirarlas** (regla 2).
+3. **Commitear.** `ia/generar.py` y `ia/entrenar.py` tienen cambios sin commitear desde el 13-ago.
+4. **Revisar 6 elecciones humanas** en `/encontrar/[id]` — 10 minutos, y deja limpio el número
    de la cascada: `023` (el algoritmo tiene razón, la elección está mal), `007` (CUIT y fecha
    coinciden y el monto no: puede ser un monto mal leído por la IA) y `015`, `032`, `043`,
    `051` (coincidencias de importe a más de 100 días → *deshacer*). Después rehacer la medición.
-3. **`lora_v4`.** Son **842 pasos** —un paso por ejemplo, `--iteraciones` en 0 usa el dataset
-   entero— o sea **~12-15 h**, no las 5 h de `lora_v3`. Antes: `pmset -g batt | grep "AC Power"`.
 
 ⚠️ **La vara cambió de etiquetas, no de integrantes.** Los 16 apartados están **FIJOS por
 nombre** en `reales.py:APARTADOS` (ya no se sortean), pero al regenerarla con la verdad
@@ -164,24 +208,27 @@ repasada **cambiaron 25 de sus 256 campos**. Los números de la tabla 🎯 hay q
 contra la vara nueva antes de comparar nada.
 
 ```bash
-# el dataset ya está hecho; esto es solo para rehacerlo si se agregan comprobantes
-ia/.venv/bin/python ia/reales.py --sinteticos ia/sinteticos/sinteticos_800.jsonl \
-  --salida ia/sinteticos/train_v4.jsonl --test ia/sinteticos/test_reales.jsonl
+# rehacer el dataset (solo si se agregan comprobantes o se toca generar.py)
+ia/.venv/bin/python ia/generar.py --n 1600 --degradados 0.5 --semilla 2026 \
+  --salida ia/sinteticos/sinteticos_1600.jsonl
+ia/.venv/bin/python ia/reales.py --sinteticos ia/sinteticos/sinteticos_1600.jsonl \
+  --salida ia/sinteticos/train_v5.jsonl --test /tmp/vara_check.jsonl
+# ⚠️ NUNCA escribir --test sobre test_reales.jsonl: se pisa la vara y se pierde la
+#    comparabilidad. Escribir a otro lado y verificar con `diff` que salga idéntica.
 
+# seguir entrenando un adaptador existente sobre datos nuevos (NO es --continuar)
 nohup caffeinate -dims ia/.venv/bin/python ia/entrenar.py \
-  --dataset ia/sinteticos/train_v4.jsonl \
-  --lr 1e-4 --alpha 0.1 --canario 25 \
-  --salida ia/checkpoints/lora_v4 \
-  > ia/checkpoints/lora_v4.log 2>&1 < /dev/null & disown
+  --dataset ia/sinteticos/train_v5.jsonl --desde ia/checkpoints/lora_v4 \
+  --lr 5e-5 --alpha 0.1 --rank 16 --canario 25 --cada 5 \
+  --salida ia/checkpoints/lora_v4_v2 \
+  > ia/checkpoints/lora_v4_v2.log 2>&1 < /dev/null & disown
 ```
 
-⚠️ **`lora_v4` cambia MUCHAS variables a la vez respecto de `lora_v3`**: dataset nuevo (842
-contra 333), 80 por banco en vez de la proporción real, etiquetas arregladas,
-`train_on_completions`, dos perfiles de calidad. **Es un salto deliberado, no un
-experimento controlado.** De acá en adelante, una variable por corrida.
+⚠️ **Antes de cualquier corrida: `pmset -g batt | grep "AC Power"`.** A batería la Mac duerme.
 
-Al terminar, medir igual que el 10-ago — está todo en `bitacora/sesion-11-medicion-lora-v3.md`
-sección 3, y `web/comparar-lora.ts` reproduce la tabla con un comando.
+⚠️ **Continuar con `--desde` OBLIGA a mantener `rank 16` y `alpha 0.1`** — el adapter tiene que
+tener la misma forma. "Más capacidad" y "sumar el encoder visual" **no se pueden hacer
+continuando**: piden una corrida desde cero.
 
 ### ▶️ Después de esa corrida, por retorno esperado
 
@@ -197,9 +244,11 @@ sección 3, y `web/comparar-lora.ts` reproduce la tabla con un comando.
 
 ## 🔧 Estado de las herramientas de IA
 
-- **Usar `ia/sinteticos/train_v4.jsonl` (842 = 800 sintéticos + 42 reales).** Máximo 1.782
-  tokens por imagen, cero por encima del tope. ⛔ **Nunca `test_reales.jsonl`:** son los 16
-  de la vara.
+- **Usar `ia/sinteticos/train_v5.jsonl` (1642 = 1600 sintéticos + 42 reales)** — es el único con
+  las distribuciones corregidas. `train_v4.jsonl` (842) queda como el de `lora_v4`, intacto.
+  Máximo 1.782 tokens por imagen. ⛔ **Nunca `test_reales.jsonl`:** son los 16 de la vara.
+- **El dataset sale mezclado**, así que cortar una corrida antes de terminar es válido: los
+  primeros 200 ejemplos ya cubren los 10 bancos parejo.
 - ⛔ **`train_v3`, `train_v2*` y `train.jsonl` ya NO se pueden usar: sus imágenes se borraron
   por error el 11-ago** y no son reproducibles. Los `.jsonl` quedaron y sirven como evidencia
   de las etiquetas, nada más. Consecuencia que hay que decir si se publica el número: **la
@@ -232,20 +281,10 @@ qué no** — decirle al modelo qué no poner hace que deje de llenarlo.
 ```
 
 Vive **solo** en `lib/eleccion.ts:candidatos()`, y el **CUIT se compara por sus dígitos**: el
-extracto lo trae sin separadores (2586 de 2586) y una persona lo escribe con guiones (33 de 42).
-Comparar los textos tal cual dejaba **33 comprobantes sin poder cruzar nunca**.
-
-| Sobre los 58 reales | Antes | Después |
-|---|---|---|
-| Al 90% | 4 | **26** |
-| Ambiguos | 9 | **3** |
-| Sin encontrar | 24 | 24 |
-
-Medido contra las 37 elecciones humanas: **29 de 30 correctas cuando propone un solo candidato
-(96,7%)** — regla 90% 25/26, regla 50% 4/4. El único desacuerdo y 4 de las 5 que el algoritmo
-no ve son **elecciones humanas que no se sostienen** (fechas a más de 100 días, CUIT distinto):
-sobre las 31 que resisten un chequeo, coincide en 31 de 31.
-`bitacora/sesion-14-cascada-encontrar.md` §6 y §7.
+extracto lo trae sin separadores y una persona lo escribe con guiones. Comparar los textos tal
+cual dejaba **33 comprobantes sin poder cruzar nunca**. Al 90% pasó de 4 a **26**, y los ambiguos
+de 9 a **3**. Medido contra las 37 elecciones humanas: **29 de 30 correctas cuando propone un
+solo candidato**. `bitacora/sesion-14-cascada-encontrar.md` §6 y §7.
 
 ⛔ **Descartados con medición:** un escalón `CUIT + monto` sin fecha (mete 14 ambiguos) y la
 ventana de fecha ±3 días — **los 24 que faltan no son de este Excel** (dato del usuario), así
@@ -312,6 +351,7 @@ resultado: es un síntoma.** Se listan y se confirman antes.
 | Archivo | Qué tiene | Cuándo leerlo |
 |---|---|---|
 | `bitacora/reespecificacion.md` | El alcance que pidió la empresa, Looker Studio, la premisa del CUIT en `NRO TRANSACCION` que no se verificó | **Antes de planificar cualquier cosa** |
+| `bitacora/sesion-15-lora-v4-y-sesgos-del-generador.md` | **La medición completa de `lora_v4` y por qué el 84% era 81,7%**, los cuatro sesgos del generador con sus números reales (montos invertidos, decimales, ventana de fechas de 2 meses, nombres), los tres errores concretos de monto y fecha, el flag `--desde`, y por qué el cronómetro interno miente | **Antes de tocar `generar.py`, el entrenamiento o la medición** |
 | `bitacora/sesion-14-cascada-encontrar.md` | **Por qué el CUIT no cruzaba (guiones) y la cascada de 3 escalones**, la tabla `eleccion` y las dos pantallas de `/encontrar` con su buscador, los 7 comprobantes nuevos, y la medición algoritmo-vs-humano que dejó 6 elecciones para revisar | **Antes de tocar `/encontrar` o `lib/eleccion.ts`** |
 | `bitacora/sesion-13-generador.md` | **La auditoría campo por campo de las 10 plantillas y los 2 bugs que tenían**, el `Lienzo` que hace imposible desincronizar etiqueta e imagen, la medición de tokens por resolución, los dos perfiles de calidad, por qué se pasó a 80 por banco, **el borrado accidental de 1364 imágenes con su daño exacto**, y la guarda de tokens de `reales.py` | **Antes de tocar `generar.py`, `reales.py` o el dataset** |
 | `bitacora/sesion-12-mayusculas-y-repaso.md` | **Por qué la medición castigaba tipografía y por qué los números anteriores no sirven**, los errores encontrados en la verdad de referencia, el chequeo de forma de `/revisar` con su migración 007, los dos bugs del recorrido, y **los 4 cortes que dejan la carga manual fuera del entrenamiento** | **Antes de tocar la medición, `/revisar` o la carga de comprobantes** |
@@ -457,6 +497,9 @@ falta un `<input type="hidden">`.
 |---|---|
 | 🔴 **Un comprobante cargado a mano NUNCA llega al entrenamiento** | Cuatro cortes y ninguno avisa: la imagen va a `web/comprobantes/` pero el visor solo mira `ia/comprobantes/` (⇒ **404 en `/revisar`**); `reales.py:56` filtra `corrida_base <> 'sintetico'`, que en SQL da **NULL** cuando la columna es NULL, y un manual la tiene NULL; y `cargarComprobante` no escribe `revisado_en`. Hoy no rompe porque los 78 son `origen='ia'`. **Se decidió NO arreglarlo** (sesión 14): el camino IA → `/revisar` es más rápido para la persona y además deja medición, que la carga manual no deja. Plan en `bitacora/sesion-12-mayusculas-y-repaso.md` §5 |
 | **`comparar-lora.ts:71-72` no compila** | `CAMPOS` es readonly y se asigna a un array mutable. **Preexistente**, no rompe la ejecución (Node ignora los tipos), pero ensucia `tsc --noEmit` |
+| **La verdad tiene `tipo_operacion` escrito de 3 formas** | `Transferencia` (50), `transferencia_saliente` (11), `Transferencia enviada` (1). El generador ya está alineado; la verdad no. Hasta arreglarlo, ese campo mide tipografía |
+| **¿58 o 62 comprobantes revisados?** | La base dice 62 (`revisado_en IS NOT NULL`), la bitácora venía diciendo 58. Hay que saber cuál es el bueno **antes** de reportar cualquier métrica |
+| **`generar.py` y `entrenar.py` sin commitear** | Cambios del 13-ago en el working tree. Último commit: `0227240 "lorav4"` |
 | **6 elecciones humanas a revisar** | `023`, `007`, `015`, `032`, `043`, `051`. Hasta que se ajusten, la medición de la cascada sale castigada. Ver el punto 2 de la próxima sesión |
 | `nombre_receptor` se derrumbó con el LoRA | 9/16 el base contra **1/16** `lora_v3_final`. Sin explicación. Es el único campo donde el LoRA es peor por goleada |
 | **`oNulo` no atrapa el string `'null'`** | Trata `''` y `'N/A'` como ausencia, pero el modelo devuelve las tres. Medido sobre los 51: son aciertos contados como errores en **4 (v1) · 4 (v2) · 5 (v3) · 7 (v4)** campos de 816. v1 pasaría de 65,2% a 65,7%. **No cambia el orden ni ninguna conclusión**, por eso no se tocó: arreglarlo mueve todos los números publicados y se decide a propósito. Hay 3 filas de `comprobante` con `'null'`/`'N/A'` guardado como valor. `/probar` ya lo muestra como ausencia |
