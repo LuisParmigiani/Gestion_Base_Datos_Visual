@@ -11,36 +11,85 @@ quedó.
 
 # ⏭️ ESTADO ACTUAL — leer esto primero
 
-**Última actualización:** 2026-08-13, sesión 15.
+**Última actualización:** 2026-08-15, sesión 18.
+
+# 🚦 EL ENTRENAMIENTO SE CERRÓ. AHORA SE CONSTRUYE EL PRODUCTO.
+
+**Hay dos aplicaciones y no se mezclan:**
+
+| Carpeta | Qué es | Stack | Base |
+|---|---|---|---|
+| `web/` | Con lo que se **entrenó y midió** la IA. **No se toca ni se migra**: es la evidencia | Next.js 16 + TS + `pg` | `conciliador` |
+| `portal/` | **El producto.** Portal del cliente ✅ · panel del dueño ✅ | FastAPI + Jinja2 + SQLAlchemy | `portal` |
 
 ```bash
 nc -z localhost 5432 && echo arriba || open -a Postgres   # Postgres NO arranca solo
+
+# el producto
+ia/.venv/bin/uvicorn portal.app:app --reload --port 8000
+ia/.venv/bin/python -m portal.verificar_saldos            # el saldo es una columna: chequearlo
+ia/.venv/bin/python -m portal.importar <archivo.xlsx> [cuenta]
+ia/.venv/bin/python -m portal.lote [--incluir-50]        # ⚠️ carga los CBU propios primero
+PORTAL_DATABASE_URL="postgresql+psycopg://luisparmigiani@localhost:5432/portal_test" \
+  ia/.venv/bin/python -m unittest discover portal/tests   # 94 en verde
+
+# la herramienta de medición
 cd web && pnpm test        # 200 en verde        ·        cd web && pnpm dev
-# ¿Hay un entrenamiento vivo? El único conteo que da bien: `pgrep -f` y los grep simples
-# cuentan de más porque el `bash -c` y el `caffeinate` llevan el comando adentro.
-ps -eo command | grep -E '[e]ntrenar\.py' | grep -vcE '^(bash|caffeinate|/bin/zsh)'
 ```
 
-## 🏃 HAY UNA CORRIDA VIVA — `lora_v4_v2`
+## ✅ El producto está entero — cliente y dueño. **94 tests en verde**
 
-**Al 2026-08-13 13:27 iba por el paso 663 de 1642, con 26 canarios verdes y 0 fallidos.**
+El cliente elige su cuenta de una lista (sin contraseña), ve su saldo y su actividad, y sube
+comprobantes —foto o **PDF, que se convierte a JPEG solo**—. El dueño sube el extracto
+**eligiendo a qué cuenta va**, aprieta un botón, y el lote lee, cruza y acredita.
+**El recorrido completo, las diez pantallas y el porqué de cada decisión están en el
+`README.md`, sección `# El producto`.** No se repiten acá.
+
+⛔ **`CLAUDE.md` cambió en dos reglas por decisión del usuario:** `portal/` **usa SQLAlchemy**
+(el ORM sigue prohibido en `web/`), y **tiene clientes pero NO login** — el id va en la URL y el
+único aislamiento real es que cada ruta coteja que el recurso sea de quien lo pide.
+
+### ⚠️ Las cuatro trampas que ya se pisaron. No volver a pisarlas
+
+1. **El saldo es una columna, no una suma.** `registrar_movimiento()` es el único camino que
+   lo mueve. **Correr `verificar_saldos.py` después de tocar cualquier cosa que sume o reste**:
+   en su primera corrida encontró que los 6 saldos estaban mal.
+2. **`sembrar.py --reiniciar` hace `drop_all` y ya borró el comprobante de una persona.**
+   Ahora se niega si hay comprobantes subidos. **Los cambios de esquema van con `ALTER TABLE`.**
+3. **Un token cada 28×28 px y escalan con el ÁREA.** Agrandar 1,5× son 2,25× de tokens: una
+   foto de 4.653 pasó a 10.430 y **mlx pidió 57 GB**. `TOKENS_MAXIMOS = 4000` para las tres
+   variantes.
+4. **Correr el lote dos veces deja dos series de intentos 1-2-3.** Buscar "la última lectura"
+   por `max(intento)` devuelve dos filas y **duplica**; va por `max(id)`. Y el diagnóstico
+   mira **solo la última corrida** (`ultimas_lecturas()`), o compara corridas distintas.
+
+**➡️ LO PRIMERO: correr el lote de punta a punta contra la IA.** Nunca terminó bien. Antes hay
+que **borrar el CBU `0170099220000012345678`, que es inventado**, y cargar los reales en
+`/admin/cbu` — sin ninguno, el lote se niega a arrancar a propósito.
+Relato entero, con los tres errores y su diagnóstico, en `bitacora/sesion-18-portal-del-dueno.md`.
+
+---
+
+## ✅ El entrenamiento quedó cerrado — `lora_v4_v2` es el que se usa
+
+**1642/1642 pasos · 17,2 h · 0 canarios fallidos · 82,6% en el corte honesto.** Es el mejor
+adaptador, pero le gana a `lora_v4` por **0,9 puntos** y **bajó** en los 6 campos de la
+conciliación (91,7% → 90,6%, un solo campo). Relato entero y tabla por campo en
+`bitacora/sesion-16-lora-v4-v2-medido-y-looker.md`.
 
 ```bash
-tail -3 ia/checkpoints/lora_v4_v2.log      # por qué paso va
-grep -c "🐤✗" ia/checkpoints/lora_v4_v2.log   # canarios fallidos: tiene que dar 0
+# ¿hay un entrenamiento vivo? el único conteo que da bien
+ps -eo command | grep -E '[e]ntrenar\.py' | grep -vcE '^(bash|caffeinate|/bin/zsh)'
 ```
-
-Parte de `lora_v4` (flag `--desde`) sobre `train_v5.jsonl`, con las cuatro distribuciones del
-generador corregidas. **Se puede cortar en cualquier momento y usar lo que haya**: guarda cada 5
-pasos y el dataset está mezclado, así que un corte temprano no deja bancos afuera. Si la máquina
-se apagó, se retoma con `--continuar --salida ia/checkpoints/lora_v4_v2` sin perder nada.
-
-⚠️ **El reloj lo decide la memoria, no el dataset:** ~30 s/paso con la Mac libre contra ~110 con
-Safari, VS Code, la web y Postgres abiertos. Son 14 h contra 39 h para los mismos pasos.
 
 ⚡ **Antes de lanzar cualquier entrenamiento: `pmset -g batt | grep "AC Power"`.** A batería
 la Mac duerme y no hay flag que lo evite: una calibración hizo **9 pasos en 12 horas** por
 esto. Y siempre `nohup caffeinate -dims ... < /dev/null & disown`.
+
+⚠️ **Al reanudar con `--continuar` hay que repetir TODOS los hiperparámetros.** Lee el
+`estado.json` solo para el contador de pasos y Adam; los flags salen de `argparse`, así que sin
+ellos sigue con `--lr 2e-5` y `--dataset train.jsonl` **en silencio**. Comando exacto en el
+README.
 
 **Releer la regla 1 de `CLAUDE.md`:** antes de cada paso se explica qué se va a hacer y se
 espera confirmación. Las autorizaciones no sobreviven al fin de la sesión que las dio.
@@ -60,15 +109,16 @@ Studio entra **solo con métricas del modelo y datos sintéticos**.
 
 ```
 F0 ✅  F1 ✅  F2 ✅  F3 ✅  F4 ✅  F5 ✅     BLOQUE A — la conciliación
-F6 ✅  F7 ✅  F8 ✅  F9 ✅  F10 🟡           BLOQUE B — la IA
-F11 ⬜  F12 ⬜                              BLOQUE C
+F6 ✅  F7 ✅  F8 ✅  F9 ✅  F10 ✅           BLOQUE B — la IA (cerrado el 15-ago)
+PORTAL: cliente ✅   dueño ✅               BLOQUE C — el producto
 ```
 
-**F9 cerrado.** F10 en curso: `lora_v4` está entrenado y medido (abajo), y `lora_v4_v2` corrige
-los sesgos que la medición destapó.
+**F10 cerrado:** cinco adaptadores entrenados, cuatro medidos contra la misma vara, y el mejor
+(`lora_v4_v2`, 82,6%) le saca 16,5 puntos al modelo base. **Es el que usa el producto, fijo.**
+La cola de experimentos sigue viva en `sesion-16` §8, pero ya no bloquea nada.
 
 En la base real: **2822 movimientos** · **78 comprobantes** (58 reales + 20 sintéticos) ·
-**58 reales revisados a mano** · 9 corridas con su linaje · **37 elecciones humanas** en
+**58 reales revisados a mano** · 10 corridas con su linaje · **37 elecciones humanas** en
 `/encontrar`.
 
 **La verdad de referencia son los 58 reales revisados a mano, y es lo más valioso del
@@ -104,33 +154,32 @@ criterio se aplica al CUIT en la cascada de `/encontrar` (ver más abajo) y al C
 **una métrica de entrenamiento no valida una capacidad que no mide.**
 `bitacora/sesion-09-colapso-alpha.md`.
 
-## 🎯 `lora_v4` ES EL MEJOR — 81,7% contra 72,8% de `lora_v3`
+## 🎯 EL MEJOR ES `lora_v4_v2` — 82,6% contra 66,1% del modelo base
 
-842/842 pasos, 21 h, **33 canarios verdes y 0 fallidos**. Medido contra la vara de siempre
-(`node --env-file=.env.local comparar-lora.ts`). Detalle en
-`bitacora/sesion-15-lora-v4-y-sesgos-del-generador.md` §2.
+| Corte | base v1 | `lora_v3` | `lora_v4` | `lora_v4_v2` |
+|---|---|---|---|---|
+| **Sin `tipo_operacion` NI `moneda`** ← el honesto | 66,1% | 72,8% | 81,7% | **82,6%** |
+| **Los 6 de la conciliación** | 76,0% | 87,5% | **91,7%** | 90,6% |
+| Sin Mercado Pago | 53,6% | 67,9% | **80,4%** | **80,4%** |
+| Solo Mercado Pago | 81,9% | 71,5% | 86,8% | **88,2%** |
+| Global (inflado, no usar) | 69,5% | 69,9% | 84,0% | 84,8% |
 
-| Corte | base v1 | `lora_v3_final` | `lora_v4_final` |
-|---|---|---|---|
-| **Sin `tipo_operacion` NI `moneda`** ← el honesto | 66,1% | 72,8% | **81,7%** |
-| Los 6 de la conciliación | 76,0% | 87,5% | **91,7%** |
-| Sin Mercado Pago | 53,6% | 67,9% | **80,4%** |
-| Solo Mercado Pago | 81,9% | 71,5% | **86,8%** |
-| Global (inflado, no usar) | 69,5% | 69,9% | 84,0% |
+Las tablas por campo y por entidad, y el detalle de cada corrida, están en
+`bitacora/sesion-16-...md` §3 y `sesion-15-...md` §2.
 
-⛔ **`tipo_operacion` y `moneda` NO son evidencia de nada.** En los 800 sintéticos tienen **un
-solo valor** cada uno ("Transferencia" y "ARS"): el modelo los emite siempre, no los lee. Y la
-vara resulta ser toda Transferencia en ARS, así que son **32 de 256 campos regalados**. Por eso
-el número que se reporta es **81,7%, no 84%**. Mientras la vara sea así, van a dar 100% sin
-significar nada.
+⛔ **`tipo_operacion` y `moneda` NO son evidencia de nada.** En los sintéticos tienen **un solo
+valor** cada uno ("Transferencia" y "ARS"): el modelo los emite siempre, no los lee. Y la vara
+resulta ser toda Transferencia en ARS, así que son **32 de 256 campos regalados**. Por eso se
+reporta el corte sin ellos. Mientras la vara sea así, van a dar 100% sin significar nada.
 
-**El base dejó de ganar en Mercado Pago**, que era el único corte donde `lora_v3` perdía: ya no
-hay ningún corte donde convenga el modelo sin entrenar. **`nombre_receptor` se arregló** (1/16 →
-9/16) y `cuit_emisor` y `cbu_cvu_emisor` quedaron en 16/16. Empeoraron dos: `concepto` 11→9 y
-`banco_emisor` 13→11.
+🔴 **Lo que la última medición dejó claro: los cuatro sesgos corregidos NO movieron `monto` ni
+`fecha`** (14/16 los dos, idénticos a `lora_v4`). La corrección era correcta —medida contra los
+2822 movimientos— pero no se tradujo en aciertos. **O la vara de 16 es demasiado chica, o esos
+2 fallan por lectura visual, que es donde el LoRA no llega.** No se puede separar con lo que hay:
+hacen falta más comprobantes reales.
 
-⚠️ **Estos números NO son comparables con nada anterior al 11-ago.** Y `lora_v4` cambió muchas
-variables a la vez: la mejora no se puede atribuir a ninguna en particular.
+⚠️ **Estos números NO son comparables con nada anterior al 11-ago.** Y tanto `lora_v4` como
+`lora_v4_v2` cambiaron varias variables a la vez: la mejora no se atribuye a ninguna.
 
 ## 🔴 El generador le enseñaba cuatro cosas falsas — corregidas el 13-ago
 
@@ -188,19 +237,20 @@ de esa métrica ciega. En `lora_v4_v2` se usó `--cada 5` a conciencia.
 corrida no depende de ninguno. Lo que la mata es **apagar, reiniciar o suspender**. Al reanudar
 el canario cuenta los pasos de la corrida en curso y el log va en `>>`, nunca en `>`.
 
-**➡️ LO PRIMERO DE LA PRÓXIMA SESIÓN.**
+**Pendientes del entrenamiento. Ya NO bloquean nada** — el producto avanza sin ellos.
 
-1. **Ver cómo quedó `lora_v4_v2`** (comandos arriba, en 🏃). Si terminó o se cortó, **medirlo
-   igual que a `lora_v4`** — la vara está verificada idéntica, así que los números se comparan
-   directo. Los tres comandos están en `bitacora/sesion-15-...md` §2.
+1. **Commitear.** Arrastra desde la sesión 16 y **lo hace el usuario**: el `README.md` reescrito,
+   `metricas/`, `ia/metricas.sh`, `web/comparar-lora.ts`, `.gitignore`, **todo `portal/`**,
+   `CLAUDE.md` y esta bitácora.
 2. **Mirar tres imágenes, 5 minutos, y es lo que más despeja:** `005.jpeg` (¿aparece "11300" en
    la pantalla?), `026.jpeg` (¿hay dos fechas?) y `044.jpeg` (¿el año es 2023 o 2026?). Decide si
    los errores son alucinación o campo equivocado. **Claude no puede mirarlas** (regla 2).
-3. **Commitear.** `ia/generar.py` y `ia/entrenar.py` tienen cambios sin commitear desde el 13-ago.
-4. **Revisar 6 elecciones humanas** en `/encontrar/[id]` — 10 minutos, y deja limpio el número
+3. **Revisar 6 elecciones humanas** en `/encontrar/[id]` — 10 minutos, y deja limpio el número
    de la cascada: `023` (el algoritmo tiene razón, la elección está mal), `007` (CUIT y fecha
    coinciden y el monto no: puede ser un monto mal leído por la IA) y `015`, `032`, `043`,
    `051` (coincidencias de importe a más de 100 días → *deshacer*). Después rehacer la medición.
+4. **Armar el tablero de Looker Studio** con los tres CSV de `metricas/` — ver
+   `metricas/LEEME.md`, que tiene el gráfico de cada página. Los archivos ya están generados.
 
 ⚠️ **La vara cambió de etiquetas, no de integrantes.** Los 16 apartados están **FIJOS por
 nombre** en `reales.py:APARTADOS` (ya no se sortean), pero al regenerarla con la verdad
@@ -215,14 +265,11 @@ ia/.venv/bin/python ia/reales.py --sinteticos ia/sinteticos/sinteticos_1600.json
   --salida ia/sinteticos/train_v5.jsonl --test /tmp/vara_check.jsonl
 # ⚠️ NUNCA escribir --test sobre test_reales.jsonl: se pisa la vara y se pierde la
 #    comparabilidad. Escribir a otro lado y verificar con `diff` que salga idéntica.
-
-# seguir entrenando un adaptador existente sobre datos nuevos (NO es --continuar)
-nohup caffeinate -dims ia/.venv/bin/python ia/entrenar.py \
-  --dataset ia/sinteticos/train_v5.jsonl --desde ia/checkpoints/lora_v4 \
-  --lr 5e-5 --alpha 0.1 --rank 16 --canario 25 --cada 5 \
-  --salida ia/checkpoints/lora_v4_v2 \
-  > ia/checkpoints/lora_v4_v2.log 2>&1 < /dev/null & disown
 ```
+
+**Los comandos de entrenar (`--desde`), de reanudar (`--continuar`) y de medir están en el
+`README.md`**, sección *El entrenamiento*, con sus advertencias al lado. No se copian acá para
+no tener dos versiones que se despeguen.
 
 ⚠️ **Antes de cualquier corrida: `pmset -g batt | grep "AC Power"`.** A batería la Mac duerme.
 
@@ -230,17 +277,11 @@ nohup caffeinate -dims ia/.venv/bin/python ia/entrenar.py \
 tener la misma forma. "Más capacidad" y "sumar el encoder visual" **no se pueden hacer
 continuando**: piden una corrida desde cero.
 
-### ▶️ Después de esa corrida, por retorno esperado
+### ▶️ La cola de experimentos se mudó a `bitacora/sesion-16-...md` §8
 
-**Uno por vez y con una sola variable** — así se cerró `alpha`. Ninguno está confirmado.
-
-1. **`lr`**: con la loss dos órdenes más chica, `1e-4` puede quedar corto. Se mira la curva.
-2. **`alpha 1.0`**, calibrado en la sesión 10 y nunca usado en una corrida larga.
-3. **Más comprobantes reales de bancos nuevos.** Lo que no se fabrica es una foto real.
-4. **Leave-one-bank-out**: apartar entidades ENTERAS. Es la única medición que contesta *"¿anda
-   con un banco que nunca vio?"*, que es de lo que depende que el sistema valga algo.
-5. Por qué se rompió `nombre_receptor` (9/16 → 1/16), y que el checkpoint lo elija la medición
-   y no `media_20` — **`mejor/` es red contra la divergencia, NO un selector de calidad.**
+**Uno por vez y con una sola variable** — así se cerró `alpha`. Ninguno confirmado. El primero
+de la lista es **más comprobantes reales de bancos nuevos**: es lo único que no se fabrica, y lo
+que destraba la pregunta que la medición dejó abierta.
 
 ## 🔧 Estado de las herramientas de IA
 
@@ -311,8 +352,9 @@ se toca.**
   BBVA, Uala, Personal Pay, Naranja X, Cuenta DNI, Prex. Cinco de cinco bancos distintos valen
   más que treinta de Mercado Pago, que ya es el 56% de la vara. **El flujo está aceitado:** se
   dejan en `ia/nuevos/` y en ~15 s por imagen quedan precargados en `/revisar`
-- **Aprobar sus CBU en `/cbu`.** Hay 6 candidatos esperando. **No los siembra Claude**: que la
-  IA haya leído un número 20 veces no lo hace correcto
+- **Aprobar sus CBU en `/cbu`.** De 8 candidatos distintos, 5 ya están aprobados y **quedan 3**
+  (verificado el 15-ago). **No los siembra Claude**: que la IA haya leído un número 20 veces no
+  lo hace correcto
 - **Los CUIT de las 3 cuentas.** El extracto trae CUIT en el 98,7% de los ingresos
 - **Un caso real** — extracto y comprobantes de la misma fuente y período. Es lo único que
   valida la regla del 90%. Ya confirmó que va a conseguirlo
@@ -350,6 +392,9 @@ resultado: es un síntoma.** Se listan y se confirman antes.
 
 | Archivo | Qué tiene | Cuándo leerlo |
 |---|---|---|
+| `bitacora/sesion-18-portal-del-dueno.md` | **Los tres errores de esta sesión con su diagnóstico**: el `--reiniciar` que borró un comprobante de una persona, el lote que se cayó en silencio (tokens × área → 57 GB) y los comprobantes duplicados por `max(intento)` · la verificación del porteo del parser contra los 2822 reales · **la `huella()` de `web/` que no reproduce su propia fórmula** · las 12 decisiones del usuario | **Antes de tocar `portal/lote.py`, el importador o las pantallas del dueño** |
+| `bitacora/sesion-17-portal-cliente.md` | **La especificación completa del portal del dueño dictada por el usuario** (el lote, la relectura ×3, los cuatro desenlaces, el CBU propio) y las 3 decisiones a tomar antes de escribirlo · las 6 decisiones de diseño del portal del cliente con lo que se descartó · **el bug de los saldos que encontró el verificador** y por qué `registrar_movimiento()` lleva dos `flush()` | **Antes de tocar `portal/` — y SIEMPRE antes de empezar el portal del dueño** |
+| `bitacora/sesion-16-lora-v4-v2-medido-y-looker.md` | **La medición completa de `lora_v4_v2` con su tabla por campo**, por qué los sesgos corregidos no movieron `monto` ni `fecha`, el reloj real de la reanudación (y por qué la memoria NO lo explicó esta vez), los tres CSV de Looker Studio con el porqué del formato largo, los conteos verificados contra la base, y la cola de experimentos | **Antes de tocar el entrenamiento, la medición o el tablero** |
 | `bitacora/reespecificacion.md` | El alcance que pidió la empresa, Looker Studio, la premisa del CUIT en `NRO TRANSACCION` que no se verificó | **Antes de planificar cualquier cosa** |
 | `bitacora/sesion-15-lora-v4-y-sesgos-del-generador.md` | **La medición completa de `lora_v4` y por qué el 84% era 81,7%**, los cuatro sesgos del generador con sus números reales (montos invertidos, decimales, ventana de fechas de 2 meses, nombres), los tres errores concretos de monto y fecha, el flag `--desde`, y por qué el cronómetro interno miente | **Antes de tocar `generar.py`, el entrenamiento o la medición** |
 | `bitacora/sesion-14-cascada-encontrar.md` | **Por qué el CUIT no cruzaba (guiones) y la cascada de 3 escalones**, la tabla `eleccion` y las dos pantallas de `/encontrar` con su buscador, los 7 comprobantes nuevos, y la medición algoritmo-vs-humano que dejó 6 elecciones para revisar | **Antes de tocar `/encontrar` o `lib/eleccion.ts`** |
@@ -370,6 +415,39 @@ resultado: es un síntoma.** Se listan y se confirman antes.
 ---
 
 # 🗺️ Mapa del código
+
+## `portal/` — el producto (base `portal`, SQLAlchemy 2.0)
+
+```
+portal/db.py                engine + Sesion. 13 líneas, sin capa de nada
+portal/modelos.py           Cliente · Comprobante · MovimientoCuenta, los 4 estados como
+                            constantes, y `registrar_movimiento()` — el ÚNICO camino que
+                            mueve el saldo. Sus dos flush() están explicados adentro
+portal/archivos.py          valida el upload, PDF→JPEG con `pdftoppm`, y el nombre del
+                            archivo lo pone el SERVIDOR (uuid), nunca el cliente
+portal/app.py               las 5 rutas + los filtros `pesos` y `dia` de Jinja
+portal/sembrar.py           6 clientes inventados, semilla 2026. `--reiniciar` rehace todo
+portal/verificar_saldos.py  recalcula el libro y sale con 1 si algún saldo se despegó
+portal/extracto.py          el parser del banco. Porteo de extracto.ts, 33 tests portados
+portal/importar.py          Excel → base. Cuenta elegible + registro de cargas (deshacibles)
+portal/cascada.py           los 3 escalones del cruce. Lógica pura, sin base y sin IA
+portal/lote.py              el lote: 3 variantes de imagen, los desenlaces, y `diagnostico()`
+portal/exportar.py          el extracto conciliado a Excel, con colores por certeza
+portal/admin.py             las pantallas del dueño
+portal/comprobantes/        lo que sube la gente. En .gitignore: son datos reales
+portal/tests/               6 tests con `unittest`. Se NIEGAN a correr si la URL no
+                            termina en `portal_test`
+```
+
+**Las tablas del producto:** `cliente` · `comprobante` · `movimiento_cuenta` ·
+`movimiento_banco` (su `comprobante_id` es **UNIQUE**: la fila tomada la garantiza Postgres) ·
+`carga_extracto` · `cbu_propio` · `extraccion` · `correccion`.
+
+**Las 3 rutas con filo:** `POST /cliente/{id}/subir` guarda **el archivo primero y la fila
+después** · `GET /cliente/{id}/comprobante/{cid}` **coteja que el comprobante sea de ese
+cliente** —es el único aislamiento que hay, no hay login— · `/` es el selector de cuenta.
+
+## `web/` — la herramienta con la que se midió (base `conciliador`, `pg` plano)
 
 ```
 web/migraciones/001..008.sql          5 tablas + conciliación + revisado_en +
@@ -403,7 +481,12 @@ ia/validar.py     separa lo confiable    ·    ia/calidad.py  compara dos corrid
 ia/comprobantes/  los 58 reales   ·   ia/nuevos/  buzón para las tandas que vengan
 ia/comprobantes_reducidos/  copias achicadas SOLO para entrenar. El original no se toca
 
-ia/sinteticos/train_v4.jsonl              ⬅️ EL DATASET A USAR (842: 800 sint. + 42 reales)
+ia/metricas.sh    junta las curvas de loss de todas las corridas en un CSV
+metricas/         los 3 CSV del tablero de Looker Studio + LEEME.md con las 3 páginas.
+                  `*.csv` está en .gitignore: metricas/ es la ÚNICA excepción
+
+ia/sinteticos/train_v5.jsonl              ⬅️ EL DATASET A USAR (1642: 1600 sint. + 42 reales)
+ia/sinteticos/train_v4.jsonl              el de lora_v4 (842). Intacto, para reproducirlo
 ia/sinteticos/sinteticos_800.jsonl        los 800 sintéticos solos, 80 por banco
 ia/sinteticos/test_reales.jsonl           los 16 apartados con su verdad. NUNCA entrenar
 ia/sinteticos/train_v{1,2,3}*.jsonl       ⛔ sin imágenes desde el 11-ago. Solo evidencia
@@ -498,15 +581,22 @@ falta un `<input type="hidden">`.
 | 🔴 **Un comprobante cargado a mano NUNCA llega al entrenamiento** | Cuatro cortes y ninguno avisa: la imagen va a `web/comprobantes/` pero el visor solo mira `ia/comprobantes/` (⇒ **404 en `/revisar`**); `reales.py:56` filtra `corrida_base <> 'sintetico'`, que en SQL da **NULL** cuando la columna es NULL, y un manual la tiene NULL; y `cargarComprobante` no escribe `revisado_en`. Hoy no rompe porque los 78 son `origen='ia'`. **Se decidió NO arreglarlo** (sesión 14): el camino IA → `/revisar` es más rápido para la persona y además deja medición, que la carga manual no deja. Plan en `bitacora/sesion-12-mayusculas-y-repaso.md` §5 |
 | **`comparar-lora.ts:71-72` no compila** | `CAMPOS` es readonly y se asigna a un array mutable. **Preexistente**, no rompe la ejecución (Node ignora los tipos), pero ensucia `tsc --noEmit` |
 | **La verdad tiene `tipo_operacion` escrito de 3 formas** | `Transferencia` (50), `transferencia_saliente` (11), `Transferencia enviada` (1). El generador ya está alineado; la verdad no. Hasta arreglarlo, ese campo mide tipografía |
-| **¿58 o 62 comprobantes revisados?** | La base dice 62 (`revisado_en IS NOT NULL`), la bitácora venía diciendo 58. Hay que saber cuál es el bueno **antes** de reportar cualquier métrica |
-| **`generar.py` y `entrenar.py` sin commitear** | Cambios del 13-ago en el working tree. Último commit: `0227240 "lorav4"` |
+| ✅ ~~**¿58 o 62 comprobantes revisados?**~~ | **RESUELTO (15-ago): los dos.** `revisado_en IS NOT NULL` da 62 (incluye 4 sintéticos); con `AND corrida_base <> 'sintetico'` da 58, los reales — que es el filtro de `reales.py` y **el número a reportar** |
+| **Sin commitear** | Lo de la sesión 16 (`README.md`, `metricas/`, `ia/metricas.sh`, `web/comparar-lora.ts`) **más todo lo de la 17**: `portal/` entero, `.claude/CLAUDE.md`, `.claude/BITACORA.md`, `.claude/bitacora/sesion-1{6,7}-*.md`, `.gitignore` |
+| 🔴 **El lote nunca corrió entero contra la IA** | Los 21 tests usan un doble que devuelve campos fijos: prueban la lógica, no que el modelo lea bien ni cuánto tarda. La primera corrida real murió por los tokens (ya arreglado) y **no se volvió a probar** |
+| **Falta el exportador de `correccion` a JSONL** | La tabla guarda `campo · valor_leido · valor_correcto`, que es lo que necesita `ia/reales.py`, pero el script que las convierte no existe. Sin él la fábrica de datos no cierra el círculo |
+| ⛔ **La `huella()` de `web/` no reproduce su fórmula** | Con los mismos 5 campos, `shasum`, Node inline y Python dan `651b8a98…` y `extracto.ts` da `ccfa65ee…`. Sin explicación. No bloquea —cada base es consistente consigo misma— pero **las huellas de las dos bases no son comparables** |
+| **Un CBU inventado en la base real** | `0170099220000012345678` en `/admin/cbu` lo cargó Claude para probar. **Borrarlo** y cargar los reales |
+| **`portal/` no tiene migraciones** | Las tablas se crean con `create_all()` sobre base vacía; un cambio de esquema se resuelve con `sembrar.py --reiniciar`. Alcanza **solo mientras los datos sean inventados**. El día que haya un dato real de un cliente, hace falta Alembic |
+| **2 comprobantes de prueba en la base `portal`** | En la cuenta de Aníbal Ferreyra (id 2), fabricados con Pillow durante la verificación. Se van con `python -m portal.sembrar --reiniciar` |
+| **`*.err` no está en `.gitignore`** | `ia/salida_lora_v4_v2_final.err` quedó sin trackear pero visible. Hoy solo lleva progreso y warnings, igual que `ia/salida_nuevos.log`. Misma decisión pendiente: ¿se borran o se agregan los patrones `*.err` y `*.log`? |
 | **6 elecciones humanas a revisar** | `023`, `007`, `015`, `032`, `043`, `051`. Hasta que se ajusten, la medición de la cascada sale castigada. Ver el punto 2 de la próxima sesión |
 | `nombre_receptor` se derrumbó con el LoRA | 9/16 el base contra **1/16** `lora_v3_final`. Sin explicación. Es el único campo donde el LoRA es peor por goleada |
 | **`oNulo` no atrapa el string `'null'`** | Trata `''` y `'N/A'` como ausencia, pero el modelo devuelve las tres. Medido sobre los 51: son aciertos contados como errores en **4 (v1) · 4 (v2) · 5 (v3) · 7 (v4)** campos de 816. v1 pasaría de 65,2% a 65,7%. **No cambia el orden ni ninguna conclusión**, por eso no se tocó: arreglarlo mueve todos los números publicados y se decide a propósito. Hay 3 filas de `comprobante` con `'null'`/`'N/A'` guardado como valor. `/probar` ya lo muestra como ausencia |
 | `corridas/page.tsx:85` cuenta blobs de JSON, no comprobantes | Latente. Miente el día que haya dos revisados con los 16 campos idénticos |
 | Los 20 sintéticos cargados tienen las etiquetas ROTAS | Vienen del generador que inventaba campos. **Hay que recargarlos** desde el dataset nuevo |
 | Menores | `@types/node` en `^20` con runtime 24.12 (cast local para `import.meta.main`) · warning `MODULE_TYPELESS_PACKAGE_JSON` · 96 movimientos (3,4%) con `tipo` NULL, a propósito · mojibake en las descripciones, viene del origen y corregirlo sería adivinar |
-| **`BITACORA.md` sigue arriba del techo: ~475 contra ~250** | Las sesiones 13 y 14 mudaron a sus archivos las tablas por campo, el relato de los guiones y el de la cascada, y comprimieron el colapso de v1/v2, los techos de la librería, la operación de una corrida larga, los descuentos y la cola de experimentos. **Lo que queda largo es el ESTADO ACTUAL, que es justo lo que hay que leer.** El recorte grande sigue atado a que `lora_v4` cierre F10: ahí se mudan enteras la sección 🎯 y la cola de experimentos, y con `motor.ts` reescrito se va también la de la cascada |
+| 🔴 **`BITACORA.md` empeoró: 580 líneas contra un techo de ~250** | La sesión 17 sumó el producto sin sacar nada. **Ahora sí se puede recortar de verdad, porque F10 cerró:** todo lo del entrenamiento —la tabla 🎯 de adaptadores, los cuatro sesgos del generador, la operación de una corrida larga, el techo de la librería, las herramientas de IA— pasó de "hay que leerlo para trabajar" a historia, y su lugar es `sesion-15` y `sesion-16`, que ya lo cuentan entero. Arriba alcanza con: **`lora_v4_v2` es el adaptador, 82,6%, y el detalle está en la sesión 16.** La sección de la cascada de `/encontrar` se va cuando el portal del dueño tenga la suya |
 | **Se pueden borrar:** `duplicadas_para_revisar.csv`, `ia/checkpoints/lora_bancos.safetensors` (154 MB) + su `adapter_config.json`, `ia/verdad_referencia.xlsx`, **`ia/checkpoints/smoke_completions/` (462 MB)** | Sobrantes del análisis de duplicadas, del smoke test de F9, de la verdad que reemplazó `/revisar`, y del smoke test de `train_on_completions` del 10-ago — **su log alcanza como evidencia, los pesos de 10 pasos no sirven para nada** |
 | **Se conservan como evidencia:** `ia/salida_v2.jsonl` vs `..._rescatado.jsonl`, `ia/sinteticos/train_v1_ROTO.jsonl`, `ia/checkpoints/lora_v1/` | Permiten reproducir el error metodológico, las etiquetas inventadas y la curva de una corrida colapsada |
 

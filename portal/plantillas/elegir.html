@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block titulo %}Elegí tu cuenta{% endblock %}
+
+{% block contenido %}
+  <h1>¿Con qué cuenta entrás?</h1>
+  <p class="aviso">Sin contraseña: esto corre en una sola máquina y todos los datos son inventados.</p>
+
+  <ul class="clientes">
+    {% for cliente in clientes %}
+      <li>
+        <a href="/cliente/{{ cliente.id }}">
+          <span class="nombre">{{ cliente.nombre_completo }}</span>
+          <span class="email">{{ cliente.email }}</span>
+          <span class="saldo {{ 'negativo' if cliente.saldo < 0 }}">$ {{ cliente.saldo | pesos }}</span>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

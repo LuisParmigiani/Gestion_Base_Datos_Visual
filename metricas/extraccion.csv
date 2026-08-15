@@ -1,0 +1,1793 @@
+corrida,comprobante_id,entidad,campo,acierto
+v1,84,"mercado pago",tipo_operacion,1
+v1,84,"mercado pago",monto,1
+v1,84,"mercado pago",moneda,1
+v1,84,"mercado pago",fecha,1
+v1,84,"mercado pago",hora,1
+v1,84,"mercado pago",nombre_emisor,0
+v1,84,"mercado pago",cuit_emisor,1
+v1,84,"mercado pago",cbu_cvu_emisor,1
+v1,84,"mercado pago",banco_emisor,1
+v1,84,"mercado pago",nombre_receptor,1
+v1,84,"mercado pago",cuit_receptor,1
+v1,84,"mercado pago",cbu_cvu_receptor,1
+v1,84,"mercado pago",banco_receptor,1
+v1,84,"mercado pago",concepto,1
+v1,84,"mercado pago",referencia,1
+v1,84,"mercado pago",coelsa_id,1
+v1,85,"nación",tipo_operacion,0
+v1,85,"nación",monto,1
+v1,85,"nación",moneda,0
+v1,85,"nación",fecha,1
+v1,85,"nación",hora,1
+v1,85,"nación",nombre_emisor,1
+v1,85,"nación",cuit_emisor,1
+v1,85,"nación",cbu_cvu_emisor,1
+v1,85,"nación",banco_emisor,0
+v1,85,"nación",nombre_receptor,0
+v1,85,"nación",cuit_receptor,0
+v1,85,"nación",cbu_cvu_receptor,0
+v1,85,"nación",banco_receptor,0
+v1,85,"nación",concepto,0
+v1,85,"nación",referencia,1
+v1,85,"nación",coelsa_id,1
+v1,87,"mercado pago",tipo_operacion,1
+v1,87,"mercado pago",monto,1
+v1,87,"mercado pago",moneda,1
+v1,87,"mercado pago",fecha,1
+v1,87,"mercado pago",hora,1
+v1,87,"mercado pago",nombre_emisor,1
+v1,87,"mercado pago",cuit_emisor,1
+v1,87,"mercado pago",cbu_cvu_emisor,1
+v1,87,"mercado pago",banco_emisor,1
+v1,87,"mercado pago",nombre_receptor,1
+v1,87,"mercado pago",cuit_receptor,0
+v1,87,"mercado pago",cbu_cvu_receptor,1
+v1,87,"mercado pago",banco_receptor,1
+v1,87,"mercado pago",concepto,1
+v1,87,"mercado pago",referencia,1
+v1,87,"mercado pago",coelsa_id,1
+v1,92,"galicia",tipo_operacion,1
+v1,92,"galicia",monto,1
+v1,92,"galicia",moneda,1
+v1,92,"galicia",fecha,1
+v1,92,"galicia",hora,1
+v1,92,"galicia",nombre_emisor,0
+v1,92,"galicia",cuit_emisor,1
+v1,92,"galicia",cbu_cvu_emisor,0
+v1,92,"galicia",banco_emisor,1
+v1,92,"galicia",nombre_receptor,1
+v1,92,"galicia",cuit_receptor,1
+v1,92,"galicia",cbu_cvu_receptor,0
+v1,92,"galicia",banco_receptor,0
+v1,92,"galicia",concepto,0
+v1,92,"galicia",referencia,0
+v1,92,"galicia",coelsa_id,0
+v1,96,"galicia",tipo_operacion,1
+v1,96,"galicia",monto,0
+v1,96,"galicia",moneda,1
+v1,96,"galicia",fecha,1
+v1,96,"galicia",hora,1
+v1,96,"galicia",nombre_emisor,1
+v1,96,"galicia",cuit_emisor,1
+v1,96,"galicia",cbu_cvu_emisor,0
+v1,96,"galicia",banco_emisor,1
+v1,96,"galicia",nombre_receptor,0
+v1,96,"galicia",cuit_receptor,1
+v1,96,"galicia",cbu_cvu_receptor,1
+v1,96,"galicia",banco_receptor,1
+v1,96,"galicia",concepto,0
+v1,96,"galicia",referencia,0
+v1,96,"galicia",coelsa_id,1
+v1,100,"mercado pago",tipo_operacion,1
+v1,100,"mercado pago",monto,1
+v1,100,"mercado pago",moneda,1
+v1,100,"mercado pago",fecha,1
+v1,100,"mercado pago",hora,1
+v1,100,"mercado pago",nombre_emisor,1
+v1,100,"mercado pago",cuit_emisor,1
+v1,100,"mercado pago",cbu_cvu_emisor,0
+v1,100,"mercado pago",banco_emisor,1
+v1,100,"mercado pago",nombre_receptor,1
+v1,100,"mercado pago",cuit_receptor,1
+v1,100,"mercado pago",cbu_cvu_receptor,1
+v1,100,"mercado pago",banco_receptor,1
+v1,100,"mercado pago",concepto,0
+v1,100,"mercado pago",referencia,1
+v1,100,"mercado pago",coelsa_id,1
+v1,101,"macro",tipo_operacion,1
+v1,101,"macro",monto,0
+v1,101,"macro",moneda,1
+v1,101,"macro",fecha,1
+v1,101,"macro",hora,1
+v1,101,"macro",nombre_emisor,0
+v1,101,"macro",cuit_emisor,0
+v1,101,"macro",cbu_cvu_emisor,0
+v1,101,"macro",banco_emisor,0
+v1,101,"macro",nombre_receptor,0
+v1,101,"macro",cuit_receptor,0
+v1,101,"macro",cbu_cvu_receptor,0
+v1,101,"macro",banco_receptor,1
+v1,101,"macro",concepto,0
+v1,101,"macro",referencia,0
+v1,101,"macro",coelsa_id,0
+v1,103,"mercado pago",tipo_operacion,1
+v1,103,"mercado pago",monto,1
+v1,103,"mercado pago",moneda,1
+v1,103,"mercado pago",fecha,1
+v1,103,"mercado pago",hora,1
+v1,103,"mercado pago",nombre_emisor,1
+v1,103,"mercado pago",cuit_emisor,1
+v1,103,"mercado pago",cbu_cvu_emisor,1
+v1,103,"mercado pago",banco_emisor,1
+v1,103,"mercado pago",nombre_receptor,1
+v1,103,"mercado pago",cuit_receptor,1
+v1,103,"mercado pago",cbu_cvu_receptor,1
+v1,103,"mercado pago",banco_receptor,1
+v1,103,"mercado pago",concepto,0
+v1,103,"mercado pago",referencia,0
+v1,103,"mercado pago",coelsa_id,1
+v1,106,"mercado pago",tipo_operacion,1
+v1,106,"mercado pago",monto,1
+v1,106,"mercado pago",moneda,1
+v1,106,"mercado pago",fecha,1
+v1,106,"mercado pago",hora,1
+v1,106,"mercado pago",nombre_emisor,1
+v1,106,"mercado pago",cuit_emisor,1
+v1,106,"mercado pago",cbu_cvu_emisor,1
+v1,106,"mercado pago",banco_emisor,1
+v1,106,"mercado pago",nombre_receptor,0
+v1,106,"mercado pago",cuit_receptor,1
+v1,106,"mercado pago",cbu_cvu_receptor,1
+v1,106,"mercado pago",banco_receptor,1
+v1,106,"mercado pago",concepto,0
+v1,106,"mercado pago",referencia,1
+v1,106,"mercado pago",coelsa_id,1
+v1,107,"macro",tipo_operacion,1
+v1,107,"macro",monto,1
+v1,107,"macro",moneda,1
+v1,107,"macro",fecha,1
+v1,107,"macro",hora,0
+v1,107,"macro",nombre_emisor,0
+v1,107,"macro",cuit_emisor,0
+v1,107,"macro",cbu_cvu_emisor,0
+v1,107,"macro",banco_emisor,1
+v1,107,"macro",nombre_receptor,1
+v1,107,"macro",cuit_receptor,0
+v1,107,"macro",cbu_cvu_receptor,0
+v1,107,"macro",banco_receptor,0
+v1,107,"macro",concepto,0
+v1,107,"macro",referencia,0
+v1,107,"macro",coelsa_id,1
+v1,108,"mercado pago",tipo_operacion,1
+v1,108,"mercado pago",monto,1
+v1,108,"mercado pago",moneda,1
+v1,108,"mercado pago",fecha,1
+v1,108,"mercado pago",hora,1
+v1,108,"mercado pago",nombre_emisor,1
+v1,108,"mercado pago",cuit_emisor,0
+v1,108,"mercado pago",cbu_cvu_emisor,0
+v1,108,"mercado pago",banco_emisor,1
+v1,108,"mercado pago",nombre_receptor,1
+v1,108,"mercado pago",cuit_receptor,1
+v1,108,"mercado pago",cbu_cvu_receptor,1
+v1,108,"mercado pago",banco_receptor,1
+v1,108,"mercado pago",concepto,0
+v1,108,"mercado pago",referencia,1
+v1,108,"mercado pago",coelsa_id,0
+v1,111,"naranja x",tipo_operacion,1
+v1,111,"naranja x",monto,0
+v1,111,"naranja x",moneda,1
+v1,111,"naranja x",fecha,0
+v1,111,"naranja x",hora,1
+v1,111,"naranja x",nombre_emisor,1
+v1,111,"naranja x",cuit_emisor,1
+v1,111,"naranja x",cbu_cvu_emisor,1
+v1,111,"naranja x",banco_emisor,1
+v1,111,"naranja x",nombre_receptor,1
+v1,111,"naranja x",cuit_receptor,1
+v1,111,"naranja x",cbu_cvu_receptor,1
+v1,111,"naranja x",banco_receptor,1
+v1,111,"naranja x",concepto,1
+v1,111,"naranja x",referencia,0
+v1,111,"naranja x",coelsa_id,0
+v1,113,"mercado pago",tipo_operacion,1
+v1,113,"mercado pago",monto,1
+v1,113,"mercado pago",moneda,1
+v1,113,"mercado pago",fecha,1
+v1,113,"mercado pago",hora,1
+v1,113,"mercado pago",nombre_emisor,1
+v1,113,"mercado pago",cuit_emisor,1
+v1,113,"mercado pago",cbu_cvu_emisor,0
+v1,113,"mercado pago",banco_emisor,1
+v1,113,"mercado pago",nombre_receptor,0
+v1,113,"mercado pago",cuit_receptor,1
+v1,113,"mercado pago",cbu_cvu_receptor,1
+v1,113,"mercado pago",banco_receptor,1
+v1,113,"mercado pago",concepto,0
+v1,113,"mercado pago",referencia,1
+v1,113,"mercado pago",coelsa_id,1
+v1,117,"banco nacion mas",tipo_operacion,1
+v1,117,"banco nacion mas",monto,1
+v1,117,"banco nacion mas",moneda,1
+v1,117,"banco nacion mas",fecha,1
+v1,117,"banco nacion mas",hora,1
+v1,117,"banco nacion mas",nombre_emisor,0
+v1,117,"banco nacion mas",cuit_emisor,0
+v1,117,"banco nacion mas",cbu_cvu_emisor,0
+v1,117,"banco nacion mas",banco_emisor,0
+v1,117,"banco nacion mas",nombre_receptor,0
+v1,117,"banco nacion mas",cuit_receptor,1
+v1,117,"banco nacion mas",cbu_cvu_receptor,0
+v1,117,"banco nacion mas",banco_receptor,1
+v1,117,"banco nacion mas",concepto,0
+v1,117,"banco nacion mas",referencia,0
+v1,117,"banco nacion mas",coelsa_id,1
+v1,126,"mercado pago",tipo_operacion,1
+v1,126,"mercado pago",monto,1
+v1,126,"mercado pago",moneda,1
+v1,126,"mercado pago",fecha,0
+v1,126,"mercado pago",hora,1
+v1,126,"mercado pago",nombre_emisor,1
+v1,126,"mercado pago",cuit_emisor,1
+v1,126,"mercado pago",cbu_cvu_emisor,0
+v1,126,"mercado pago",banco_emisor,0
+v1,126,"mercado pago",nombre_receptor,1
+v1,126,"mercado pago",cuit_receptor,0
+v1,126,"mercado pago",cbu_cvu_receptor,1
+v1,126,"mercado pago",banco_receptor,1
+v1,126,"mercado pago",concepto,0
+v1,126,"mercado pago",referencia,1
+v1,126,"mercado pago",coelsa_id,1
+v1,131,"mercado pago",tipo_operacion,1
+v1,131,"mercado pago",monto,1
+v1,131,"mercado pago",moneda,1
+v1,131,"mercado pago",fecha,1
+v1,131,"mercado pago",hora,1
+v1,131,"mercado pago",nombre_emisor,0
+v1,131,"mercado pago",cuit_emisor,1
+v1,131,"mercado pago",cbu_cvu_emisor,0
+v1,131,"mercado pago",banco_emisor,1
+v1,131,"mercado pago",nombre_receptor,0
+v1,131,"mercado pago",cuit_receptor,0
+v1,131,"mercado pago",cbu_cvu_receptor,1
+v1,131,"mercado pago",banco_receptor,1
+v1,131,"mercado pago",concepto,1
+v1,131,"mercado pago",referencia,0
+v1,131,"mercado pago",coelsa_id,0
+v2,84,"mercado pago",tipo_operacion,1
+v2,84,"mercado pago",monto,0
+v2,84,"mercado pago",moneda,1
+v2,84,"mercado pago",fecha,0
+v2,84,"mercado pago",hora,0
+v2,84,"mercado pago",nombre_emisor,1
+v2,84,"mercado pago",cuit_emisor,1
+v2,84,"mercado pago",cbu_cvu_emisor,1
+v2,84,"mercado pago",banco_emisor,1
+v2,84,"mercado pago",nombre_receptor,1
+v2,84,"mercado pago",cuit_receptor,1
+v2,84,"mercado pago",cbu_cvu_receptor,1
+v2,84,"mercado pago",banco_receptor,1
+v2,84,"mercado pago",concepto,0
+v2,84,"mercado pago",referencia,0
+v2,84,"mercado pago",coelsa_id,0
+v2,85,"nación",tipo_operacion,1
+v2,85,"nación",monto,0
+v2,85,"nación",moneda,1
+v2,85,"nación",fecha,1
+v2,85,"nación",hora,1
+v2,85,"nación",nombre_emisor,0
+v2,85,"nación",cuit_emisor,0
+v2,85,"nación",cbu_cvu_emisor,0
+v2,85,"nación",banco_emisor,0
+v2,85,"nación",nombre_receptor,0
+v2,85,"nación",cuit_receptor,1
+v2,85,"nación",cbu_cvu_receptor,0
+v2,85,"nación",banco_receptor,0
+v2,85,"nación",concepto,0
+v2,85,"nación",referencia,0
+v2,85,"nación",coelsa_id,0
+v2,87,"mercado pago",tipo_operacion,1
+v2,87,"mercado pago",monto,0
+v2,87,"mercado pago",moneda,1
+v2,87,"mercado pago",fecha,0
+v2,87,"mercado pago",hora,0
+v2,87,"mercado pago",nombre_emisor,0
+v2,87,"mercado pago",cuit_emisor,0
+v2,87,"mercado pago",cbu_cvu_emisor,0
+v2,87,"mercado pago",banco_emisor,0
+v2,87,"mercado pago",nombre_receptor,0
+v2,87,"mercado pago",cuit_receptor,0
+v2,87,"mercado pago",cbu_cvu_receptor,1
+v2,87,"mercado pago",banco_receptor,1
+v2,87,"mercado pago",concepto,0
+v2,87,"mercado pago",referencia,1
+v2,87,"mercado pago",coelsa_id,1
+v2,92,"galicia",tipo_operacion,1
+v2,92,"galicia",monto,0
+v2,92,"galicia",moneda,1
+v2,92,"galicia",fecha,0
+v2,92,"galicia",hora,1
+v2,92,"galicia",nombre_emisor,0
+v2,92,"galicia",cuit_emisor,0
+v2,92,"galicia",cbu_cvu_emisor,0
+v2,92,"galicia",banco_emisor,0
+v2,92,"galicia",nombre_receptor,0
+v2,92,"galicia",cuit_receptor,0
+v2,92,"galicia",cbu_cvu_receptor,0
+v2,92,"galicia",banco_receptor,0
+v2,92,"galicia",concepto,0
+v2,92,"galicia",referencia,0
+v2,92,"galicia",coelsa_id,0
+v2,96,"galicia",tipo_operacion,1
+v2,96,"galicia",monto,0
+v2,96,"galicia",moneda,1
+v2,96,"galicia",fecha,0
+v2,96,"galicia",hora,1
+v2,96,"galicia",nombre_emisor,0
+v2,96,"galicia",cuit_emisor,0
+v2,96,"galicia",cbu_cvu_emisor,0
+v2,96,"galicia",banco_emisor,0
+v2,96,"galicia",nombre_receptor,0
+v2,96,"galicia",cuit_receptor,1
+v2,96,"galicia",cbu_cvu_receptor,1
+v2,96,"galicia",banco_receptor,0
+v2,96,"galicia",concepto,0
+v2,96,"galicia",referencia,1
+v2,96,"galicia",coelsa_id,0
+v2,100,"mercado pago",tipo_operacion,1
+v2,100,"mercado pago",monto,0
+v2,100,"mercado pago",moneda,1
+v2,100,"mercado pago",fecha,0
+v2,100,"mercado pago",hora,1
+v2,100,"mercado pago",nombre_emisor,1
+v2,100,"mercado pago",cuit_emisor,1
+v2,100,"mercado pago",cbu_cvu_emisor,0
+v2,100,"mercado pago",banco_emisor,1
+v2,100,"mercado pago",nombre_receptor,0
+v2,100,"mercado pago",cuit_receptor,1
+v2,100,"mercado pago",cbu_cvu_receptor,1
+v2,100,"mercado pago",banco_receptor,1
+v2,100,"mercado pago",concepto,0
+v2,100,"mercado pago",referencia,1
+v2,100,"mercado pago",coelsa_id,1
+v2,101,"macro",tipo_operacion,1
+v2,101,"macro",monto,1
+v2,101,"macro",moneda,1
+v2,101,"macro",fecha,1
+v2,101,"macro",hora,1
+v2,101,"macro",nombre_emisor,0
+v2,101,"macro",cuit_emisor,1
+v2,101,"macro",cbu_cvu_emisor,0
+v2,101,"macro",banco_emisor,0
+v2,101,"macro",nombre_receptor,0
+v2,101,"macro",cuit_receptor,0
+v2,101,"macro",cbu_cvu_receptor,0
+v2,101,"macro",banco_receptor,1
+v2,101,"macro",concepto,0
+v2,101,"macro",referencia,0
+v2,101,"macro",coelsa_id,0
+v2,103,"mercado pago",tipo_operacion,1
+v2,103,"mercado pago",monto,0
+v2,103,"mercado pago",moneda,1
+v2,103,"mercado pago",fecha,0
+v2,103,"mercado pago",hora,0
+v2,103,"mercado pago",nombre_emisor,0
+v2,103,"mercado pago",cuit_emisor,1
+v2,103,"mercado pago",cbu_cvu_emisor,0
+v2,103,"mercado pago",banco_emisor,1
+v2,103,"mercado pago",nombre_receptor,0
+v2,103,"mercado pago",cuit_receptor,1
+v2,103,"mercado pago",cbu_cvu_receptor,1
+v2,103,"mercado pago",banco_receptor,1
+v2,103,"mercado pago",concepto,0
+v2,103,"mercado pago",referencia,1
+v2,103,"mercado pago",coelsa_id,0
+v2,106,"mercado pago",tipo_operacion,1
+v2,106,"mercado pago",monto,1
+v2,106,"mercado pago",moneda,1
+v2,106,"mercado pago",fecha,0
+v2,106,"mercado pago",hora,1
+v2,106,"mercado pago",nombre_emisor,0
+v2,106,"mercado pago",cuit_emisor,1
+v2,106,"mercado pago",cbu_cvu_emisor,0
+v2,106,"mercado pago",banco_emisor,0
+v2,106,"mercado pago",nombre_receptor,0
+v2,106,"mercado pago",cuit_receptor,1
+v2,106,"mercado pago",cbu_cvu_receptor,1
+v2,106,"mercado pago",banco_receptor,1
+v2,106,"mercado pago",concepto,0
+v2,106,"mercado pago",referencia,1
+v2,106,"mercado pago",coelsa_id,1
+v2,107,"macro",tipo_operacion,1
+v2,107,"macro",monto,1
+v2,107,"macro",moneda,1
+v2,107,"macro",fecha,0
+v2,107,"macro",hora,1
+v2,107,"macro",nombre_emisor,0
+v2,107,"macro",cuit_emisor,0
+v2,107,"macro",cbu_cvu_emisor,1
+v2,107,"macro",banco_emisor,0
+v2,107,"macro",nombre_receptor,0
+v2,107,"macro",cuit_receptor,0
+v2,107,"macro",cbu_cvu_receptor,1
+v2,107,"macro",banco_receptor,0
+v2,107,"macro",concepto,0
+v2,107,"macro",referencia,0
+v2,107,"macro",coelsa_id,1
+v2,108,"mercado pago",tipo_operacion,1
+v2,108,"mercado pago",monto,0
+v2,108,"mercado pago",moneda,1
+v2,108,"mercado pago",fecha,0
+v2,108,"mercado pago",hora,0
+v2,108,"mercado pago",nombre_emisor,0
+v2,108,"mercado pago",cuit_emisor,0
+v2,108,"mercado pago",cbu_cvu_emisor,0
+v2,108,"mercado pago",banco_emisor,0
+v2,108,"mercado pago",nombre_receptor,0
+v2,108,"mercado pago",cuit_receptor,1
+v2,108,"mercado pago",cbu_cvu_receptor,1
+v2,108,"mercado pago",banco_receptor,1
+v2,108,"mercado pago",concepto,0
+v2,108,"mercado pago",referencia,1
+v2,108,"mercado pago",coelsa_id,0
+v2,111,"naranja x",tipo_operacion,1
+v2,111,"naranja x",monto,0
+v2,111,"naranja x",moneda,1
+v2,111,"naranja x",fecha,1
+v2,111,"naranja x",hora,0
+v2,111,"naranja x",nombre_emisor,0
+v2,111,"naranja x",cuit_emisor,1
+v2,111,"naranja x",cbu_cvu_emisor,0
+v2,111,"naranja x",banco_emisor,0
+v2,111,"naranja x",nombre_receptor,0
+v2,111,"naranja x",cuit_receptor,1
+v2,111,"naranja x",cbu_cvu_receptor,0
+v2,111,"naranja x",banco_receptor,1
+v2,111,"naranja x",concepto,0
+v2,111,"naranja x",referencia,0
+v2,111,"naranja x",coelsa_id,0
+v2,113,"mercado pago",tipo_operacion,1
+v2,113,"mercado pago",monto,0
+v2,113,"mercado pago",moneda,1
+v2,113,"mercado pago",fecha,0
+v2,113,"mercado pago",hora,1
+v2,113,"mercado pago",nombre_emisor,1
+v2,113,"mercado pago",cuit_emisor,1
+v2,113,"mercado pago",cbu_cvu_emisor,0
+v2,113,"mercado pago",banco_emisor,1
+v2,113,"mercado pago",nombre_receptor,1
+v2,113,"mercado pago",cuit_receptor,1
+v2,113,"mercado pago",cbu_cvu_receptor,1
+v2,113,"mercado pago",banco_receptor,1
+v2,113,"mercado pago",concepto,0
+v2,113,"mercado pago",referencia,1
+v2,113,"mercado pago",coelsa_id,1
+v2,117,"banco nacion mas",tipo_operacion,1
+v2,117,"banco nacion mas",monto,1
+v2,117,"banco nacion mas",moneda,1
+v2,117,"banco nacion mas",fecha,0
+v2,117,"banco nacion mas",hora,1
+v2,117,"banco nacion mas",nombre_emisor,0
+v2,117,"banco nacion mas",cuit_emisor,0
+v2,117,"banco nacion mas",cbu_cvu_emisor,0
+v2,117,"banco nacion mas",banco_emisor,0
+v2,117,"banco nacion mas",nombre_receptor,0
+v2,117,"banco nacion mas",cuit_receptor,0
+v2,117,"banco nacion mas",cbu_cvu_receptor,1
+v2,117,"banco nacion mas",banco_receptor,0
+v2,117,"banco nacion mas",concepto,0
+v2,117,"banco nacion mas",referencia,1
+v2,117,"banco nacion mas",coelsa_id,0
+v2,126,"mercado pago",tipo_operacion,1
+v2,126,"mercado pago",monto,0
+v2,126,"mercado pago",moneda,1
+v2,126,"mercado pago",fecha,0
+v2,126,"mercado pago",hora,0
+v2,126,"mercado pago",nombre_emisor,0
+v2,126,"mercado pago",cuit_emisor,0
+v2,126,"mercado pago",cbu_cvu_emisor,0
+v2,126,"mercado pago",banco_emisor,0
+v2,126,"mercado pago",nombre_receptor,0
+v2,126,"mercado pago",cuit_receptor,0
+v2,126,"mercado pago",cbu_cvu_receptor,1
+v2,126,"mercado pago",banco_receptor,1
+v2,126,"mercado pago",concepto,0
+v2,126,"mercado pago",referencia,1
+v2,126,"mercado pago",coelsa_id,0
+v2,131,"mercado pago",tipo_operacion,1
+v2,131,"mercado pago",monto,0
+v2,131,"mercado pago",moneda,1
+v2,131,"mercado pago",fecha,0
+v2,131,"mercado pago",hora,1
+v2,131,"mercado pago",nombre_emisor,1
+v2,131,"mercado pago",cuit_emisor,1
+v2,131,"mercado pago",cbu_cvu_emisor,0
+v2,131,"mercado pago",banco_emisor,1
+v2,131,"mercado pago",nombre_receptor,0
+v2,131,"mercado pago",cuit_receptor,0
+v2,131,"mercado pago",cbu_cvu_receptor,1
+v2,131,"mercado pago",banco_receptor,1
+v2,131,"mercado pago",concepto,0
+v2,131,"mercado pago",referencia,1
+v2,131,"mercado pago",coelsa_id,1
+v4,84,"mercado pago",tipo_operacion,1
+v4,84,"mercado pago",monto,0
+v4,84,"mercado pago",moneda,1
+v4,84,"mercado pago",fecha,0
+v4,84,"mercado pago",hora,0
+v4,84,"mercado pago",nombre_emisor,1
+v4,84,"mercado pago",cuit_emisor,1
+v4,84,"mercado pago",cbu_cvu_emisor,0
+v4,84,"mercado pago",banco_emisor,1
+v4,84,"mercado pago",nombre_receptor,0
+v4,84,"mercado pago",cuit_receptor,1
+v4,84,"mercado pago",cbu_cvu_receptor,0
+v4,84,"mercado pago",banco_receptor,1
+v4,84,"mercado pago",concepto,1
+v4,84,"mercado pago",referencia,0
+v4,84,"mercado pago",coelsa_id,0
+v4,85,"nación",tipo_operacion,1
+v4,85,"nación",monto,1
+v4,85,"nación",moneda,1
+v4,85,"nación",fecha,1
+v4,85,"nación",hora,1
+v4,85,"nación",nombre_emisor,0
+v4,85,"nación",cuit_emisor,0
+v4,85,"nación",cbu_cvu_emisor,0
+v4,85,"nación",banco_emisor,0
+v4,85,"nación",nombre_receptor,0
+v4,85,"nación",cuit_receptor,0
+v4,85,"nación",cbu_cvu_receptor,0
+v4,85,"nación",banco_receptor,0
+v4,85,"nación",concepto,0
+v4,85,"nación",referencia,0
+v4,85,"nación",coelsa_id,1
+v4,87,"mercado pago",tipo_operacion,1
+v4,87,"mercado pago",monto,0
+v4,87,"mercado pago",moneda,1
+v4,87,"mercado pago",fecha,0
+v4,87,"mercado pago",hora,0
+v4,87,"mercado pago",nombre_emisor,0
+v4,87,"mercado pago",cuit_emisor,0
+v4,87,"mercado pago",cbu_cvu_emisor,0
+v4,87,"mercado pago",banco_emisor,0
+v4,87,"mercado pago",nombre_receptor,0
+v4,87,"mercado pago",cuit_receptor,0
+v4,87,"mercado pago",cbu_cvu_receptor,0
+v4,87,"mercado pago",banco_receptor,0
+v4,87,"mercado pago",concepto,1
+v4,87,"mercado pago",referencia,0
+v4,87,"mercado pago",coelsa_id,0
+v4,92,"galicia",tipo_operacion,1
+v4,92,"galicia",monto,0
+v4,92,"galicia",moneda,1
+v4,92,"galicia",fecha,0
+v4,92,"galicia",hora,1
+v4,92,"galicia",nombre_emisor,0
+v4,92,"galicia",cuit_emisor,0
+v4,92,"galicia",cbu_cvu_emisor,0
+v4,92,"galicia",banco_emisor,1
+v4,92,"galicia",nombre_receptor,0
+v4,92,"galicia",cuit_receptor,0
+v4,92,"galicia",cbu_cvu_receptor,0
+v4,92,"galicia",banco_receptor,0
+v4,92,"galicia",concepto,0
+v4,92,"galicia",referencia,0
+v4,92,"galicia",coelsa_id,1
+v4,96,"galicia",tipo_operacion,1
+v4,96,"galicia",monto,0
+v4,96,"galicia",moneda,1
+v4,96,"galicia",fecha,0
+v4,96,"galicia",hora,1
+v4,96,"galicia",nombre_emisor,0
+v4,96,"galicia",cuit_emisor,0
+v4,96,"galicia",cbu_cvu_emisor,0
+v4,96,"galicia",banco_emisor,0
+v4,96,"galicia",nombre_receptor,0
+v4,96,"galicia",cuit_receptor,0
+v4,96,"galicia",cbu_cvu_receptor,0
+v4,96,"galicia",banco_receptor,0
+v4,96,"galicia",concepto,0
+v4,96,"galicia",referencia,0
+v4,96,"galicia",coelsa_id,0
+v4,100,"mercado pago",tipo_operacion,1
+v4,100,"mercado pago",monto,1
+v4,100,"mercado pago",moneda,1
+v4,100,"mercado pago",fecha,0
+v4,100,"mercado pago",hora,1
+v4,100,"mercado pago",nombre_emisor,1
+v4,100,"mercado pago",cuit_emisor,1
+v4,100,"mercado pago",cbu_cvu_emisor,0
+v4,100,"mercado pago",banco_emisor,0
+v4,100,"mercado pago",nombre_receptor,0
+v4,100,"mercado pago",cuit_receptor,1
+v4,100,"mercado pago",cbu_cvu_receptor,0
+v4,100,"mercado pago",banco_receptor,0
+v4,100,"mercado pago",concepto,0
+v4,100,"mercado pago",referencia,1
+v4,100,"mercado pago",coelsa_id,1
+v4,101,"macro",tipo_operacion,1
+v4,101,"macro",monto,1
+v4,101,"macro",moneda,1
+v4,101,"macro",fecha,1
+v4,101,"macro",hora,1
+v4,101,"macro",nombre_emisor,0
+v4,101,"macro",cuit_emisor,0
+v4,101,"macro",cbu_cvu_emisor,1
+v4,101,"macro",banco_emisor,0
+v4,101,"macro",nombre_receptor,0
+v4,101,"macro",cuit_receptor,0
+v4,101,"macro",cbu_cvu_receptor,1
+v4,101,"macro",banco_receptor,0
+v4,101,"macro",concepto,0
+v4,101,"macro",referencia,0
+v4,101,"macro",coelsa_id,0
+v4,103,"mercado pago",tipo_operacion,1
+v4,103,"mercado pago",monto,0
+v4,103,"mercado pago",moneda,1
+v4,103,"mercado pago",fecha,0
+v4,103,"mercado pago",hora,1
+v4,103,"mercado pago",nombre_emisor,1
+v4,103,"mercado pago",cuit_emisor,1
+v4,103,"mercado pago",cbu_cvu_emisor,0
+v4,103,"mercado pago",banco_emisor,0
+v4,103,"mercado pago",nombre_receptor,1
+v4,103,"mercado pago",cuit_receptor,1
+v4,103,"mercado pago",cbu_cvu_receptor,0
+v4,103,"mercado pago",banco_receptor,0
+v4,103,"mercado pago",concepto,0
+v4,103,"mercado pago",referencia,1
+v4,103,"mercado pago",coelsa_id,1
+v4,106,"mercado pago",tipo_operacion,1
+v4,106,"mercado pago",monto,1
+v4,106,"mercado pago",moneda,1
+v4,106,"mercado pago",fecha,0
+v4,106,"mercado pago",hora,1
+v4,106,"mercado pago",nombre_emisor,0
+v4,106,"mercado pago",cuit_emisor,1
+v4,106,"mercado pago",cbu_cvu_emisor,0
+v4,106,"mercado pago",banco_emisor,0
+v4,106,"mercado pago",nombre_receptor,0
+v4,106,"mercado pago",cuit_receptor,1
+v4,106,"mercado pago",cbu_cvu_receptor,0
+v4,106,"mercado pago",banco_receptor,1
+v4,106,"mercado pago",concepto,0
+v4,106,"mercado pago",referencia,1
+v4,106,"mercado pago",coelsa_id,1
+v4,107,"macro",tipo_operacion,1
+v4,107,"macro",monto,1
+v4,107,"macro",moneda,1
+v4,107,"macro",fecha,1
+v4,107,"macro",hora,0
+v4,107,"macro",nombre_emisor,0
+v4,107,"macro",cuit_emisor,1
+v4,107,"macro",cbu_cvu_emisor,1
+v4,107,"macro",banco_emisor,0
+v4,107,"macro",nombre_receptor,0
+v4,107,"macro",cuit_receptor,0
+v4,107,"macro",cbu_cvu_receptor,1
+v4,107,"macro",banco_receptor,0
+v4,107,"macro",concepto,0
+v4,107,"macro",referencia,0
+v4,107,"macro",coelsa_id,0
+v4,108,"mercado pago",tipo_operacion,1
+v4,108,"mercado pago",monto,0
+v4,108,"mercado pago",moneda,1
+v4,108,"mercado pago",fecha,0
+v4,108,"mercado pago",hora,0
+v4,108,"mercado pago",nombre_emisor,1
+v4,108,"mercado pago",cuit_emisor,0
+v4,108,"mercado pago",cbu_cvu_emisor,0
+v4,108,"mercado pago",banco_emisor,0
+v4,108,"mercado pago",nombre_receptor,1
+v4,108,"mercado pago",cuit_receptor,1
+v4,108,"mercado pago",cbu_cvu_receptor,0
+v4,108,"mercado pago",banco_receptor,1
+v4,108,"mercado pago",concepto,0
+v4,108,"mercado pago",referencia,1
+v4,108,"mercado pago",coelsa_id,1
+v4,111,"naranja x",tipo_operacion,1
+v4,111,"naranja x",monto,0
+v4,111,"naranja x",moneda,1
+v4,111,"naranja x",fecha,1
+v4,111,"naranja x",hora,0
+v4,111,"naranja x",nombre_emisor,0
+v4,111,"naranja x",cuit_emisor,1
+v4,111,"naranja x",cbu_cvu_emisor,0
+v4,111,"naranja x",banco_emisor,0
+v4,111,"naranja x",nombre_receptor,0
+v4,111,"naranja x",cuit_receptor,0
+v4,111,"naranja x",cbu_cvu_receptor,0
+v4,111,"naranja x",banco_receptor,0
+v4,111,"naranja x",concepto,0
+v4,111,"naranja x",referencia,0
+v4,111,"naranja x",coelsa_id,0
+v4,113,"mercado pago",tipo_operacion,1
+v4,113,"mercado pago",monto,0
+v4,113,"mercado pago",moneda,1
+v4,113,"mercado pago",fecha,0
+v4,113,"mercado pago",hora,1
+v4,113,"mercado pago",nombre_emisor,1
+v4,113,"mercado pago",cuit_emisor,1
+v4,113,"mercado pago",cbu_cvu_emisor,0
+v4,113,"mercado pago",banco_emisor,0
+v4,113,"mercado pago",nombre_receptor,0
+v4,113,"mercado pago",cuit_receptor,1
+v4,113,"mercado pago",cbu_cvu_receptor,0
+v4,113,"mercado pago",banco_receptor,1
+v4,113,"mercado pago",concepto,0
+v4,113,"mercado pago",referencia,1
+v4,113,"mercado pago",coelsa_id,1
+v4,117,"banco nacion mas",tipo_operacion,1
+v4,117,"banco nacion mas",monto,1
+v4,117,"banco nacion mas",moneda,1
+v4,117,"banco nacion mas",fecha,1
+v4,117,"banco nacion mas",hora,1
+v4,117,"banco nacion mas",nombre_emisor,1
+v4,117,"banco nacion mas",cuit_emisor,1
+v4,117,"banco nacion mas",cbu_cvu_emisor,1
+v4,117,"banco nacion mas",banco_emisor,0
+v4,117,"banco nacion mas",nombre_receptor,0
+v4,117,"banco nacion mas",cuit_receptor,1
+v4,117,"banco nacion mas",cbu_cvu_receptor,0
+v4,117,"banco nacion mas",banco_receptor,1
+v4,117,"banco nacion mas",concepto,0
+v4,117,"banco nacion mas",referencia,0
+v4,117,"banco nacion mas",coelsa_id,1
+v4,126,"mercado pago",tipo_operacion,1
+v4,126,"mercado pago",monto,0
+v4,126,"mercado pago",moneda,1
+v4,126,"mercado pago",fecha,0
+v4,126,"mercado pago",hora,0
+v4,126,"mercado pago",nombre_emisor,0
+v4,126,"mercado pago",cuit_emisor,0
+v4,126,"mercado pago",cbu_cvu_emisor,0
+v4,126,"mercado pago",banco_emisor,0
+v4,126,"mercado pago",nombre_receptor,0
+v4,126,"mercado pago",cuit_receptor,0
+v4,126,"mercado pago",cbu_cvu_receptor,0
+v4,126,"mercado pago",banco_receptor,0
+v4,126,"mercado pago",concepto,0
+v4,126,"mercado pago",referencia,1
+v4,126,"mercado pago",coelsa_id,0
+v4,131,"mercado pago",tipo_operacion,1
+v4,131,"mercado pago",monto,0
+v4,131,"mercado pago",moneda,1
+v4,131,"mercado pago",fecha,0
+v4,131,"mercado pago",hora,0
+v4,131,"mercado pago",nombre_emisor,0
+v4,131,"mercado pago",cuit_emisor,0
+v4,131,"mercado pago",cbu_cvu_emisor,0
+v4,131,"mercado pago",banco_emisor,0
+v4,131,"mercado pago",nombre_receptor,0
+v4,131,"mercado pago",cuit_receptor,0
+v4,131,"mercado pago",cbu_cvu_receptor,0
+v4,131,"mercado pago",banco_receptor,0
+v4,131,"mercado pago",concepto,0
+v4,131,"mercado pago",referencia,0
+v4,131,"mercado pago",coelsa_id,0
+lora_v3_mejor,84,"mercado pago",tipo_operacion,0
+lora_v3_mejor,84,"mercado pago",monto,1
+lora_v3_mejor,84,"mercado pago",moneda,1
+lora_v3_mejor,84,"mercado pago",fecha,1
+lora_v3_mejor,84,"mercado pago",hora,0
+lora_v3_mejor,84,"mercado pago",nombre_emisor,0
+lora_v3_mejor,84,"mercado pago",cuit_emisor,1
+lora_v3_mejor,84,"mercado pago",cbu_cvu_emisor,1
+lora_v3_mejor,84,"mercado pago",banco_emisor,1
+lora_v3_mejor,84,"mercado pago",nombre_receptor,1
+lora_v3_mejor,84,"mercado pago",cuit_receptor,1
+lora_v3_mejor,84,"mercado pago",cbu_cvu_receptor,0
+lora_v3_mejor,84,"mercado pago",banco_receptor,1
+lora_v3_mejor,84,"mercado pago",concepto,0
+lora_v3_mejor,84,"mercado pago",referencia,1
+lora_v3_mejor,84,"mercado pago",coelsa_id,1
+lora_v3_mejor,85,"nación",tipo_operacion,0
+lora_v3_mejor,85,"nación",monto,1
+lora_v3_mejor,85,"nación",moneda,1
+lora_v3_mejor,85,"nación",fecha,1
+lora_v3_mejor,85,"nación",hora,1
+lora_v3_mejor,85,"nación",nombre_emisor,1
+lora_v3_mejor,85,"nación",cuit_emisor,1
+lora_v3_mejor,85,"nación",cbu_cvu_emisor,1
+lora_v3_mejor,85,"nación",banco_emisor,0
+lora_v3_mejor,85,"nación",nombre_receptor,0
+lora_v3_mejor,85,"nación",cuit_receptor,0
+lora_v3_mejor,85,"nación",cbu_cvu_receptor,0
+lora_v3_mejor,85,"nación",banco_receptor,0
+lora_v3_mejor,85,"nación",concepto,1
+lora_v3_mejor,85,"nación",referencia,0
+lora_v3_mejor,85,"nación",coelsa_id,1
+lora_v3_mejor,87,"mercado pago",tipo_operacion,0
+lora_v3_mejor,87,"mercado pago",monto,0
+lora_v3_mejor,87,"mercado pago",moneda,1
+lora_v3_mejor,87,"mercado pago",fecha,1
+lora_v3_mejor,87,"mercado pago",hora,0
+lora_v3_mejor,87,"mercado pago",nombre_emisor,1
+lora_v3_mejor,87,"mercado pago",cuit_emisor,0
+lora_v3_mejor,87,"mercado pago",cbu_cvu_emisor,1
+lora_v3_mejor,87,"mercado pago",banco_emisor,1
+lora_v3_mejor,87,"mercado pago",nombre_receptor,0
+lora_v3_mejor,87,"mercado pago",cuit_receptor,1
+lora_v3_mejor,87,"mercado pago",cbu_cvu_receptor,1
+lora_v3_mejor,87,"mercado pago",banco_receptor,1
+lora_v3_mejor,87,"mercado pago",concepto,0
+lora_v3_mejor,87,"mercado pago",referencia,1
+lora_v3_mejor,87,"mercado pago",coelsa_id,1
+lora_v3_mejor,92,"galicia",tipo_operacion,0
+lora_v3_mejor,92,"galicia",monto,0
+lora_v3_mejor,92,"galicia",moneda,1
+lora_v3_mejor,92,"galicia",fecha,1
+lora_v3_mejor,92,"galicia",hora,1
+lora_v3_mejor,92,"galicia",nombre_emisor,0
+lora_v3_mejor,92,"galicia",cuit_emisor,1
+lora_v3_mejor,92,"galicia",cbu_cvu_emisor,0
+lora_v3_mejor,92,"galicia",banco_emisor,0
+lora_v3_mejor,92,"galicia",nombre_receptor,0
+lora_v3_mejor,92,"galicia",cuit_receptor,1
+lora_v3_mejor,92,"galicia",cbu_cvu_receptor,1
+lora_v3_mejor,92,"galicia",banco_receptor,1
+lora_v3_mejor,92,"galicia",concepto,1
+lora_v3_mejor,92,"galicia",referencia,0
+lora_v3_mejor,92,"galicia",coelsa_id,0
+lora_v3_mejor,96,"galicia",tipo_operacion,0
+lora_v3_mejor,96,"galicia",monto,0
+lora_v3_mejor,96,"galicia",moneda,1
+lora_v3_mejor,96,"galicia",fecha,1
+lora_v3_mejor,96,"galicia",hora,1
+lora_v3_mejor,96,"galicia",nombre_emisor,1
+lora_v3_mejor,96,"galicia",cuit_emisor,1
+lora_v3_mejor,96,"galicia",cbu_cvu_emisor,0
+lora_v3_mejor,96,"galicia",banco_emisor,1
+lora_v3_mejor,96,"galicia",nombre_receptor,0
+lora_v3_mejor,96,"galicia",cuit_receptor,1
+lora_v3_mejor,96,"galicia",cbu_cvu_receptor,1
+lora_v3_mejor,96,"galicia",banco_receptor,1
+lora_v3_mejor,96,"galicia",concepto,1
+lora_v3_mejor,96,"galicia",referencia,1
+lora_v3_mejor,96,"galicia",coelsa_id,1
+lora_v3_mejor,100,"mercado pago",tipo_operacion,0
+lora_v3_mejor,100,"mercado pago",monto,1
+lora_v3_mejor,100,"mercado pago",moneda,1
+lora_v3_mejor,100,"mercado pago",fecha,1
+lora_v3_mejor,100,"mercado pago",hora,0
+lora_v3_mejor,100,"mercado pago",nombre_emisor,1
+lora_v3_mejor,100,"mercado pago",cuit_emisor,1
+lora_v3_mejor,100,"mercado pago",cbu_cvu_emisor,1
+lora_v3_mejor,100,"mercado pago",banco_emisor,1
+lora_v3_mejor,100,"mercado pago",nombre_receptor,1
+lora_v3_mejor,100,"mercado pago",cuit_receptor,1
+lora_v3_mejor,100,"mercado pago",cbu_cvu_receptor,1
+lora_v3_mejor,100,"mercado pago",banco_receptor,1
+lora_v3_mejor,100,"mercado pago",concepto,1
+lora_v3_mejor,100,"mercado pago",referencia,1
+lora_v3_mejor,100,"mercado pago",coelsa_id,1
+lora_v3_mejor,101,"macro",tipo_operacion,0
+lora_v3_mejor,101,"macro",monto,1
+lora_v3_mejor,101,"macro",moneda,1
+lora_v3_mejor,101,"macro",fecha,1
+lora_v3_mejor,101,"macro",hora,1
+lora_v3_mejor,101,"macro",nombre_emisor,0
+lora_v3_mejor,101,"macro",cuit_emisor,0
+lora_v3_mejor,101,"macro",cbu_cvu_emisor,1
+lora_v3_mejor,101,"macro",banco_emisor,0
+lora_v3_mejor,101,"macro",nombre_receptor,0
+lora_v3_mejor,101,"macro",cuit_receptor,0
+lora_v3_mejor,101,"macro",cbu_cvu_receptor,1
+lora_v3_mejor,101,"macro",banco_receptor,1
+lora_v3_mejor,101,"macro",concepto,1
+lora_v3_mejor,101,"macro",referencia,1
+lora_v3_mejor,101,"macro",coelsa_id,0
+lora_v3_mejor,103,"mercado pago",tipo_operacion,0
+lora_v3_mejor,103,"mercado pago",monto,1
+lora_v3_mejor,103,"mercado pago",moneda,1
+lora_v3_mejor,103,"mercado pago",fecha,1
+lora_v3_mejor,103,"mercado pago",hora,1
+lora_v3_mejor,103,"mercado pago",nombre_emisor,1
+lora_v3_mejor,103,"mercado pago",cuit_emisor,1
+lora_v3_mejor,103,"mercado pago",cbu_cvu_emisor,1
+lora_v3_mejor,103,"mercado pago",banco_emisor,1
+lora_v3_mejor,103,"mercado pago",nombre_receptor,0
+lora_v3_mejor,103,"mercado pago",cuit_receptor,1
+lora_v3_mejor,103,"mercado pago",cbu_cvu_receptor,1
+lora_v3_mejor,103,"mercado pago",banco_receptor,1
+lora_v3_mejor,103,"mercado pago",concepto,1
+lora_v3_mejor,103,"mercado pago",referencia,1
+lora_v3_mejor,103,"mercado pago",coelsa_id,1
+lora_v3_mejor,106,"mercado pago",tipo_operacion,0
+lora_v3_mejor,106,"mercado pago",monto,1
+lora_v3_mejor,106,"mercado pago",moneda,1
+lora_v3_mejor,106,"mercado pago",fecha,1
+lora_v3_mejor,106,"mercado pago",hora,1
+lora_v3_mejor,106,"mercado pago",nombre_emisor,0
+lora_v3_mejor,106,"mercado pago",cuit_emisor,1
+lora_v3_mejor,106,"mercado pago",cbu_cvu_emisor,0
+lora_v3_mejor,106,"mercado pago",banco_emisor,1
+lora_v3_mejor,106,"mercado pago",nombre_receptor,1
+lora_v3_mejor,106,"mercado pago",cuit_receptor,1
+lora_v3_mejor,106,"mercado pago",cbu_cvu_receptor,1
+lora_v3_mejor,106,"mercado pago",banco_receptor,1
+lora_v3_mejor,106,"mercado pago",concepto,1
+lora_v3_mejor,106,"mercado pago",referencia,1
+lora_v3_mejor,106,"mercado pago",coelsa_id,1
+lora_v3_mejor,107,"macro",tipo_operacion,0
+lora_v3_mejor,107,"macro",monto,1
+lora_v3_mejor,107,"macro",moneda,1
+lora_v3_mejor,107,"macro",fecha,1
+lora_v3_mejor,107,"macro",hora,1
+lora_v3_mejor,107,"macro",nombre_emisor,1
+lora_v3_mejor,107,"macro",cuit_emisor,1
+lora_v3_mejor,107,"macro",cbu_cvu_emisor,1
+lora_v3_mejor,107,"macro",banco_emisor,1
+lora_v3_mejor,107,"macro",nombre_receptor,0
+lora_v3_mejor,107,"macro",cuit_receptor,1
+lora_v3_mejor,107,"macro",cbu_cvu_receptor,1
+lora_v3_mejor,107,"macro",banco_receptor,0
+lora_v3_mejor,107,"macro",concepto,1
+lora_v3_mejor,107,"macro",referencia,1
+lora_v3_mejor,107,"macro",coelsa_id,1
+lora_v3_mejor,108,"mercado pago",tipo_operacion,0
+lora_v3_mejor,108,"mercado pago",monto,1
+lora_v3_mejor,108,"mercado pago",moneda,1
+lora_v3_mejor,108,"mercado pago",fecha,0
+lora_v3_mejor,108,"mercado pago",hora,0
+lora_v3_mejor,108,"mercado pago",nombre_emisor,1
+lora_v3_mejor,108,"mercado pago",cuit_emisor,1
+lora_v3_mejor,108,"mercado pago",cbu_cvu_emisor,1
+lora_v3_mejor,108,"mercado pago",banco_emisor,1
+lora_v3_mejor,108,"mercado pago",nombre_receptor,0
+lora_v3_mejor,108,"mercado pago",cuit_receptor,1
+lora_v3_mejor,108,"mercado pago",cbu_cvu_receptor,1
+lora_v3_mejor,108,"mercado pago",banco_receptor,1
+lora_v3_mejor,108,"mercado pago",concepto,1
+lora_v3_mejor,108,"mercado pago",referencia,1
+lora_v3_mejor,108,"mercado pago",coelsa_id,1
+lora_v3_mejor,111,"naranja x",tipo_operacion,0
+lora_v3_mejor,111,"naranja x",monto,0
+lora_v3_mejor,111,"naranja x",moneda,1
+lora_v3_mejor,111,"naranja x",fecha,1
+lora_v3_mejor,111,"naranja x",hora,1
+lora_v3_mejor,111,"naranja x",nombre_emisor,1
+lora_v3_mejor,111,"naranja x",cuit_emisor,0
+lora_v3_mejor,111,"naranja x",cbu_cvu_emisor,0
+lora_v3_mejor,111,"naranja x",banco_emisor,1
+lora_v3_mejor,111,"naranja x",nombre_receptor,1
+lora_v3_mejor,111,"naranja x",cuit_receptor,0
+lora_v3_mejor,111,"naranja x",cbu_cvu_receptor,1
+lora_v3_mejor,111,"naranja x",banco_receptor,1
+lora_v3_mejor,111,"naranja x",concepto,1
+lora_v3_mejor,111,"naranja x",referencia,1
+lora_v3_mejor,111,"naranja x",coelsa_id,0
+lora_v3_mejor,113,"mercado pago",tipo_operacion,0
+lora_v3_mejor,113,"mercado pago",monto,1
+lora_v3_mejor,113,"mercado pago",moneda,1
+lora_v3_mejor,113,"mercado pago",fecha,1
+lora_v3_mejor,113,"mercado pago",hora,0
+lora_v3_mejor,113,"mercado pago",nombre_emisor,1
+lora_v3_mejor,113,"mercado pago",cuit_emisor,1
+lora_v3_mejor,113,"mercado pago",cbu_cvu_emisor,1
+lora_v3_mejor,113,"mercado pago",banco_emisor,1
+lora_v3_mejor,113,"mercado pago",nombre_receptor,0
+lora_v3_mejor,113,"mercado pago",cuit_receptor,1
+lora_v3_mejor,113,"mercado pago",cbu_cvu_receptor,1
+lora_v3_mejor,113,"mercado pago",banco_receptor,1
+lora_v3_mejor,113,"mercado pago",concepto,1
+lora_v3_mejor,113,"mercado pago",referencia,1
+lora_v3_mejor,113,"mercado pago",coelsa_id,1
+lora_v3_mejor,117,"banco nacion mas",tipo_operacion,0
+lora_v3_mejor,117,"banco nacion mas",monto,1
+lora_v3_mejor,117,"banco nacion mas",moneda,1
+lora_v3_mejor,117,"banco nacion mas",fecha,1
+lora_v3_mejor,117,"banco nacion mas",hora,1
+lora_v3_mejor,117,"banco nacion mas",nombre_emisor,1
+lora_v3_mejor,117,"banco nacion mas",cuit_emisor,1
+lora_v3_mejor,117,"banco nacion mas",cbu_cvu_emisor,1
+lora_v3_mejor,117,"banco nacion mas",banco_emisor,0
+lora_v3_mejor,117,"banco nacion mas",nombre_receptor,1
+lora_v3_mejor,117,"banco nacion mas",cuit_receptor,0
+lora_v3_mejor,117,"banco nacion mas",cbu_cvu_receptor,1
+lora_v3_mejor,117,"banco nacion mas",banco_receptor,0
+lora_v3_mejor,117,"banco nacion mas",concepto,0
+lora_v3_mejor,117,"banco nacion mas",referencia,1
+lora_v3_mejor,117,"banco nacion mas",coelsa_id,1
+lora_v3_mejor,126,"mercado pago",tipo_operacion,0
+lora_v3_mejor,126,"mercado pago",monto,0
+lora_v3_mejor,126,"mercado pago",moneda,1
+lora_v3_mejor,126,"mercado pago",fecha,0
+lora_v3_mejor,126,"mercado pago",hora,0
+lora_v3_mejor,126,"mercado pago",nombre_emisor,1
+lora_v3_mejor,126,"mercado pago",cuit_emisor,1
+lora_v3_mejor,126,"mercado pago",cbu_cvu_emisor,1
+lora_v3_mejor,126,"mercado pago",banco_emisor,1
+lora_v3_mejor,126,"mercado pago",nombre_receptor,1
+lora_v3_mejor,126,"mercado pago",cuit_receptor,0
+lora_v3_mejor,126,"mercado pago",cbu_cvu_receptor,1
+lora_v3_mejor,126,"mercado pago",banco_receptor,1
+lora_v3_mejor,126,"mercado pago",concepto,1
+lora_v3_mejor,126,"mercado pago",referencia,1
+lora_v3_mejor,126,"mercado pago",coelsa_id,0
+lora_v3_mejor,131,"mercado pago",tipo_operacion,0
+lora_v3_mejor,131,"mercado pago",monto,1
+lora_v3_mejor,131,"mercado pago",moneda,1
+lora_v3_mejor,131,"mercado pago",fecha,1
+lora_v3_mejor,131,"mercado pago",hora,0
+lora_v3_mejor,131,"mercado pago",nombre_emisor,0
+lora_v3_mejor,131,"mercado pago",cuit_emisor,1
+lora_v3_mejor,131,"mercado pago",cbu_cvu_emisor,0
+lora_v3_mejor,131,"mercado pago",banco_emisor,1
+lora_v3_mejor,131,"mercado pago",nombre_receptor,1
+lora_v3_mejor,131,"mercado pago",cuit_receptor,1
+lora_v3_mejor,131,"mercado pago",cbu_cvu_receptor,0
+lora_v3_mejor,131,"mercado pago",banco_receptor,1
+lora_v3_mejor,131,"mercado pago",concepto,0
+lora_v3_mejor,131,"mercado pago",referencia,1
+lora_v3_mejor,131,"mercado pago",coelsa_id,1
+lora_v3_final,84,"mercado pago",tipo_operacion,0
+lora_v3_final,84,"mercado pago",monto,1
+lora_v3_final,84,"mercado pago",moneda,1
+lora_v3_final,84,"mercado pago",fecha,1
+lora_v3_final,84,"mercado pago",hora,0
+lora_v3_final,84,"mercado pago",nombre_emisor,0
+lora_v3_final,84,"mercado pago",cuit_emisor,1
+lora_v3_final,84,"mercado pago",cbu_cvu_emisor,1
+lora_v3_final,84,"mercado pago",banco_emisor,1
+lora_v3_final,84,"mercado pago",nombre_receptor,1
+lora_v3_final,84,"mercado pago",cuit_receptor,1
+lora_v3_final,84,"mercado pago",cbu_cvu_receptor,1
+lora_v3_final,84,"mercado pago",banco_receptor,1
+lora_v3_final,84,"mercado pago",concepto,0
+lora_v3_final,84,"mercado pago",referencia,1
+lora_v3_final,84,"mercado pago",coelsa_id,1
+lora_v3_final,85,"nación",tipo_operacion,0
+lora_v3_final,85,"nación",monto,1
+lora_v3_final,85,"nación",moneda,1
+lora_v3_final,85,"nación",fecha,1
+lora_v3_final,85,"nación",hora,1
+lora_v3_final,85,"nación",nombre_emisor,1
+lora_v3_final,85,"nación",cuit_emisor,1
+lora_v3_final,85,"nación",cbu_cvu_emisor,1
+lora_v3_final,85,"nación",banco_emisor,0
+lora_v3_final,85,"nación",nombre_receptor,0
+lora_v3_final,85,"nación",cuit_receptor,1
+lora_v3_final,85,"nación",cbu_cvu_receptor,0
+lora_v3_final,85,"nación",banco_receptor,0
+lora_v3_final,85,"nación",concepto,1
+lora_v3_final,85,"nación",referencia,0
+lora_v3_final,85,"nación",coelsa_id,1
+lora_v3_final,87,"mercado pago",tipo_operacion,0
+lora_v3_final,87,"mercado pago",monto,0
+lora_v3_final,87,"mercado pago",moneda,1
+lora_v3_final,87,"mercado pago",fecha,1
+lora_v3_final,87,"mercado pago",hora,0
+lora_v3_final,87,"mercado pago",nombre_emisor,1
+lora_v3_final,87,"mercado pago",cuit_emisor,0
+lora_v3_final,87,"mercado pago",cbu_cvu_emisor,1
+lora_v3_final,87,"mercado pago",banco_emisor,1
+lora_v3_final,87,"mercado pago",nombre_receptor,0
+lora_v3_final,87,"mercado pago",cuit_receptor,1
+lora_v3_final,87,"mercado pago",cbu_cvu_receptor,1
+lora_v3_final,87,"mercado pago",banco_receptor,1
+lora_v3_final,87,"mercado pago",concepto,0
+lora_v3_final,87,"mercado pago",referencia,1
+lora_v3_final,87,"mercado pago",coelsa_id,1
+lora_v3_final,92,"galicia",tipo_operacion,0
+lora_v3_final,92,"galicia",monto,0
+lora_v3_final,92,"galicia",moneda,1
+lora_v3_final,92,"galicia",fecha,1
+lora_v3_final,92,"galicia",hora,1
+lora_v3_final,92,"galicia",nombre_emisor,0
+lora_v3_final,92,"galicia",cuit_emisor,1
+lora_v3_final,92,"galicia",cbu_cvu_emisor,0
+lora_v3_final,92,"galicia",banco_emisor,1
+lora_v3_final,92,"galicia",nombre_receptor,0
+lora_v3_final,92,"galicia",cuit_receptor,1
+lora_v3_final,92,"galicia",cbu_cvu_receptor,1
+lora_v3_final,92,"galicia",banco_receptor,1
+lora_v3_final,92,"galicia",concepto,1
+lora_v3_final,92,"galicia",referencia,0
+lora_v3_final,92,"galicia",coelsa_id,0
+lora_v3_final,96,"galicia",tipo_operacion,0
+lora_v3_final,96,"galicia",monto,0
+lora_v3_final,96,"galicia",moneda,1
+lora_v3_final,96,"galicia",fecha,1
+lora_v3_final,96,"galicia",hora,1
+lora_v3_final,96,"galicia",nombre_emisor,1
+lora_v3_final,96,"galicia",cuit_emisor,1
+lora_v3_final,96,"galicia",cbu_cvu_emisor,1
+lora_v3_final,96,"galicia",banco_emisor,1
+lora_v3_final,96,"galicia",nombre_receptor,0
+lora_v3_final,96,"galicia",cuit_receptor,1
+lora_v3_final,96,"galicia",cbu_cvu_receptor,1
+lora_v3_final,96,"galicia",banco_receptor,1
+lora_v3_final,96,"galicia",concepto,1
+lora_v3_final,96,"galicia",referencia,1
+lora_v3_final,96,"galicia",coelsa_id,1
+lora_v3_final,100,"mercado pago",tipo_operacion,0
+lora_v3_final,100,"mercado pago",monto,1
+lora_v3_final,100,"mercado pago",moneda,1
+lora_v3_final,100,"mercado pago",fecha,1
+lora_v3_final,100,"mercado pago",hora,1
+lora_v3_final,100,"mercado pago",nombre_emisor,1
+lora_v3_final,100,"mercado pago",cuit_emisor,1
+lora_v3_final,100,"mercado pago",cbu_cvu_emisor,0
+lora_v3_final,100,"mercado pago",banco_emisor,1
+lora_v3_final,100,"mercado pago",nombre_receptor,0
+lora_v3_final,100,"mercado pago",cuit_receptor,1
+lora_v3_final,100,"mercado pago",cbu_cvu_receptor,1
+lora_v3_final,100,"mercado pago",banco_receptor,1
+lora_v3_final,100,"mercado pago",concepto,1
+lora_v3_final,100,"mercado pago",referencia,1
+lora_v3_final,100,"mercado pago",coelsa_id,1
+lora_v3_final,101,"macro",tipo_operacion,0
+lora_v3_final,101,"macro",monto,1
+lora_v3_final,101,"macro",moneda,1
+lora_v3_final,101,"macro",fecha,1
+lora_v3_final,101,"macro",hora,1
+lora_v3_final,101,"macro",nombre_emisor,0
+lora_v3_final,101,"macro",cuit_emisor,0
+lora_v3_final,101,"macro",cbu_cvu_emisor,1
+lora_v3_final,101,"macro",banco_emisor,0
+lora_v3_final,101,"macro",nombre_receptor,0
+lora_v3_final,101,"macro",cuit_receptor,0
+lora_v3_final,101,"macro",cbu_cvu_receptor,1
+lora_v3_final,101,"macro",banco_receptor,1
+lora_v3_final,101,"macro",concepto,1
+lora_v3_final,101,"macro",referencia,1
+lora_v3_final,101,"macro",coelsa_id,0
+lora_v3_final,103,"mercado pago",tipo_operacion,0
+lora_v3_final,103,"mercado pago",monto,1
+lora_v3_final,103,"mercado pago",moneda,1
+lora_v3_final,103,"mercado pago",fecha,1
+lora_v3_final,103,"mercado pago",hora,1
+lora_v3_final,103,"mercado pago",nombre_emisor,0
+lora_v3_final,103,"mercado pago",cuit_emisor,1
+lora_v3_final,103,"mercado pago",cbu_cvu_emisor,1
+lora_v3_final,103,"mercado pago",banco_emisor,1
+lora_v3_final,103,"mercado pago",nombre_receptor,0
+lora_v3_final,103,"mercado pago",cuit_receptor,1
+lora_v3_final,103,"mercado pago",cbu_cvu_receptor,1
+lora_v3_final,103,"mercado pago",banco_receptor,1
+lora_v3_final,103,"mercado pago",concepto,1
+lora_v3_final,103,"mercado pago",referencia,1
+lora_v3_final,103,"mercado pago",coelsa_id,1
+lora_v3_final,106,"mercado pago",tipo_operacion,0
+lora_v3_final,106,"mercado pago",monto,1
+lora_v3_final,106,"mercado pago",moneda,1
+lora_v3_final,106,"mercado pago",fecha,1
+lora_v3_final,106,"mercado pago",hora,1
+lora_v3_final,106,"mercado pago",nombre_emisor,0
+lora_v3_final,106,"mercado pago",cuit_emisor,1
+lora_v3_final,106,"mercado pago",cbu_cvu_emisor,0
+lora_v3_final,106,"mercado pago",banco_emisor,1
+lora_v3_final,106,"mercado pago",nombre_receptor,0
+lora_v3_final,106,"mercado pago",cuit_receptor,1
+lora_v3_final,106,"mercado pago",cbu_cvu_receptor,1
+lora_v3_final,106,"mercado pago",banco_receptor,1
+lora_v3_final,106,"mercado pago",concepto,1
+lora_v3_final,106,"mercado pago",referencia,1
+lora_v3_final,106,"mercado pago",coelsa_id,1
+lora_v3_final,107,"macro",tipo_operacion,0
+lora_v3_final,107,"macro",monto,1
+lora_v3_final,107,"macro",moneda,1
+lora_v3_final,107,"macro",fecha,1
+lora_v3_final,107,"macro",hora,1
+lora_v3_final,107,"macro",nombre_emisor,1
+lora_v3_final,107,"macro",cuit_emisor,1
+lora_v3_final,107,"macro",cbu_cvu_emisor,1
+lora_v3_final,107,"macro",banco_emisor,1
+lora_v3_final,107,"macro",nombre_receptor,0
+lora_v3_final,107,"macro",cuit_receptor,1
+lora_v3_final,107,"macro",cbu_cvu_receptor,1
+lora_v3_final,107,"macro",banco_receptor,0
+lora_v3_final,107,"macro",concepto,1
+lora_v3_final,107,"macro",referencia,1
+lora_v3_final,107,"macro",coelsa_id,1
+lora_v3_final,108,"mercado pago",tipo_operacion,0
+lora_v3_final,108,"mercado pago",monto,1
+lora_v3_final,108,"mercado pago",moneda,1
+lora_v3_final,108,"mercado pago",fecha,0
+lora_v3_final,108,"mercado pago",hora,0
+lora_v3_final,108,"mercado pago",nombre_emisor,1
+lora_v3_final,108,"mercado pago",cuit_emisor,1
+lora_v3_final,108,"mercado pago",cbu_cvu_emisor,1
+lora_v3_final,108,"mercado pago",banco_emisor,1
+lora_v3_final,108,"mercado pago",nombre_receptor,0
+lora_v3_final,108,"mercado pago",cuit_receptor,1
+lora_v3_final,108,"mercado pago",cbu_cvu_receptor,1
+lora_v3_final,108,"mercado pago",banco_receptor,1
+lora_v3_final,108,"mercado pago",concepto,1
+lora_v3_final,108,"mercado pago",referencia,1
+lora_v3_final,108,"mercado pago",coelsa_id,1
+lora_v3_final,111,"naranja x",tipo_operacion,0
+lora_v3_final,111,"naranja x",monto,1
+lora_v3_final,111,"naranja x",moneda,1
+lora_v3_final,111,"naranja x",fecha,1
+lora_v3_final,111,"naranja x",hora,1
+lora_v3_final,111,"naranja x",nombre_emisor,1
+lora_v3_final,111,"naranja x",cuit_emisor,1
+lora_v3_final,111,"naranja x",cbu_cvu_emisor,1
+lora_v3_final,111,"naranja x",banco_emisor,1
+lora_v3_final,111,"naranja x",nombre_receptor,0
+lora_v3_final,111,"naranja x",cuit_receptor,1
+lora_v3_final,111,"naranja x",cbu_cvu_receptor,1
+lora_v3_final,111,"naranja x",banco_receptor,1
+lora_v3_final,111,"naranja x",concepto,0
+lora_v3_final,111,"naranja x",referencia,1
+lora_v3_final,111,"naranja x",coelsa_id,0
+lora_v3_final,113,"mercado pago",tipo_operacion,0
+lora_v3_final,113,"mercado pago",monto,1
+lora_v3_final,113,"mercado pago",moneda,1
+lora_v3_final,113,"mercado pago",fecha,1
+lora_v3_final,113,"mercado pago",hora,1
+lora_v3_final,113,"mercado pago",nombre_emisor,1
+lora_v3_final,113,"mercado pago",cuit_emisor,1
+lora_v3_final,113,"mercado pago",cbu_cvu_emisor,0
+lora_v3_final,113,"mercado pago",banco_emisor,1
+lora_v3_final,113,"mercado pago",nombre_receptor,0
+lora_v3_final,113,"mercado pago",cuit_receptor,1
+lora_v3_final,113,"mercado pago",cbu_cvu_receptor,1
+lora_v3_final,113,"mercado pago",banco_receptor,1
+lora_v3_final,113,"mercado pago",concepto,1
+lora_v3_final,113,"mercado pago",referencia,1
+lora_v3_final,113,"mercado pago",coelsa_id,1
+lora_v3_final,117,"banco nacion mas",tipo_operacion,0
+lora_v3_final,117,"banco nacion mas",monto,1
+lora_v3_final,117,"banco nacion mas",moneda,1
+lora_v3_final,117,"banco nacion mas",fecha,1
+lora_v3_final,117,"banco nacion mas",hora,1
+lora_v3_final,117,"banco nacion mas",nombre_emisor,1
+lora_v3_final,117,"banco nacion mas",cuit_emisor,1
+lora_v3_final,117,"banco nacion mas",cbu_cvu_emisor,1
+lora_v3_final,117,"banco nacion mas",banco_emisor,0
+lora_v3_final,117,"banco nacion mas",nombre_receptor,0
+lora_v3_final,117,"banco nacion mas",cuit_receptor,0
+lora_v3_final,117,"banco nacion mas",cbu_cvu_receptor,1
+lora_v3_final,117,"banco nacion mas",banco_receptor,0
+lora_v3_final,117,"banco nacion mas",concepto,0
+lora_v3_final,117,"banco nacion mas",referencia,1
+lora_v3_final,117,"banco nacion mas",coelsa_id,1
+lora_v3_final,126,"mercado pago",tipo_operacion,0
+lora_v3_final,126,"mercado pago",monto,0
+lora_v3_final,126,"mercado pago",moneda,1
+lora_v3_final,126,"mercado pago",fecha,0
+lora_v3_final,126,"mercado pago",hora,0
+lora_v3_final,126,"mercado pago",nombre_emisor,1
+lora_v3_final,126,"mercado pago",cuit_emisor,1
+lora_v3_final,126,"mercado pago",cbu_cvu_emisor,1
+lora_v3_final,126,"mercado pago",banco_emisor,1
+lora_v3_final,126,"mercado pago",nombre_receptor,0
+lora_v3_final,126,"mercado pago",cuit_receptor,0
+lora_v3_final,126,"mercado pago",cbu_cvu_receptor,1
+lora_v3_final,126,"mercado pago",banco_receptor,1
+lora_v3_final,126,"mercado pago",concepto,1
+lora_v3_final,126,"mercado pago",referencia,0
+lora_v3_final,126,"mercado pago",coelsa_id,0
+lora_v3_final,131,"mercado pago",tipo_operacion,0
+lora_v3_final,131,"mercado pago",monto,1
+lora_v3_final,131,"mercado pago",moneda,1
+lora_v3_final,131,"mercado pago",fecha,1
+lora_v3_final,131,"mercado pago",hora,0
+lora_v3_final,131,"mercado pago",nombre_emisor,0
+lora_v3_final,131,"mercado pago",cuit_emisor,1
+lora_v3_final,131,"mercado pago",cbu_cvu_emisor,0
+lora_v3_final,131,"mercado pago",banco_emisor,1
+lora_v3_final,131,"mercado pago",nombre_receptor,0
+lora_v3_final,131,"mercado pago",cuit_receptor,1
+lora_v3_final,131,"mercado pago",cbu_cvu_receptor,1
+lora_v3_final,131,"mercado pago",banco_receptor,1
+lora_v3_final,131,"mercado pago",concepto,0
+lora_v3_final,131,"mercado pago",referencia,1
+lora_v3_final,131,"mercado pago",coelsa_id,1
+lora_v4_final,84,"mercado pago",tipo_operacion,1
+lora_v4_final,84,"mercado pago",monto,1
+lora_v4_final,84,"mercado pago",moneda,1
+lora_v4_final,84,"mercado pago",fecha,1
+lora_v4_final,84,"mercado pago",hora,1
+lora_v4_final,84,"mercado pago",nombre_emisor,0
+lora_v4_final,84,"mercado pago",cuit_emisor,1
+lora_v4_final,84,"mercado pago",cbu_cvu_emisor,1
+lora_v4_final,84,"mercado pago",banco_emisor,1
+lora_v4_final,84,"mercado pago",nombre_receptor,0
+lora_v4_final,84,"mercado pago",cuit_receptor,1
+lora_v4_final,84,"mercado pago",cbu_cvu_receptor,1
+lora_v4_final,84,"mercado pago",banco_receptor,1
+lora_v4_final,84,"mercado pago",concepto,1
+lora_v4_final,84,"mercado pago",referencia,1
+lora_v4_final,84,"mercado pago",coelsa_id,1
+lora_v4_final,85,"nación",tipo_operacion,1
+lora_v4_final,85,"nación",monto,1
+lora_v4_final,85,"nación",moneda,1
+lora_v4_final,85,"nación",fecha,1
+lora_v4_final,85,"nación",hora,1
+lora_v4_final,85,"nación",nombre_emisor,1
+lora_v4_final,85,"nación",cuit_emisor,1
+lora_v4_final,85,"nación",cbu_cvu_emisor,1
+lora_v4_final,85,"nación",banco_emisor,0
+lora_v4_final,85,"nación",nombre_receptor,1
+lora_v4_final,85,"nación",cuit_receptor,0
+lora_v4_final,85,"nación",cbu_cvu_receptor,0
+lora_v4_final,85,"nación",banco_receptor,0
+lora_v4_final,85,"nación",concepto,1
+lora_v4_final,85,"nación",referencia,0
+lora_v4_final,85,"nación",coelsa_id,1
+lora_v4_final,87,"mercado pago",tipo_operacion,1
+lora_v4_final,87,"mercado pago",monto,0
+lora_v4_final,87,"mercado pago",moneda,1
+lora_v4_final,87,"mercado pago",fecha,1
+lora_v4_final,87,"mercado pago",hora,1
+lora_v4_final,87,"mercado pago",nombre_emisor,1
+lora_v4_final,87,"mercado pago",cuit_emisor,1
+lora_v4_final,87,"mercado pago",cbu_cvu_emisor,1
+lora_v4_final,87,"mercado pago",banco_emisor,1
+lora_v4_final,87,"mercado pago",nombre_receptor,0
+lora_v4_final,87,"mercado pago",cuit_receptor,1
+lora_v4_final,87,"mercado pago",cbu_cvu_receptor,1
+lora_v4_final,87,"mercado pago",banco_receptor,1
+lora_v4_final,87,"mercado pago",concepto,1
+lora_v4_final,87,"mercado pago",referencia,1
+lora_v4_final,87,"mercado pago",coelsa_id,1
+lora_v4_final,92,"galicia",tipo_operacion,1
+lora_v4_final,92,"galicia",monto,1
+lora_v4_final,92,"galicia",moneda,1
+lora_v4_final,92,"galicia",fecha,1
+lora_v4_final,92,"galicia",hora,1
+lora_v4_final,92,"galicia",nombre_emisor,1
+lora_v4_final,92,"galicia",cuit_emisor,1
+lora_v4_final,92,"galicia",cbu_cvu_emisor,1
+lora_v4_final,92,"galicia",banco_emisor,0
+lora_v4_final,92,"galicia",nombre_receptor,0
+lora_v4_final,92,"galicia",cuit_receptor,1
+lora_v4_final,92,"galicia",cbu_cvu_receptor,1
+lora_v4_final,92,"galicia",banco_receptor,1
+lora_v4_final,92,"galicia",concepto,1
+lora_v4_final,92,"galicia",referencia,0
+lora_v4_final,92,"galicia",coelsa_id,0
+lora_v4_final,96,"galicia",tipo_operacion,1
+lora_v4_final,96,"galicia",monto,1
+lora_v4_final,96,"galicia",moneda,1
+lora_v4_final,96,"galicia",fecha,1
+lora_v4_final,96,"galicia",hora,1
+lora_v4_final,96,"galicia",nombre_emisor,1
+lora_v4_final,96,"galicia",cuit_emisor,1
+lora_v4_final,96,"galicia",cbu_cvu_emisor,1
+lora_v4_final,96,"galicia",banco_emisor,0
+lora_v4_final,96,"galicia",nombre_receptor,1
+lora_v4_final,96,"galicia",cuit_receptor,1
+lora_v4_final,96,"galicia",cbu_cvu_receptor,1
+lora_v4_final,96,"galicia",banco_receptor,1
+lora_v4_final,96,"galicia",concepto,1
+lora_v4_final,96,"galicia",referencia,1
+lora_v4_final,96,"galicia",coelsa_id,1
+lora_v4_final,100,"mercado pago",tipo_operacion,1
+lora_v4_final,100,"mercado pago",monto,1
+lora_v4_final,100,"mercado pago",moneda,1
+lora_v4_final,100,"mercado pago",fecha,1
+lora_v4_final,100,"mercado pago",hora,1
+lora_v4_final,100,"mercado pago",nombre_emisor,1
+lora_v4_final,100,"mercado pago",cuit_emisor,1
+lora_v4_final,100,"mercado pago",cbu_cvu_emisor,1
+lora_v4_final,100,"mercado pago",banco_emisor,1
+lora_v4_final,100,"mercado pago",nombre_receptor,1
+lora_v4_final,100,"mercado pago",cuit_receptor,1
+lora_v4_final,100,"mercado pago",cbu_cvu_receptor,1
+lora_v4_final,100,"mercado pago",banco_receptor,1
+lora_v4_final,100,"mercado pago",concepto,0
+lora_v4_final,100,"mercado pago",referencia,1
+lora_v4_final,100,"mercado pago",coelsa_id,1
+lora_v4_final,101,"macro",tipo_operacion,1
+lora_v4_final,101,"macro",monto,1
+lora_v4_final,101,"macro",moneda,1
+lora_v4_final,101,"macro",fecha,1
+lora_v4_final,101,"macro",hora,1
+lora_v4_final,101,"macro",nombre_emisor,1
+lora_v4_final,101,"macro",cuit_emisor,1
+lora_v4_final,101,"macro",cbu_cvu_emisor,1
+lora_v4_final,101,"macro",banco_emisor,0
+lora_v4_final,101,"macro",nombre_receptor,1
+lora_v4_final,101,"macro",cuit_receptor,1
+lora_v4_final,101,"macro",cbu_cvu_receptor,1
+lora_v4_final,101,"macro",banco_receptor,1
+lora_v4_final,101,"macro",concepto,1
+lora_v4_final,101,"macro",referencia,0
+lora_v4_final,101,"macro",coelsa_id,0
+lora_v4_final,103,"mercado pago",tipo_operacion,1
+lora_v4_final,103,"mercado pago",monto,1
+lora_v4_final,103,"mercado pago",moneda,1
+lora_v4_final,103,"mercado pago",fecha,1
+lora_v4_final,103,"mercado pago",hora,1
+lora_v4_final,103,"mercado pago",nombre_emisor,1
+lora_v4_final,103,"mercado pago",cuit_emisor,1
+lora_v4_final,103,"mercado pago",cbu_cvu_emisor,1
+lora_v4_final,103,"mercado pago",banco_emisor,1
+lora_v4_final,103,"mercado pago",nombre_receptor,0
+lora_v4_final,103,"mercado pago",cuit_receptor,1
+lora_v4_final,103,"mercado pago",cbu_cvu_receptor,1
+lora_v4_final,103,"mercado pago",banco_receptor,1
+lora_v4_final,103,"mercado pago",concepto,0
+lora_v4_final,103,"mercado pago",referencia,1
+lora_v4_final,103,"mercado pago",coelsa_id,1
+lora_v4_final,106,"mercado pago",tipo_operacion,1
+lora_v4_final,106,"mercado pago",monto,1
+lora_v4_final,106,"mercado pago",moneda,1
+lora_v4_final,106,"mercado pago",fecha,1
+lora_v4_final,106,"mercado pago",hora,1
+lora_v4_final,106,"mercado pago",nombre_emisor,0
+lora_v4_final,106,"mercado pago",cuit_emisor,1
+lora_v4_final,106,"mercado pago",cbu_cvu_emisor,1
+lora_v4_final,106,"mercado pago",banco_emisor,1
+lora_v4_final,106,"mercado pago",nombre_receptor,1
+lora_v4_final,106,"mercado pago",cuit_receptor,1
+lora_v4_final,106,"mercado pago",cbu_cvu_receptor,1
+lora_v4_final,106,"mercado pago",banco_receptor,1
+lora_v4_final,106,"mercado pago",concepto,0
+lora_v4_final,106,"mercado pago",referencia,1
+lora_v4_final,106,"mercado pago",coelsa_id,1
+lora_v4_final,107,"macro",tipo_operacion,1
+lora_v4_final,107,"macro",monto,1
+lora_v4_final,107,"macro",moneda,1
+lora_v4_final,107,"macro",fecha,1
+lora_v4_final,107,"macro",hora,0
+lora_v4_final,107,"macro",nombre_emisor,1
+lora_v4_final,107,"macro",cuit_emisor,1
+lora_v4_final,107,"macro",cbu_cvu_emisor,1
+lora_v4_final,107,"macro",banco_emisor,1
+lora_v4_final,107,"macro",nombre_receptor,0
+lora_v4_final,107,"macro",cuit_receptor,1
+lora_v4_final,107,"macro",cbu_cvu_receptor,1
+lora_v4_final,107,"macro",banco_receptor,0
+lora_v4_final,107,"macro",concepto,1
+lora_v4_final,107,"macro",referencia,1
+lora_v4_final,107,"macro",coelsa_id,1
+lora_v4_final,108,"mercado pago",tipo_operacion,1
+lora_v4_final,108,"mercado pago",monto,1
+lora_v4_final,108,"mercado pago",moneda,1
+lora_v4_final,108,"mercado pago",fecha,0
+lora_v4_final,108,"mercado pago",hora,1
+lora_v4_final,108,"mercado pago",nombre_emisor,1
+lora_v4_final,108,"mercado pago",cuit_emisor,1
+lora_v4_final,108,"mercado pago",cbu_cvu_emisor,1
+lora_v4_final,108,"mercado pago",banco_emisor,1
+lora_v4_final,108,"mercado pago",nombre_receptor,0
+lora_v4_final,108,"mercado pago",cuit_receptor,1
+lora_v4_final,108,"mercado pago",cbu_cvu_receptor,1
+lora_v4_final,108,"mercado pago",banco_receptor,1
+lora_v4_final,108,"mercado pago",concepto,0
+lora_v4_final,108,"mercado pago",referencia,1
+lora_v4_final,108,"mercado pago",coelsa_id,1
+lora_v4_final,111,"naranja x",tipo_operacion,1
+lora_v4_final,111,"naranja x",monto,1
+lora_v4_final,111,"naranja x",moneda,1
+lora_v4_final,111,"naranja x",fecha,1
+lora_v4_final,111,"naranja x",hora,1
+lora_v4_final,111,"naranja x",nombre_emisor,1
+lora_v4_final,111,"naranja x",cuit_emisor,1
+lora_v4_final,111,"naranja x",cbu_cvu_emisor,1
+lora_v4_final,111,"naranja x",banco_emisor,1
+lora_v4_final,111,"naranja x",nombre_receptor,1
+lora_v4_final,111,"naranja x",cuit_receptor,1
+lora_v4_final,111,"naranja x",cbu_cvu_receptor,1
+lora_v4_final,111,"naranja x",banco_receptor,1
+lora_v4_final,111,"naranja x",concepto,0
+lora_v4_final,111,"naranja x",referencia,1
+lora_v4_final,111,"naranja x",coelsa_id,0
+lora_v4_final,113,"mercado pago",tipo_operacion,1
+lora_v4_final,113,"mercado pago",monto,1
+lora_v4_final,113,"mercado pago",moneda,1
+lora_v4_final,113,"mercado pago",fecha,1
+lora_v4_final,113,"mercado pago",hora,1
+lora_v4_final,113,"mercado pago",nombre_emisor,1
+lora_v4_final,113,"mercado pago",cuit_emisor,1
+lora_v4_final,113,"mercado pago",cbu_cvu_emisor,1
+lora_v4_final,113,"mercado pago",banco_emisor,1
+lora_v4_final,113,"mercado pago",nombre_receptor,0
+lora_v4_final,113,"mercado pago",cuit_receptor,1
+lora_v4_final,113,"mercado pago",cbu_cvu_receptor,1
+lora_v4_final,113,"mercado pago",banco_receptor,1
+lora_v4_final,113,"mercado pago",concepto,0
+lora_v4_final,113,"mercado pago",referencia,1
+lora_v4_final,113,"mercado pago",coelsa_id,1
+lora_v4_final,117,"banco nacion mas",tipo_operacion,1
+lora_v4_final,117,"banco nacion mas",monto,1
+lora_v4_final,117,"banco nacion mas",moneda,1
+lora_v4_final,117,"banco nacion mas",fecha,1
+lora_v4_final,117,"banco nacion mas",hora,1
+lora_v4_final,117,"banco nacion mas",nombre_emisor,1
+lora_v4_final,117,"banco nacion mas",cuit_emisor,1
+lora_v4_final,117,"banco nacion mas",cbu_cvu_emisor,1
+lora_v4_final,117,"banco nacion mas",banco_emisor,0
+lora_v4_final,117,"banco nacion mas",nombre_receptor,1
+lora_v4_final,117,"banco nacion mas",cuit_receptor,0
+lora_v4_final,117,"banco nacion mas",cbu_cvu_receptor,1
+lora_v4_final,117,"banco nacion mas",banco_receptor,0
+lora_v4_final,117,"banco nacion mas",concepto,0
+lora_v4_final,117,"banco nacion mas",referencia,1
+lora_v4_final,117,"banco nacion mas",coelsa_id,1
+lora_v4_final,126,"mercado pago",tipo_operacion,1
+lora_v4_final,126,"mercado pago",monto,0
+lora_v4_final,126,"mercado pago",moneda,1
+lora_v4_final,126,"mercado pago",fecha,0
+lora_v4_final,126,"mercado pago",hora,1
+lora_v4_final,126,"mercado pago",nombre_emisor,1
+lora_v4_final,126,"mercado pago",cuit_emisor,1
+lora_v4_final,126,"mercado pago",cbu_cvu_emisor,1
+lora_v4_final,126,"mercado pago",banco_emisor,1
+lora_v4_final,126,"mercado pago",nombre_receptor,1
+lora_v4_final,126,"mercado pago",cuit_receptor,0
+lora_v4_final,126,"mercado pago",cbu_cvu_receptor,1
+lora_v4_final,126,"mercado pago",banco_receptor,1
+lora_v4_final,126,"mercado pago",concepto,1
+lora_v4_final,126,"mercado pago",referencia,1
+lora_v4_final,126,"mercado pago",coelsa_id,0
+lora_v4_final,131,"mercado pago",tipo_operacion,1
+lora_v4_final,131,"mercado pago",monto,1
+lora_v4_final,131,"mercado pago",moneda,1
+lora_v4_final,131,"mercado pago",fecha,1
+lora_v4_final,131,"mercado pago",hora,1
+lora_v4_final,131,"mercado pago",nombre_emisor,0
+lora_v4_final,131,"mercado pago",cuit_emisor,1
+lora_v4_final,131,"mercado pago",cbu_cvu_emisor,1
+lora_v4_final,131,"mercado pago",banco_emisor,1
+lora_v4_final,131,"mercado pago",nombre_receptor,1
+lora_v4_final,131,"mercado pago",cuit_receptor,1
+lora_v4_final,131,"mercado pago",cbu_cvu_receptor,1
+lora_v4_final,131,"mercado pago",banco_receptor,1
+lora_v4_final,131,"mercado pago",concepto,1
+lora_v4_final,131,"mercado pago",referencia,1
+lora_v4_final,131,"mercado pago",coelsa_id,1
+lora_v4_v2_final,84,"mercado pago",tipo_operacion,1
+lora_v4_v2_final,84,"mercado pago",monto,1
+lora_v4_v2_final,84,"mercado pago",moneda,1
+lora_v4_v2_final,84,"mercado pago",fecha,1
+lora_v4_v2_final,84,"mercado pago",hora,1
+lora_v4_v2_final,84,"mercado pago",nombre_emisor,0
+lora_v4_v2_final,84,"mercado pago",cuit_emisor,1
+lora_v4_v2_final,84,"mercado pago",cbu_cvu_emisor,1
+lora_v4_v2_final,84,"mercado pago",banco_emisor,1
+lora_v4_v2_final,84,"mercado pago",nombre_receptor,1
+lora_v4_v2_final,84,"mercado pago",cuit_receptor,1
+lora_v4_v2_final,84,"mercado pago",cbu_cvu_receptor,1
+lora_v4_v2_final,84,"mercado pago",banco_receptor,1
+lora_v4_v2_final,84,"mercado pago",concepto,0
+lora_v4_v2_final,84,"mercado pago",referencia,1
+lora_v4_v2_final,84,"mercado pago",coelsa_id,1
+lora_v4_v2_final,85,"nación",tipo_operacion,1
+lora_v4_v2_final,85,"nación",monto,1
+lora_v4_v2_final,85,"nación",moneda,1
+lora_v4_v2_final,85,"nación",fecha,1
+lora_v4_v2_final,85,"nación",hora,1
+lora_v4_v2_final,85,"nación",nombre_emisor,1
+lora_v4_v2_final,85,"nación",cuit_emisor,1
+lora_v4_v2_final,85,"nación",cbu_cvu_emisor,1
+lora_v4_v2_final,85,"nación",banco_emisor,0
+lora_v4_v2_final,85,"nación",nombre_receptor,1
+lora_v4_v2_final,85,"nación",cuit_receptor,0
+lora_v4_v2_final,85,"nación",cbu_cvu_receptor,0
+lora_v4_v2_final,85,"nación",banco_receptor,0
+lora_v4_v2_final,85,"nación",concepto,1
+lora_v4_v2_final,85,"nación",referencia,0
+lora_v4_v2_final,85,"nación",coelsa_id,1
+lora_v4_v2_final,87,"mercado pago",tipo_operacion,1
+lora_v4_v2_final,87,"mercado pago",monto,0
+lora_v4_v2_final,87,"mercado pago",moneda,1
+lora_v4_v2_final,87,"mercado pago",fecha,1
+lora_v4_v2_final,87,"mercado pago",hora,1
+lora_v4_v2_final,87,"mercado pago",nombre_emisor,1
+lora_v4_v2_final,87,"mercado pago",cuit_emisor,1
+lora_v4_v2_final,87,"mercado pago",cbu_cvu_emisor,1
+lora_v4_v2_final,87,"mercado pago",banco_emisor,1
+lora_v4_v2_final,87,"mercado pago",nombre_receptor,0
+lora_v4_v2_final,87,"mercado pago",cuit_receptor,1
+lora_v4_v2_final,87,"mercado pago",cbu_cvu_receptor,1
+lora_v4_v2_final,87,"mercado pago",banco_receptor,1
+lora_v4_v2_final,87,"mercado pago",concepto,0
+lora_v4_v2_final,87,"mercado pago",referencia,1
+lora_v4_v2_final,87,"mercado pago",coelsa_id,1
+lora_v4_v2_final,92,"galicia",tipo_operacion,1
+lora_v4_v2_final,92,"galicia",monto,1
+lora_v4_v2_final,92,"galicia",moneda,1
+lora_v4_v2_final,92,"galicia",fecha,1
+lora_v4_v2_final,92,"galicia",hora,1
+lora_v4_v2_final,92,"galicia",nombre_emisor,1
+lora_v4_v2_final,92,"galicia",cuit_emisor,1
+lora_v4_v2_final,92,"galicia",cbu_cvu_emisor,0
+lora_v4_v2_final,92,"galicia",banco_emisor,0
+lora_v4_v2_final,92,"galicia",nombre_receptor,0
+lora_v4_v2_final,92,"galicia",cuit_receptor,1
+lora_v4_v2_final,92,"galicia",cbu_cvu_receptor,1
+lora_v4_v2_final,92,"galicia",banco_receptor,1
+lora_v4_v2_final,92,"galicia",concepto,1
+lora_v4_v2_final,92,"galicia",referencia,0
+lora_v4_v2_final,92,"galicia",coelsa_id,0
+lora_v4_v2_final,96,"galicia",tipo_operacion,1
+lora_v4_v2_final,96,"galicia",monto,1
+lora_v4_v2_final,96,"galicia",moneda,1
+lora_v4_v2_final,96,"galicia",fecha,1
+lora_v4_v2_final,96,"galicia",hora,1
+lora_v4_v2_final,96,"galicia",nombre_emisor,1
+lora_v4_v2_final,96,"galicia",cuit_emisor,1
+lora_v4_v2_final,96,"galicia",cbu_cvu_emisor,0
+lora_v4_v2_final,96,"galicia",banco_emisor,1
+lora_v4_v2_final,96,"galicia",nombre_receptor,1
+lora_v4_v2_final,96,"galicia",cuit_receptor,1
+lora_v4_v2_final,96,"galicia",cbu_cvu_receptor,1
+lora_v4_v2_final,96,"galicia",banco_receptor,1
+lora_v4_v2_final,96,"galicia",concepto,1
+lora_v4_v2_final,96,"galicia",referencia,1
+lora_v4_v2_final,96,"galicia",coelsa_id,1
+lora_v4_v2_final,100,"mercado pago",tipo_operacion,1
+lora_v4_v2_final,100,"mercado pago",monto,1
+lora_v4_v2_final,100,"mercado pago",moneda,1
+lora_v4_v2_final,100,"mercado pago",fecha,1
+lora_v4_v2_final,100,"mercado pago",hora,1
+lora_v4_v2_final,100,"mercado pago",nombre_emisor,1
+lora_v4_v2_final,100,"mercado pago",cuit_emisor,1
+lora_v4_v2_final,100,"mercado pago",cbu_cvu_emisor,1
+lora_v4_v2_final,100,"mercado pago",banco_emisor,1
+lora_v4_v2_final,100,"mercado pago",nombre_receptor,1
+lora_v4_v2_final,100,"mercado pago",cuit_receptor,1
+lora_v4_v2_final,100,"mercado pago",cbu_cvu_receptor,1
+lora_v4_v2_final,100,"mercado pago",banco_receptor,1
+lora_v4_v2_final,100,"mercado pago",concepto,1
+lora_v4_v2_final,100,"mercado pago",referencia,1
+lora_v4_v2_final,100,"mercado pago",coelsa_id,1
+lora_v4_v2_final,101,"macro",tipo_operacion,1
+lora_v4_v2_final,101,"macro",monto,1
+lora_v4_v2_final,101,"macro",moneda,1
+lora_v4_v2_final,101,"macro",fecha,1
+lora_v4_v2_final,101,"macro",hora,1
+lora_v4_v2_final,101,"macro",nombre_emisor,1
+lora_v4_v2_final,101,"macro",cuit_emisor,1
+lora_v4_v2_final,101,"macro",cbu_cvu_emisor,1
+lora_v4_v2_final,101,"macro",banco_emisor,0
+lora_v4_v2_final,101,"macro",nombre_receptor,1
+lora_v4_v2_final,101,"macro",cuit_receptor,1
+lora_v4_v2_final,101,"macro",cbu_cvu_receptor,1
+lora_v4_v2_final,101,"macro",banco_receptor,1
+lora_v4_v2_final,101,"macro",concepto,1
+lora_v4_v2_final,101,"macro",referencia,0
+lora_v4_v2_final,101,"macro",coelsa_id,0
+lora_v4_v2_final,103,"mercado pago",tipo_operacion,1
+lora_v4_v2_final,103,"mercado pago",monto,1
+lora_v4_v2_final,103,"mercado pago",moneda,1
+lora_v4_v2_final,103,"mercado pago",fecha,1
+lora_v4_v2_final,103,"mercado pago",hora,1
+lora_v4_v2_final,103,"mercado pago",nombre_emisor,0
+lora_v4_v2_final,103,"mercado pago",cuit_emisor,1
+lora_v4_v2_final,103,"mercado pago",cbu_cvu_emisor,1
+lora_v4_v2_final,103,"mercado pago",banco_emisor,1
+lora_v4_v2_final,103,"mercado pago",nombre_receptor,0
+lora_v4_v2_final,103,"mercado pago",cuit_receptor,1
+lora_v4_v2_final,103,"mercado pago",cbu_cvu_receptor,1
+lora_v4_v2_final,103,"mercado pago",banco_receptor,1
+lora_v4_v2_final,103,"mercado pago",concepto,1
+lora_v4_v2_final,103,"mercado pago",referencia,1
+lora_v4_v2_final,103,"mercado pago",coelsa_id,1
+lora_v4_v2_final,106,"mercado pago",tipo_operacion,1
+lora_v4_v2_final,106,"mercado pago",monto,1
+lora_v4_v2_final,106,"mercado pago",moneda,1
+lora_v4_v2_final,106,"mercado pago",fecha,1
+lora_v4_v2_final,106,"mercado pago",hora,1
+lora_v4_v2_final,106,"mercado pago",nombre_emisor,0
+lora_v4_v2_final,106,"mercado pago",cuit_emisor,1
+lora_v4_v2_final,106,"mercado pago",cbu_cvu_emisor,1
+lora_v4_v2_final,106,"mercado pago",banco_emisor,1
+lora_v4_v2_final,106,"mercado pago",nombre_receptor,1
+lora_v4_v2_final,106,"mercado pago",cuit_receptor,1
+lora_v4_v2_final,106,"mercado pago",cbu_cvu_receptor,1
+lora_v4_v2_final,106,"mercado pago",banco_receptor,1
+lora_v4_v2_final,106,"mercado pago",concepto,1
+lora_v4_v2_final,106,"mercado pago",referencia,1
+lora_v4_v2_final,106,"mercado pago",coelsa_id,1
+lora_v4_v2_final,107,"macro",tipo_operacion,1
+lora_v4_v2_final,107,"macro",monto,1
+lora_v4_v2_final,107,"macro",moneda,1
+lora_v4_v2_final,107,"macro",fecha,1
+lora_v4_v2_final,107,"macro",hora,1
+lora_v4_v2_final,107,"macro",nombre_emisor,1
+lora_v4_v2_final,107,"macro",cuit_emisor,1
+lora_v4_v2_final,107,"macro",cbu_cvu_emisor,1
+lora_v4_v2_final,107,"macro",banco_emisor,1
+lora_v4_v2_final,107,"macro",nombre_receptor,0
+lora_v4_v2_final,107,"macro",cuit_receptor,1
+lora_v4_v2_final,107,"macro",cbu_cvu_receptor,1
+lora_v4_v2_final,107,"macro",banco_receptor,0
+lora_v4_v2_final,107,"macro",concepto,1
+lora_v4_v2_final,107,"macro",referencia,1
+lora_v4_v2_final,107,"macro",coelsa_id,1
+lora_v4_v2_final,108,"mercado pago",tipo_operacion,1
+lora_v4_v2_final,108,"mercado pago",monto,1
+lora_v4_v2_final,108,"mercado pago",moneda,1
+lora_v4_v2_final,108,"mercado pago",fecha,0
+lora_v4_v2_final,108,"mercado pago",hora,1
+lora_v4_v2_final,108,"mercado pago",nombre_emisor,1
+lora_v4_v2_final,108,"mercado pago",cuit_emisor,1
+lora_v4_v2_final,108,"mercado pago",cbu_cvu_emisor,1
+lora_v4_v2_final,108,"mercado pago",banco_emisor,1
+lora_v4_v2_final,108,"mercado pago",nombre_receptor,0
+lora_v4_v2_final,108,"mercado pago",cuit_receptor,1
+lora_v4_v2_final,108,"mercado pago",cbu_cvu_receptor,1
+lora_v4_v2_final,108,"mercado pago",banco_receptor,1
+lora_v4_v2_final,108,"mercado pago",concepto,1
+lora_v4_v2_final,108,"mercado pago",referencia,1
+lora_v4_v2_final,108,"mercado pago",coelsa_id,1
+lora_v4_v2_final,111,"naranja x",tipo_operacion,1
+lora_v4_v2_final,111,"naranja x",monto,1
+lora_v4_v2_final,111,"naranja x",moneda,1
+lora_v4_v2_final,111,"naranja x",fecha,1
+lora_v4_v2_final,111,"naranja x",hora,1
+lora_v4_v2_final,111,"naranja x",nombre_emisor,1
+lora_v4_v2_final,111,"naranja x",cuit_emisor,1
+lora_v4_v2_final,111,"naranja x",cbu_cvu_emisor,1
+lora_v4_v2_final,111,"naranja x",banco_emisor,1
+lora_v4_v2_final,111,"naranja x",nombre_receptor,1
+lora_v4_v2_final,111,"naranja x",cuit_receptor,1
+lora_v4_v2_final,111,"naranja x",cbu_cvu_receptor,1
+lora_v4_v2_final,111,"naranja x",banco_receptor,1
+lora_v4_v2_final,111,"naranja x",concepto,1
+lora_v4_v2_final,111,"naranja x",referencia,0
+lora_v4_v2_final,111,"naranja x",coelsa_id,0
+lora_v4_v2_final,113,"mercado pago",tipo_operacion,1
+lora_v4_v2_final,113,"mercado pago",monto,1
+lora_v4_v2_final,113,"mercado pago",moneda,1
+lora_v4_v2_final,113,"mercado pago",fecha,1
+lora_v4_v2_final,113,"mercado pago",hora,1
+lora_v4_v2_final,113,"mercado pago",nombre_emisor,1
+lora_v4_v2_final,113,"mercado pago",cuit_emisor,1
+lora_v4_v2_final,113,"mercado pago",cbu_cvu_emisor,1
+lora_v4_v2_final,113,"mercado pago",banco_emisor,1
+lora_v4_v2_final,113,"mercado pago",nombre_receptor,0
+lora_v4_v2_final,113,"mercado pago",cuit_receptor,1
+lora_v4_v2_final,113,"mercado pago",cbu_cvu_receptor,1
+lora_v4_v2_final,113,"mercado pago",banco_receptor,1
+lora_v4_v2_final,113,"mercado pago",concepto,1
+lora_v4_v2_final,113,"mercado pago",referencia,1
+lora_v4_v2_final,113,"mercado pago",coelsa_id,1
+lora_v4_v2_final,117,"banco nacion mas",tipo_operacion,1
+lora_v4_v2_final,117,"banco nacion mas",monto,1
+lora_v4_v2_final,117,"banco nacion mas",moneda,1
+lora_v4_v2_final,117,"banco nacion mas",fecha,1
+lora_v4_v2_final,117,"banco nacion mas",hora,1
+lora_v4_v2_final,117,"banco nacion mas",nombre_emisor,1
+lora_v4_v2_final,117,"banco nacion mas",cuit_emisor,1
+lora_v4_v2_final,117,"banco nacion mas",cbu_cvu_emisor,1
+lora_v4_v2_final,117,"banco nacion mas",banco_emisor,0
+lora_v4_v2_final,117,"banco nacion mas",nombre_receptor,1
+lora_v4_v2_final,117,"banco nacion mas",cuit_receptor,0
+lora_v4_v2_final,117,"banco nacion mas",cbu_cvu_receptor,1
+lora_v4_v2_final,117,"banco nacion mas",banco_receptor,0
+lora_v4_v2_final,117,"banco nacion mas",concepto,0
+lora_v4_v2_final,117,"banco nacion mas",referencia,1
+lora_v4_v2_final,117,"banco nacion mas",coelsa_id,1
+lora_v4_v2_final,126,"mercado pago",tipo_operacion,1
+lora_v4_v2_final,126,"mercado pago",monto,0
+lora_v4_v2_final,126,"mercado pago",moneda,1
+lora_v4_v2_final,126,"mercado pago",fecha,0
+lora_v4_v2_final,126,"mercado pago",hora,1
+lora_v4_v2_final,126,"mercado pago",nombre_emisor,1
+lora_v4_v2_final,126,"mercado pago",cuit_emisor,1
+lora_v4_v2_final,126,"mercado pago",cbu_cvu_emisor,1
+lora_v4_v2_final,126,"mercado pago",banco_emisor,1
+lora_v4_v2_final,126,"mercado pago",nombre_receptor,1
+lora_v4_v2_final,126,"mercado pago",cuit_receptor,0
+lora_v4_v2_final,126,"mercado pago",cbu_cvu_receptor,1
+lora_v4_v2_final,126,"mercado pago",banco_receptor,1
+lora_v4_v2_final,126,"mercado pago",concepto,1
+lora_v4_v2_final,126,"mercado pago",referencia,1
+lora_v4_v2_final,126,"mercado pago",coelsa_id,0
+lora_v4_v2_final,131,"mercado pago",tipo_operacion,1
+lora_v4_v2_final,131,"mercado pago",monto,1
+lora_v4_v2_final,131,"mercado pago",moneda,1
+lora_v4_v2_final,131,"mercado pago",fecha,1
+lora_v4_v2_final,131,"mercado pago",hora,1
+lora_v4_v2_final,131,"mercado pago",nombre_emisor,0
+lora_v4_v2_final,131,"mercado pago",cuit_emisor,1
+lora_v4_v2_final,131,"mercado pago",cbu_cvu_emisor,1
+lora_v4_v2_final,131,"mercado pago",banco_emisor,1
+lora_v4_v2_final,131,"mercado pago",nombre_receptor,1
+lora_v4_v2_final,131,"mercado pago",cuit_receptor,1
+lora_v4_v2_final,131,"mercado pago",cbu_cvu_receptor,1
+lora_v4_v2_final,131,"mercado pago",banco_receptor,1
+lora_v4_v2_final,131,"mercado pago",concepto,0
+lora_v4_v2_final,131,"mercado pago",referencia,1
+lora_v4_v2_final,131,"mercado pago",coelsa_id,1

@@ -1,0 +1,7 @@
+corrida,fecha,ejemplos,pasos_hechos,pasos_totales,lr,alpha,rank,loss_final,acierto_honesto,estado,que_cambio
+lora_v1,2026-08-07,300,300,300,2e-05,32,16,6.9060,0.0,roto,primera corrida completa
+lora_v2,2026-08-08,335,162,335,1e-04,32,16,8.1232,0.0,roto,"lr 10x, dataset con reales; murio en el paso 162"
+lora_v2c,2026-08-09,333,333,333,1e-04,32,16,6.3889,0.0,roto,reanudable con checkpoint por paso
+lora_v3,2026-08-10,333,333,333,1e-04,0.1,16,4.0472,72.8,ok,"alpha 32 -> 0.1 y train_on_completions"
+lora_v4,2026-08-12,842,842,842,1e-04,0.1,16,0.0001,81.7,ok,"dataset 800 sinteticos + 42 reales"
+lora_v4_v2,2026-08-15,1642,1642,1642,5e-05,0.1,16,0.0002,82.6,ok,"parte de lora_v4; 4 sesgos del generador corregidos"

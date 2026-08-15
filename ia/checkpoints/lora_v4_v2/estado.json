@@ -1,7 +1,7 @@
 {
   "epoch": 0,
-  "paso": 664,
-  "loss": 3.506839493638836e-05,
+  "paso": 1641,
+  "loss": 0.0002092556096613407,
   "pasos": 1642,
   "epochs": 1,
   "dataset": "ia/sinteticos/train_v5.jsonl",
@@ -12,5 +12,5 @@
   "dropout": 0.05,
   "batch": 1,
   "resize": null,
-  "guardado": "2026-08-13 13:32:13"
+  "guardado": "2026-08-15 11:42:35"
 }

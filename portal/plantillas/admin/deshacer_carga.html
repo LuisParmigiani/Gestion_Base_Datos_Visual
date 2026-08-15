@@ -1,0 +1,50 @@
+{% extends "admin/base.html" %}
+{% block titulo %}Deshacer una carga{% endblock %}
+
+{% block contenido %}
+  <h1>¿Deshacer «{{ carga.archivo }}»?</h1>
+
+  <p class="aviso">
+    Subida el {{ carga.importado_en.strftime('%d/%m/%Y a las %H:%M') }} ·
+    {{ carga.filas_nuevas }} filas nuevas de {{ carga.filas_leidas }} leídas.
+  </p>
+
+  <section class="tarjeta">
+    <p class="rotulo">Se van a borrar</p>
+    <p class="numero">{{ filas }}</p>
+    <p class="pie">movimientos del banco</p>
+  </section>
+
+  {% if acreditadas %}
+    <p class="error" style="max-width:none; margin-top:1.5rem">
+      <strong>Ojo: {{ acreditadas | length }} de esas filas ya acreditaron plata.</strong>
+      Deshacer la carga anula esas acreditaciones con su contra-movimiento y devuelve
+      los comprobantes al lote. El libro conserva las dos líneas, así que se puede
+      reconstruir qué pasó.
+    </p>
+    <table>
+      <thead><tr><th>Cliente</th><th>Fecha</th><th>Detalle</th><th class="der">Importe</th></tr></thead>
+      <tbody>
+        {% for fila in acreditadas %}
+          <tr>
+            <td>{{ fila.comprobante.cliente.nombre_completo }}</td>
+            <td class="fecha">{{ fila.fecha | dia }}</td>
+            <td>{{ fila.descripcion[:56] }}</td>
+            <td class="der monto">{{ fila.importe | pesos if fila.importe else '—' }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="aviso" style="margin-top:1rem">
+      Ninguna de esas filas está asignada a un comprobante, así que no se toca ningún saldo.
+    </p>
+  {% endif %}
+
+  <form method="post" style="margin-top:1.5rem">
+    <div class="acciones">
+      <button type="submit">Sí, deshacer la carga</button>
+      <a href="/admin/extracto">No, volver</a>
+    </div>
+  </form>
+{% endblock %}

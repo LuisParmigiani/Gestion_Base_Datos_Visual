@@ -1,0 +1,92 @@
+{% extends "admin/base.html" %}
+{% block titulo %}Todos los comprobantes{% endblock %}
+
+{% block contenido %}
+  <h1>Todos los comprobantes</h1>
+
+  <form method="get" class="filtros">
+    <div>
+      <label for="q">Buscar</label>
+      <input type="text" id="q" name="q" value="{{ q }}"
+             placeholder="un CUIT, un monto, un nombre, el archivo…">
+    </div>
+    <div>
+      <label for="estado">Estado</label>
+      <select id="estado" name="estado">
+        <option value="">Todos</option>
+        {% for clave, rotulo in estados %}
+          <option value="{{ clave }}" {{ 'selected' if estado == clave }}>{{ rotulo }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="cliente_id">Cliente</label>
+      <select id="cliente_id" name="cliente_id">
+        <option value="">Todos</option>
+        {% for c in clientes %}
+          <option value="{{ c.id }}" {{ 'selected' if cliente_id == c.id | string }}>
+            {{ c.nombre_completo }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="submit">Filtrar</button>
+    <a href="/admin/comprobantes" class="secundario-enlace">Limpiar</a>
+  </form>
+
+  <p class="aviso">
+    {{ filas | length }} comprobante(s).
+    El buscador mira el nombre del archivo, el motivo <strong>y todo lo que leyó la IA</strong>.
+  </p>
+
+  {% if filas %}
+    <table>
+      <thead>
+        <tr>
+          <th></th><th>Cliente</th><th>Estado</th><th>Leyó</th>
+          <th class="der">Monto leído</th><th>Fila del extracto</th><th>Archivo</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for comprobante, cliente, campos, fila in filas %}
+          <tr>
+            <td>
+              <a href="/cliente/{{ cliente.id }}/comprobante/{{ comprobante.id }}" target="_blank">
+                <img class="mini" src="/cliente/{{ cliente.id }}/comprobante/{{ comprobante.id }}" alt="">
+              </a>
+            </td>
+            <td>
+              <a href="/admin/cliente/{{ cliente.id }}">{{ cliente.nombre_completo }}</a><br>
+              <span class="fecha">subido el {{ comprobante.subido_en | dia }}</span>
+            </td>
+            <td>
+              <span class="estado estado-{{ comprobante.estado }}">{{ comprobante.estado.replace('_', ' ') }}</span>
+              {% if comprobante.confianza %}
+                <br><span class="fecha">
+                  {{ 'elegido a mano' if comprobante.confianza >= 100 else comprobante.confianza ~ '%' }}
+                </span>
+              {% endif %}
+              {% if comprobante.motivo %}
+                <br><span class="fecha" title="{{ comprobante.motivo }}">{{ comprobante.motivo[:60] }}…</span>
+              {% endif %}
+            </td>
+            <td class="fecha">
+              {{ comprobante.intentos }} vez/veces
+              {% if campos and campos.get('fecha') %}<br>{{ campos.get('fecha') }}{% endif %}
+            </td>
+            <td class="der monto">{{ campos.get('monto') if campos else '—' }}</td>
+            <td class="fecha">
+              {% if fila %}
+                {{ fila.hoja }} · fila {{ fila.fila }}<br>$ {{ fila.importe | pesos if fila.importe }}
+              {% else %}<span class="vacio">—</span>{% endif %}
+            </td>
+            <td class="fecha">
+              <a href="/admin/bandeja/{{ comprobante.id }}">{{ comprobante.archivo.split('/')[-1][:18] }}</a><br><a href="/admin/bandeja/{{ comprobante.id }}">¿por qué? →</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="vacio">Ningún comprobante coincide con ese filtro.</p>
+  {% endif %}
+{% endblock %}

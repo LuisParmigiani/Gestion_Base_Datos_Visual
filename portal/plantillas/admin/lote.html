@@ -1,0 +1,62 @@
+{% extends "admin/base.html" %}
+{% block titulo %}Leer los comprobantes{% endblock %}
+
+{% block contenido %}
+  <h1>Leer los comprobantes</h1>
+
+  {% if not hay_cbu %}
+    <p class="error">
+      No hay ningún CBU propio cargado. Sin eso no se puede verificar que la plata haya
+      caído en una cuenta tuya. <a href="/admin/cbu">Cargalos acá</a> antes de correr el lote.
+    </p>
+  {% endif %}
+
+  <p class="aviso">
+    Hay <strong>{{ pendientes }}</strong> comprobantes esperando. Cada uno se lee hasta
+    3 veces, con la imagen variada en cada intento, siempre con <code>lora_v4_v2</code>.
+    Calculá 15-30 segundos por lectura.
+  </p>
+
+  <form method="post" class="formulario">
+    <label>¿Qué se acredita solo?</label>
+    <label class="radio">
+      <input type="radio" name="umbral" value="90" checked>
+      Solo lo seguro (90%) — nro de transacción + CUIT, o CUIT + monto + fecha
+    </label>
+    <label class="radio">
+      <input type="radio" name="umbral" value="50">
+      También monto + fecha (50%) — más rápido, pero dos transferencias iguales el
+      mismo día pueden acreditarse mal
+    </label>
+    <div class="acciones">
+      <button type="submit" {{ 'disabled' if not hay_cbu or estado.corriendo }}>
+        {{ 'Corriendo…' if estado.corriendo else 'Empezar' }}
+      </button>
+    </div>
+  </form>
+
+  <div id="progreso" class="tarjeta" style="margin-top:1.5rem"></div>
+
+  <script>
+    async function mirar() {
+      const r = await fetch('/admin/lote/estado')
+      const e = await r.json()
+      const caja = document.getElementById('progreso')
+      if (e.corriendo) {
+        caja.innerHTML = `<p class="rotulo">Leyendo — variante <strong>${e.variante ?? '…'}</strong></p>
+          <p class="numero">${e.hechos} de ${e.total}</p>`
+      } else if (e.error) {
+        caja.innerHTML = `<p class="rotulo">El lote se cortó</p>
+          <p class="error" style="margin:.5rem 0 0">${e.error}</p>
+          <p class="pie">Lo que alcanzó a leer quedó guardado. Abrí el comprobante para ver el detalle.</p>`
+      } else if (e.resumen) {
+        caja.innerHTML = '<p class="rotulo">Terminó</p><p class="pie">' +
+          Object.entries(e.resumen).map(([k, v]) => `${k}: <strong>${v}</strong>`).join(' · ') +
+          '</p><p class="pie"><a href="/admin/bandeja">ver la bandeja</a></p>'
+      } else {
+        caja.innerHTML = '<p class="pie vacio">El lote no está corriendo.</p>'
+      }
+    }
+    mirar(); setInterval(mirar, 3000)
+  </script>
+{% endblock %}

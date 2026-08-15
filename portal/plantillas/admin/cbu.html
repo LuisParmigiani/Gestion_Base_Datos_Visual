@@ -1,0 +1,41 @@
+{% extends "admin/base.html" %}
+{% block titulo %}Tus cuentas{% endblock %}
+
+{% block contenido %}
+  <h1>Tus cuentas</h1>
+  <p class="aviso">
+    Un comprobante cuyo receptor no esté acá <strong>no se acredita</strong>: se relee tres
+    veces y, si se sostiene, te preguntamos si es una cuenta tuya nueva.
+    <strong>No las carga la IA</strong> — que haya leído un número veinte veces no lo hace correcto.
+  </p>
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+  <table>
+    <thead><tr><th>CBU / CUIT</th><th>Etiqueta</th><th>Origen</th><th></th></tr></thead>
+    <tbody>
+      {% for c in cbus %}
+        <tr>
+          <td class="monto">{{ c.valor }}</td>
+          <td>{{ c.etiqueta or '—' }}</td>
+          <td class="fecha">{{ c.origen }}{{ ' · sin aprobar' if not c.aprobado_en }}</td>
+          <td>
+            <form method="post" action="/admin/cbu/{{ c.id }}/borrar">
+              <button type="submit" class="enlace">borrar</button>
+            </form>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="4" class="vacio">Todavía no cargaste ninguna.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <form method="post" class="formulario" style="margin-top:1.5rem">
+    <label for="valor">CBU/CVU (22 dígitos) o CUIT (11)</label>
+    <input type="text" id="valor" name="valor" required placeholder="0170099220000012345678">
+    <p class="ayuda">Los guiones y espacios se ignoran.</p>
+    <label for="etiqueta">Etiqueta</label>
+    <input type="text" id="etiqueta" name="etiqueta" placeholder="Cuenta principal — Macro">
+    <div class="acciones"><button type="submit">Agregar</button></div>
+  </form>
+{% endblock %}

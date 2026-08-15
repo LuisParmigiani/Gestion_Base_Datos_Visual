@@ -1,0 +1,20 @@
+{% extends "admin/base.html" %}
+{% block titulo %}Clientes{% endblock %}
+
+{% block contenido %}
+  <h1>Clientes</h1>
+  <table>
+    <thead><tr><th>Cliente</th><th>Email</th><th>CUIT</th><th class="der">Saldo</th></tr></thead>
+    <tbody>
+      {% for c in clientes %}
+        <tr>
+          <td><a href="/admin/cliente/{{ c.id }}">{{ c.nombre_completo }}</a></td>
+          <td class="fecha">{{ c.email }}</td>
+          <td class="fecha">{{ c.cuit or '—' }}</td>
+          <td class="der monto {{ 'negativo' if c.saldo < 0 }}">{{ c.saldo | pesos }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p class="ayuda">Los clientes se crean con <code>python -m portal.sembrar</code>.</p>
+{% endblock %}

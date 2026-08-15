@@ -1,0 +1,83 @@
+{% extends "admin/base.html" %}
+{% block titulo %}Cómo va el negocio{% endblock %}
+
+{% block contenido %}
+  <h1>Cómo va el negocio</h1>
+  <p><a class="boton" href="/admin/exportar">Bajar el extracto conciliado (Excel)</a></p>
+
+  <div class="tarjetas">
+    <div class="tarjeta">
+      <p class="rotulo">Saldo de todos los clientes</p>
+      <p class="numero {{ 'negativo' if total_saldos < 0 }}">$ {{ total_saldos | pesos }}</p>
+      <p class="pie">{{ clientes | length }} clientes</p>
+    </div>
+    <div class="tarjeta">
+      <p class="rotulo">Filas del banco sin comprobante</p>
+      <p class="numero">{{ sin_comprobante[0] }}</p>
+      <p class="pie">$ {{ sin_comprobante[1] | pesos }} que entró y nadie reclamó</p>
+    </div>
+    <div class="tarjeta">
+      <p class="rotulo">Esperando tu decisión</p>
+      <p class="numero {{ 'negativo' if en_bandeja }}">{{ en_bandeja }}</p>
+      <p class="pie"><a href="/admin/bandeja">ir a la bandeja</a></p>
+    </div>
+    <div class="tarjeta">
+      <p class="rotulo">Movimientos del extracto</p>
+      <p class="numero">{{ movimientos_banco }}</p>
+      <p class="pie"><a href="/admin/extracto">subir más</a></p>
+    </div>
+  </div>
+
+  <div class="dos-columnas">
+    <section>
+      <h2>Plata entrando por mes</h2>
+      {% if por_mes %}
+        <table>
+          <thead><tr><th>Mes</th><th class="der">Entró</th><th class="der">Salió</th><th class="der">Neto</th></tr></thead>
+          <tbody>
+            {% for mes, entro, salio in por_mes %}
+              <tr>
+                <td>{{ mes }}</td>
+                <td class="der monto">+ {{ entro | pesos }}</td>
+                <td class="der monto negativo">{{ salio | pesos }}</td>
+                <td class="der monto {{ 'negativo' if (entro + salio) < 0 }}">{{ (entro + salio) | pesos }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p class="vacio">Todavía no hay movimientos.</p>
+      {% endif %}
+
+      <h2 style="margin-top:2rem">Estado de los comprobantes</h2>
+      <table>
+        <tbody>
+          {% for clave, rotulo in [
+              ("confirmado", "Acreditados"),
+              ("pendiente", "Pendientes"),
+              ("revision_manual", "Esperando que los mires"),
+              ("en_disputa", "En disputa")] %}
+            <tr>
+              <td><span class="estado estado-{{ clave }}">{{ rotulo }}</span></td>
+              <td class="der monto">{{ por_estado.get(clave, 0) }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Clientes por saldo</h2>
+      <table>
+        <tbody>
+          {% for cliente in clientes %}
+            <tr>
+              <td><a href="/admin/cliente/{{ cliente.id }}">{{ cliente.nombre_completo }}</a></td>
+              <td class="der monto {{ 'negativo' if cliente.saldo < 0 }}">{{ cliente.saldo | pesos }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  </div>
+{% endblock %}

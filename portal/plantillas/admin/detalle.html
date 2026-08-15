@@ -1,0 +1,93 @@
+{% extends "admin/base.html" %}
+{% block titulo %}Revisar comprobante {{ comprobante.id }}{% endblock %}
+
+{% block contenido %}
+  <h1>{{ comprobante.cliente.nombre_completo }}</h1>
+  {% if comprobante.motivo %}<p class="motivo">{{ comprobante.motivo }}</p>{% endif %}
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+  <section class="diagnostico">
+    <h2>Por qué está en «{{ comprobante.estado.replace('_', ' ') }}»</h2>
+    <ol>
+      {% for paso in diagnostico %}
+        <li class="paso paso-{{ paso.estado }}">
+          <span class="marca">{{ '✓' if paso.estado == 'ok' else '✕' if paso.estado == 'falla' else 'i' }}</span>
+          <div>
+            <strong>{{ paso.paso }}</strong>
+            <span>{{ paso.detalle }}</span>
+          </div>
+        </li>
+      {% endfor %}
+    </ol>
+  </section>
+
+  <div class="revisar">
+    <section class="imagen">
+      <a href="/cliente/{{ comprobante.cliente_id }}/comprobante/{{ comprobante.id }}" target="_blank">
+        <img src="/cliente/{{ comprobante.cliente_id }}/comprobante/{{ comprobante.id }}" alt="Comprobante">
+      </a>
+      {% if extracciones | length > 1 %}
+        <p class="ayuda">
+          Se leyó {{ extracciones | length }} veces:
+          {{ extracciones | map(attribute='variante') | join(' · ') }}.
+        </p>
+      {% endif %}
+    </section>
+
+    <form method="post" class="campos">
+      <h2>Lo que leyó la IA — corregí lo que esté mal</h2>
+      <p class="ayuda">
+        Cada campo que cambies se guarda como corrección y sirve para reentrenar el modelo.
+      </p>
+
+      {% for campo in campos %}
+        <label for="{{ campo }}">{{ campo.replace('_', ' ') }}</label>
+        <input type="text" id="{{ campo }}" name="{{ campo }}"
+               value="{{ leido.get(campo) if leido.get(campo) is not none else '' }}">
+      {% endfor %}
+
+      <label for="descripcion">Nota (opcional)</label>
+      <input type="text" id="descripcion" name="descripcion"
+             placeholder="p. ej.: la foto está cortada y no se ve el monto">
+
+      <h2 style="margin-top:1.5rem">¿Cuál es su fila del extracto?</h2>
+      {% if filas %}
+        <table>
+          <thead><tr><th></th><th>Fecha</th><th>Detalle</th><th class="der">Importe</th></tr></thead>
+          <tbody>
+            {% for fila in filas %}
+              <tr class="{{ 'tomada' if fila.comprobante_id and fila.comprobante_id != comprobante.id }}">
+                <td>
+                  <input type="radio" name="movimiento_id" value="{{ fila.id }}"
+                         {{ 'disabled' if fila.comprobante_id and fila.comprobante_id != comprobante.id }}>
+                </td>
+                <td class="fecha">{{ fila.fecha | dia }}</td>
+                <td>{{ fila.descripcion[:60] }}
+                  {%- if fila.comprobante_id and fila.comprobante_id != comprobante.id %}
+                    <span class="vacio">— ya es del comprobante {{ fila.comprobante_id }}</span>
+                  {% endif %}</td>
+                <td class="der monto">{{ fila.importe | pesos if fila.importe else '—' }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p class="vacio">Ninguna fila del extracto coincide con esa búsqueda.</p>
+      {% endif %}
+
+      <div class="acciones">
+        <button type="submit">Guardar</button>
+        <button type="submit" name="accion" value="reintentar" class="secundario">
+          Guardar y mandarlo de vuelta al lote
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <form method="get" class="buscador">
+    <label for="buscar">Buscar otra fila del extracto</label>
+    <input type="text" id="buscar" name="buscar" value="{{ buscar }}"
+           placeholder="un monto, una fecha (2026-08-15) o parte del detalle">
+    <button type="submit">Buscar</button>
+  </form>
+{% endblock %}

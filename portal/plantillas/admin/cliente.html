@@ -1,0 +1,65 @@
+{% extends "admin/base.html" %}
+{% block titulo %}{{ cliente.nombre_completo }}{% endblock %}
+
+{% block contenido %}
+  <h1>{{ cliente.nombre_completo }}</h1>
+  <p class="aviso">{{ cliente.email }}{% if cliente.cuit %} · CUIT {{ cliente.cuit }}{% endif %}</p>
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+  <section class="tarjeta-saldo">
+    <p class="rotulo">{{ "Saldo a favor" if cliente.saldo >= 0 else "Saldo en contra" }}</p>
+    <p class="monto-grande {{ 'negativo' if cliente.saldo < 0 }}">$ {{ cliente.saldo | pesos }}</p>
+  </section>
+
+  <div class="dos-columnas">
+    <section>
+      <h2>Actividad</h2>
+      <table>
+        <thead><tr><th>Fecha</th><th>Concepto</th><th class="der">Monto</th><th></th></tr></thead>
+        <tbody>
+          {% for m in movimientos %}
+            <tr>
+              <td class="fecha">{{ m.fecha | dia }}</td>
+              <td>{{ m.concepto }}</td>
+              <td class="der monto {{ 'negativo' if m.monto < 0 }}">{{ m.monto | pesos }}</td>
+              <td>
+                <form method="post" action="/admin/movimiento/{{ m.id }}/deshacer">
+                  <button type="submit" class="enlace">deshacer</button>
+                </form>
+              </td>
+            </tr>
+          {% else %}
+            <tr><td colspan="4" class="vacio">Sin movimientos.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <p class="ayuda">
+        Deshacer no borra: agrega el movimiento inverso y, si venía de un comprobante,
+        libera su fila del extracto y lo manda de vuelta al lote.
+      </p>
+    </section>
+
+    <section>
+      <h2>Cargar un movimiento</h2>
+      <form method="post" action="/admin/cliente/{{ cliente.id }}/movimiento" class="formulario">
+        <label for="concepto">Concepto</label>
+        <input type="text" id="concepto" name="concepto" required
+               placeholder="Compra — remito 4471">
+
+        <label for="monto">Monto</label>
+        <input type="text" id="monto" name="monto" required placeholder="12.500,00">
+        <p class="ayuda">Sin signo. El signo se elige abajo.</p>
+
+        <label class="radio"><input type="radio" name="signo" value="-" checked>
+          Descontar del saldo (le vendiste algo)</label>
+        <label class="radio"><input type="radio" name="signo" value="+">
+          Sumar al saldo (recarga)</label>
+
+        <label for="fecha">Fecha</label>
+        <input type="date" id="fecha" name="fecha">
+
+        <div class="acciones"><button type="submit">Cargar</button></div>
+      </form>
+    </section>
+  </div>
+{% endblock %}

@@ -11,10 +11,12 @@
  *
  *   node --env-file=.env.local comparar-lora.ts
  */
+import { writeFile } from 'node:fs/promises'
 import { db } from './src/lib/db.ts'
 import { CAMPOS, type Campo, normalizarCampo } from './src/lib/importar-comprobantes.ts'
 
-const CORRIDAS = ['v1', 'v2', 'v4', 'lora_v3_mejor', 'lora_v3_final', 'lora_v4_final']
+const CORRIDAS = ['v1', 'v2', 'v4', 'lora_v3_mejor', 'lora_v3_final', 'lora_v4_final',
+                  'lora_v4_v2_final']
 const REFERENCIA = 'lora_v3_mejor'   // define el conjunto de comprobantes a comparar
 
 type Fila = {
@@ -115,5 +117,20 @@ for (const ent of entidades) {
   const n = de(REFERENCIA).filter((r) => norm(r.banco) === ent).length
   console.log(`  ${ent.padEnd(15)}${String(n).padStart(4)}${celdas.join('')}`)
 }
+
+// El CSV que consume Looker Studio: UNA fila por corrida × comprobante × campo. En formato
+// largo a propósito — con esas cuatro dimensiones el tablero arma solo el corte por campo,
+// por entidad y sin `tipo_operacion`, así que no hay que exportar un archivo por vista ni
+// mantener acá los mismos cortes dos veces.
+const q = (s: string) => `"${s.replace(/"/g, '""')}"`   // la entidad puede traer una coma
+const csv = ['corrida,comprobante_id,entidad,campo,acierto']
+for (const c of cabecera)
+  for (const r of de(c))
+    for (const campo of CAMPOS)
+      csv.push([c, r.comprobanteId, q(norm(r.banco)), campo, acierta(r, campo) ? 1 : 0].join(','))
+
+const salida = new URL('../metricas/extraccion.csv', import.meta.url)
+await writeFile(salida, csv.join('\n') + '\n')
+console.log(`\n${csv.length - 1} filas → metricas/extraccion.csv`)
 
 await db.end()

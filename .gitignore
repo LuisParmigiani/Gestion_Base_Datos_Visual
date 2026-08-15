@@ -18,6 +18,12 @@ comprobantesReales/
 *.sql.gz
 *.dump
 
+# Excepción única a `*.csv`: los CSV del tablero de Looker Studio. Son aciertos del modelo
+# (0/1 por campo), curvas de loss e hiperparámetros — ni un CUIT, ni un monto, ni un nombre.
+# `metricas/corridas.csv` está escrito a mano y no se regenera solo: sin esto se pierde.
+# Acotada a esta carpeta a propósito: cualquier otro .csv sigue fuera de git.
+!metricas/*.csv
+
 # Salidas de la IA: llevan los 16 campos extraídos de comprobantes reales.
 # La verdad de referencia es el archivo más sensible del proyecto.
 *.jsonl
@@ -64,3 +70,6 @@ dist/
 .DS_Store
 .idea/
 .vscode/
+
+# Portal del cliente: los comprobantes que suben son datos reales
+portal/comprobantes/

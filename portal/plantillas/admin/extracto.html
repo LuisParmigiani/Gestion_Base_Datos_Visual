@@ -1,0 +1,102 @@
+{% extends "admin/base.html" %}
+{% block titulo %}Extracto del banco{% endblock %}
+
+{% block contenido %}
+  <h1>Extracto del banco</h1>
+
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+  {% if resumen %}<p class="aviso-ok">{{ resumen }}</p>{% endif %}
+
+  <div class="dos-columnas">
+    <section>
+      <h2>Subir un archivo</h2>
+      <form method="post" enctype="multipart/form-data" class="formulario">
+        <label for="archivo">Archivo del banco (.xlsx)</label>
+        <input type="file" id="archivo" name="archivo" accept=".xlsx" required>
+        <p class="ayuda">
+          Columnas: FECHA · NRO TRANSACCION · DESCRIPCION · IMPORTE.
+          La columna SALDO no se lee.
+        </p>
+
+        <label for="cuenta">¿A qué cuenta van estas filas?</label>
+        <select id="cuenta" name="cuenta" onchange="
+          document.getElementById('nueva').hidden = this.value !== '__nueva__'">
+          <option value="">Al nombre de cada hoja del archivo</option>
+          {% for c in cuentas %}
+            <option value="{{ c }}">{{ c }}</option>
+          {% endfor %}
+          <option value="__nueva__">Otra cuenta…</option>
+        </select>
+        <p class="ayuda">
+          Dejalo en <em>«al nombre de cada hoja»</em> si el archivo trae una cuenta por hoja.
+          Elegí una cuenta si el archivo es de una sola y la hoja se llama <code>Hoja1</code>.
+        </p>
+
+        <div id="nueva" hidden>
+          <label for="cuenta_nueva">Nombre de la cuenta nueva</label>
+          <input type="text" id="cuenta_nueva" name="cuenta_nueva" placeholder="BRUBANK">
+        </div>
+
+        <div class="acciones"><button type="submit">Importar</button></div>
+      </form>
+
+      <p class="ayuda">
+        <strong>Subir varios archivos es lo normal.</strong> Las filas repetidas no entran
+        dos veces, así que podés ir agregando meses o cuentas sin miedo.
+      </p>
+    </section>
+
+    <section>
+      <h2>Lo que hay cargado</h2>
+      {% if por_cuenta %}
+        <table>
+          <thead><tr><th>Cuenta</th><th class="der">Movimientos</th><th>Desde</th><th>Hasta</th></tr></thead>
+          <tbody>
+            {% for cuenta, cuantos, desde, hasta in por_cuenta %}
+              <tr>
+                <td><strong>{{ cuenta }}</strong></td>
+                <td class="der monto">{{ cuantos }}</td>
+                <td class="fecha">{{ desde | dia }}</td>
+                <td class="fecha">{{ hasta | dia }}</td>
+              </tr>
+            {% endfor %}
+            <tr><td><em>Total</em></td><td class="der monto">{{ total }}</td><td colspan="2"></td></tr>
+          </tbody>
+        </table>
+      {% else %}
+        <p class="vacio">Todavía no hay ningún movimiento. Sin extracto, el lote no tiene
+          contra qué comparar.</p>
+      {% endif %}
+    </section>
+  </div>
+
+  <h2 style="margin-top:2rem">Cargas anteriores</h2>
+  {% if cargas %}
+    <table>
+      <thead>
+        <tr><th>Cuándo</th><th>Archivo</th><th>Cuenta</th>
+            <th class="der">Nuevas</th><th class="der">Repetidas</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for carga in cargas %}
+          <tr>
+            <td class="fecha">{{ carga.importado_en.strftime('%d/%m/%Y %H:%M') }}</td>
+            <td>{{ carga.archivo }}</td>
+            <td class="fecha">
+              {{ carga.cuenta_forzada or (carga.resumen.hojas | map(attribute='cuenta') | join(', ') if carga.resumen else '—') }}
+            </td>
+            <td class="der monto">{{ carga.filas_nuevas }}</td>
+            <td class="der fecha">{{ carga.filas_duplicadas }}</td>
+            <td><a href="/admin/extracto/carga/{{ carga.id }}/deshacer">deshacer</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <p class="ayuda">
+      Deshacer borra los movimientos que trajo esa carga. Si alguno ya había acreditado
+      plata, te lo dice antes y anula esas acreditaciones con su contra-movimiento.
+    </p>
+  {% else %}
+    <p class="vacio">Todavía no subiste ningún archivo desde acá.</p>
+  {% endif %}
+{% endblock %}

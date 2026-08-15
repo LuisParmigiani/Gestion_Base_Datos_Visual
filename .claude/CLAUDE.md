@@ -11,6 +11,16 @@ Claude carga este archivo al inicio de cada sesión. Son reglas, no sugerencias.
 > mil líneas. Se abre uno **solo cuando el ESTADO ACTUAL o el índice mandan a abrirlo**, o
 > cuando se va a tocar el código del que ese archivo habla.
 
+## Hay DOS aplicaciones, y no se mezclan
+
+| Carpeta | Qué es | Stack | Base |
+|---|---|---|---|
+| `web/` | La herramienta interna con la que se **entrenó y midió** la IA | Next.js 16 + TS + `pg` | `conciliador` |
+| `portal/` | El **producto**: portal del cliente y (falta) del dueño | FastAPI + Jinja2 + SQLAlchemy | `portal` |
+
+`ia/` sirve a las dos. **`web/` no se toca ni se migra**: es la evidencia de cómo se midieron
+los adaptadores. Las reglas de abajo dicen cuándo aplican a una y no a la otra.
+
 ---
 
 ## 0. Las cuatro reglas que mandan sobre todas las demás
@@ -93,8 +103,8 @@ seguir probando. Complementa `debugging-solucionador` (skill propia, en español
 - ❌ Mandar comprobantes, extractos, CUITs, nombres o montos reales a **cualquier** servicio
   externo. Incluye Firecrawl, Exa, Tavily, Apify, Bright Data, artifacts publicados, gists,
   pastebins y APIs de modelos en la nube.
-- ❌ Commitear a git: `TRANSFERENCIAS.xlsx`, `viejo./comprobantesReales/`, cualquier imagen de
-  comprobante real, cualquier dump de la base. Van al `.gitignore` en la Fase 0.
+- ❌ Commitear a git: `TRANSFERENCIAS.xlsx`, `viejo./comprobantesReales/`, **`portal/comprobantes/`**
+  (lo que suben los clientes), cualquier imagen de comprobante real, cualquier dump de la base.
 - ❌ Usar datos reales en tests. Los tests usan las fixtures generadas de la Fase 3.
 
 ### IA — prohibición dura
@@ -110,6 +120,11 @@ seguir probando. Complementa `debugging-solucionador` (skill propia, en español
 ### Alcance — no se construye
 
 - ❌ Login, usuarios, roles, permisos. Una persona, máquina local.
+  - ⚠️ **Matizado el 15-ago:** `portal/` tiene **clientes**, y cada uno ve solo lo suyo. Pero
+    **no hay contraseña**: se elige la cuenta de una lista y el id viaja en la URL. No hay
+    sesión, ni cookie, ni hash. **Esto no es seguridad, es un selector** — el único aislamiento
+    real es que cada ruta coteja que el recurso sea del cliente que lo pide. El día que esto
+    salga de la máquina hace falta login de verdad, y hoy no existe.
 - ❌ Deploy: Vercel, Cloudflare, Supabase cloud, Firebase, Docker para producción.
 - ❌ Análisis forense de imágenes. Decidido fuera de alcance.
 - ❌ Módulo de deudas antes de la Fase 12. La deuda vive en otra API.
@@ -122,7 +137,11 @@ seguir probando. Complementa `debugging-solucionador` (skill propia, en español
   traduce a `pnpm` antes de correrlo. Nunca se genera un `package-lock.json` ni un `yarn.lock`;
   el único lockfile del repo es `pnpm-lock.yaml`.
 - ❌ Dependencia nueva sin justificar por qué la stdlib o algo ya instalado no alcanza.
-- ❌ ORM, capa de repositorios, inyección de dependencias, fábricas. SQL plano con `pg`.
+- ❌ ORM, capa de repositorios, inyección de dependencias, fábricas **en `web/`**. SQL plano con `pg`.
+  - ✅ **Excepción decidida por el usuario el 15-ago: `portal/` usa SQLAlchemy 2.0** (estilo
+    `DeclarativeBase` + `Mapped` + `mapped_column`). Es código nuevo y es Python. Lo que sigue
+    prohibido igual: capa de repositorios, fábricas e inyección de dependencias — los modelos y
+    las queries van a la vista, en `portal/modelos.py` y en la ruta que las usa.
 - ❌ Abstracción con una sola implementación. Se inlinea hasta que exista la segunda.
 - ❌ SQLite. Descartado a propósito: se quiere algo robusto.
 - ❌ `float` para plata. Los importes van en `NUMERIC` de Postgres.

@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block titulo %}{{ cliente.nombre_completo }}{% endblock %}
+
+{% block encabezado %}
+  <span class="quien">{{ cliente.nombre_completo }}</span>
+{% endblock %}
+
+{% block contenido %}
+  <section class="tarjeta-saldo">
+    <p class="rotulo">{{ "Saldo a favor" if cliente.saldo >= 0 else "Saldo en contra" }}</p>
+    <p class="monto-grande {{ 'negativo' if cliente.saldo < 0 }}">$ {{ cliente.saldo | pesos }}</p>
+    <a class="boton" href="/cliente/{{ cliente.id }}/subir">Subir un comprobante</a>
+  </section>
+
+  <div class="dos-columnas">
+    <section>
+      <h2>Actividad</h2>
+      {% if movimientos %}
+        <table>
+          <thead>
+            <tr><th>Fecha</th><th>Concepto</th><th class="der">Monto</th><th>Comprobante</th></tr>
+          </thead>
+          <tbody>
+            {% for m in movimientos %}
+              <tr>
+                <td class="fecha">{{ m.fecha | dia }}</td>
+                <td>{{ m.concepto }}</td>
+                <td class="der monto {{ 'negativo' if m.monto < 0 }}">
+                  {{ "+" if m.monto >= 0 else "−" }} {{ (m.monto if m.monto >= 0 else -m.monto) | pesos }}
+                </td>
+                <td>
+                  {% if m.comprobante_id %}
+                    <a href="/cliente/{{ cliente.id }}/comprobante/{{ m.comprobante_id }}" target="_blank">ver</a>
+                  {% else %}
+                    <span class="vacio">—</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p class="vacio">Todavía no hay movimientos.</p>
+      {% endif %}
+    </section>
+
+    <section>
+      <h2>Tus comprobantes</h2>
+      {% if comprobantes %}
+        <ul class="comprobantes">
+          {% for c in comprobantes %}
+            <li>
+              <a href="/cliente/{{ cliente.id }}/comprobante/{{ c.id }}" target="_blank">
+                <img src="/cliente/{{ cliente.id }}/comprobante/{{ c.id }}" alt="Comprobante {{ c.id }}">
+              </a>
+              <div>
+                <span class="estado estado-{{ c.estado }}">
+                  {% if c.estado == "pendiente" %}Pendiente de revisión
+                  {% elif c.estado == "confirmado" %}Acreditado
+                  {% elif c.estado == "revision_manual" %}Lo está mirando el administrador
+                  {% else %}En disputa{% endif %}
+                </span>
+                <span class="fecha">Subido el {{ c.subido_en | dia }}</span>
+                {% if c.fecha_declarada %}
+                  <span class="fecha">Transferido el {{ c.fecha_declarada | dia }}</span>
+                {% endif %}
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="vacio">Todavía no subiste ninguno.</p>
+      {% endif %}
+    </section>
+  </div>
+{% endblock %}

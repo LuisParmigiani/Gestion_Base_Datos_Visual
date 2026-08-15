@@ -1,0 +1,27 @@
+{% extends "admin/base.html" %}
+{% block titulo %}Lo que hay que decidir{% endblock %}
+
+{% block contenido %}
+  <h1>Lo que hay que decidir</h1>
+
+  {% if comprobantes %}
+    <ul class="comprobantes ancha">
+      {% for c in comprobantes %}
+        <li>
+          <img src="/cliente/{{ c.cliente_id }}/comprobante/{{ c.id }}" alt="">
+          <div>
+            <span class="estado estado-{{ c.estado }}">
+              {{ 'En disputa' if c.estado == 'en_disputa' else 'Para revisar' }}
+            </span>
+            <span><strong>{{ c.cliente.nombre_completo }}</strong> · subido el {{ c.subido_en | dia }}
+              · {{ c.intentos }} lectura(s)</span>
+            <span class="motivo">{{ c.motivo }}</span>
+            <span><a href="/admin/bandeja/{{ c.id }}">Abrirlo →</a></span>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="vacio">No hay nada esperando. El lote resolvió todo lo que pudo.</p>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block titulo %}Subir un comprobante{% endblock %}
+
+{% block encabezado %}
+  <span class="quien">{{ cliente.nombre_completo }}</span>
+{% endblock %}
+
+{% block contenido %}
+  <h1>Subir un comprobante</h1>
+
+  {% if error %}
+    <p class="error">{{ error }}</p>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data" class="formulario">
+    <label for="archivo">Foto del comprobante o PDF</label>
+    <input type="file" id="archivo" name="archivo"
+           accept=".jpg,.jpeg,.png,.webp,.pdf" required>
+    <p class="ayuda">Hasta 10 MB. Si mandás un PDF lo convertimos a imagen solos.</p>
+
+    <label for="fecha_declarada">Fecha de la transferencia <span class="opcional">(opcional)</span></label>
+    <input type="date" id="fecha_declarada" name="fecha_declarada">
+    <p class="ayuda">Si el comprobante no muestra la fecha, poné acá el día en que hiciste la transferencia.</p>
+
+    <div class="acciones">
+      <button type="submit">Subir</button>
+      <a href="/cliente/{{ cliente.id }}">Cancelar</a>
+    </div>
+  </form>
+{% endblock %}
