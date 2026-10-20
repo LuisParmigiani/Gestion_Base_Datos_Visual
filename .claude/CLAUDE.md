@@ -170,6 +170,9 @@ ni pasarela de pagos.
   `PLAN.md`, `BITACORA.md`. Alcanzan.
 - ✅ Excepción única: `.claude/bitacora/`, que es `BITACORA.md` partido en dos niveles (ver la
   sección 4). Ahí sí se crea un archivo por sesión, y **ningún otro documento suelto**.
+- ✅ Excepción pedida por el usuario: `docs/` (4 archivos). Es el detalle que salió del
+  `README.md` cuando se lo acortó para un lector no técnico (el profesor). El README es la
+  portada; lo técnico va a `docs/`, no de vuelta al README.
 - ⚠️ Excepción: `web/AGENTS.md` y `web/CLAUDE.md` los genera `next dev` solo, en cada arranque.
   **No se borran.** Avisan que Next.js 16 rompe compatibilidad con lo que el modelo tiene
   aprendido. Antes de escribir cualquier código de Next.js o React en este proyecto, se lee
